@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Brosco Control - Optimized Layout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        input[type="number"]::-webkit-inner-spin-button { display: none; }
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    </style>
+</head>
+<body class="bg-slate-900 text-white font-sans pb-20">
+
+<div class="max-w-6xl mx-auto p-4 md:p-8">
+    <header class="flex justify-between items-end mb-10">
+        <div>
+            <h1 class="text-4xl font-black italic uppercase tracking-tighter text-blue-500">Brosco Control</h1>
+            <div class="flex items-center gap-2 mt-1">
+                <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Курс $:</p>
+                <input type="number" id="usdRateInput" step="0.1" onchange="updateUsdRate(this.value)" class="bg-slate-800 text-blue-400 text-[10px] font-bold w-12 rounded px-1 outline-none border border-slate-700">
+                <button onclick="fetchUsdRate()" class="text-[9px] bg-slate-700 hover:bg-slate-600 px-2 py-0.5 rounded text-slate-300">Обновить НБУ</button>
+            </div>
+        </div>
+        <div class="flex gap-3">
+            <button onclick="exportToExcel()" class="bg-green-600 hover:bg-green-500 text-white text-xs font-bold py-2 px-4 rounded-xl transition shadow-lg">📊 Excel</button>
+            <button onclick="clearJournal()" class="bg-red-600 hover:bg-red-500 text-white text-xs font-bold py-2 px-4 rounded-xl transition shadow-lg">🗑️ Очистить</button>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-6">
+            <button onclick="addNewSale()" class="w-full bg-blue-600 hover:bg-blue-500 py-5 rounded-2xl font-black uppercase text-sm shadow-xl transition-all active:scale-95">
+                + Новая продажа
+            </button>
+
+            <div class="bg-slate-800 rounded-[2.5rem] border border-slate-700/50 overflow-hidden">
+                <div class="table-container">
+                    <table class="w-full text-left min-w-[600px]">
+                        <thead class="bg-slate-950/50 text-slate-500 text-[10px] uppercase font-black tracking-widest">
+                            <tr>
+                                <th class="p-5 w-20">Дата</th>
+                                <th class="p-5">Заказ и Комментарий</th>
+                                <th class="p-5 text-right w-32">Итог</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salesTable" class="divide-y divide-slate-700/30"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <aside class="space-y-4">
+            <!-- БЛОК ЦЕЛЕЙ -->
+            <div class="bg-slate-800 p-6 rounded-[2.5rem] border border-blue-500/20">
+                <h2 class="text-[10px] font-black uppercase mb-6 text-blue-400 tracking-widest text-center italic">Месячные цели</h2>
+                <div class="space-y-10">
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-end">
+                            <span class="text-[9px] font-bold text-slate-500 uppercase">Чистая Прибыль</span>
+                            <div class="text-[11px] font-bold flex items-center">
+                                <span id="monthCurrentProfit" class="text-white">0</span>
+                                <span class="text-slate-600 mx-1">/</span>
+                                <input type="number" id="targetProfitInput" onchange="updateGoal('profit', this.value)" class="bg-transparent text-blue-400 w-16 text-right outline-none">
+                                <span class="text-blue-400 ml-0.5">₴</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden shadow-inner">
+                            <div id="profitBar" class="bg-blue-500 h-full transition-all duration-700" style="width: 0%"></div>
+                        </div>
+                        <div class="flex justify-between text-[9px] font-black uppercase tracking-tighter">
+                            <div class="text-blue-500">Выполнено: <span id="profitPerc">0</span>%</div>
+                            <div class="text-slate-500">Осталось: <span id="profitLeft" class="text-slate-300">0</span> ₴</div>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-end">
+                            <span class="text-[9px] font-bold text-slate-500 uppercase">Общий Оборот</span>
+                            <div class="text-[11px] font-bold flex items-center">
+                                <span id="monthCurrentRevenue" class="text-white">0</span>
+                                <span class="text-slate-600 mx-1">/</span>
+                                <input type="number" id="targetRevenueInput" onchange="updateGoal('revenue', this.value)" class="bg-transparent text-emerald-400 w-16 text-right outline-none">
+                                <span class="text-emerald-400 ml-0.5">₴</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden shadow-inner">
+                            <div id="revenueBar" class="bg-emerald-500 h-full transition-all duration-700" style="width: 0%"></div>
+                        </div>
+                        <div class="flex justify-between text-[9px] font-black uppercase tracking-tighter">
+                            <div class="text-emerald-500">Выполнено: <span id="revenuePerc">0</span>%</div>
+                            <div class="text-slate-500">Осталось: <span id="revenueLeft" class="text-slate-300">0</span> ₴</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-amber-600/10 border border-amber-600/30 p-6 rounded-[2rem]">
+                <p class="text-amber-500 text-[10px] uppercase font-black mb-3 italic">🚚 В ПУТИ</p>
+                <div class="space-y-2">
+                    <p class="text-xs text-slate-400">Касса: <span id="pendingCash" class="text-white font-bold">0 ₴</span></p>
+                    <p class="text-xs text-slate-400">Прибыль: <span id="pendingProfit" class="text-amber-400 font-bold">0 ₴</span></p>
+                </div>
+            </div>
+
+            <div class="bg-green-600/10 border border-green-600/30 p-6 rounded-[2rem]">
+                <p class="text-green-500 text-[10px] uppercase font-black mb-3 italic">✅ ОПЛАЧЕНО</p>
+                <div class="space-y-2">
+                    <p class="text-xs text-slate-400">Касса: <span id="totalCash" class="text-white font-bold">0 ₴</span></p>
+                    <p class="text-xs text-slate-400">Прибыль: <span id="totalProfit" class="text-green-400 font-bold">0 ₴</span></p>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 p-6 rounded-[2.5rem] border border-blue-500/20">
+                <h2 class="text-sm font-black uppercase mb-4 text-blue-400 tracking-widest italic">Остатки склада</h2>
+                <div id="stockList" class="space-y-3 max-h-[300px] overflow-y-auto pr-2 hide-scroll"></div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<script>
+    const DB_KEY = 'brosco_v6_data';
+    const SALES_KEY = 'brosco_sales_v5';
+    const SETTINGS_KEY = 'brosco_settings_v2';
+
+    let baseData = JSON.parse(localStorage.getItem(DB_KEY)) || { products: [], bundles: [], addons: {} };
+    let sales = JSON.parse(localStorage.getItem(SALES_KEY)) || [];
+    let settings = JSON.parse(localStorage.getItem(SETTINGS_KEY)) || { usdRate: 41.5, targetProfit: 30000, targetRevenue: 80000 };
+
+    function save() {
+        localStorage.setItem(SALES_KEY, JSON.stringify(sales));
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+        render();
+    }
+
+    function updateUsdRate(val) { settings.usdRate = parseFloat(val) || 41.5; save(); }
+
+    async function fetchUsdRate() {
+        try {
+            const res = await fetch('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=USD&json');
+            const data = await res.json();
+            if(data[0] && data[0].rate) { settings.usdRate = parseFloat(data[0].rate.toFixed(2)); save(); }
+        } catch(e) { alert("Ошибка API НБУ"); }
+    }
+
+    function toUSD(amount) { return (amount / settings.usdRate).toFixed(2) + ' $'; }
+
+    function updateGoal(type, val) {
+        if(type === 'profit') settings.targetProfit = parseInt(val) || 0;
+        if(type === 'revenue') settings.targetRevenue = parseInt(val) || 0;
+        save();
+    }
+
+    function getProductFullCost(p) {
+        if (!p) return 0;
+        let adds = 0;
+        if(p.adds) p.adds.forEach(id => { if(baseData.addons[id]) adds += baseData.addons[id].val; });
+        return ((p.buy / (p.vol || 1)) * p.dose) + adds;
+    }
+
+    function getBundleCost(b) {
+        let total = 0;
+        if(b.items) b.items.forEach(pid => {
+            const p = baseData.products.find(x => x.id == pid);
+            if(p) total += (p.buy / (p.vol || 1)) * p.dose;
+        });
+        if(b.adds) b.adds.forEach(aid => { if(baseData.addons[aid]) total += baseData.addons[aid].val; });
+        return total;
+    }
+
+    // НОВАЯ ФУНКЦИЯ ДЛЯ ОБНОВЛЕНИЯ ДАННЫХ ВНУТРИ ПРОДАЖИ
+    function updateItemData(sIdx, iIdx, field, value) {
+        const si = sales[sIdx].items[iIdx];
+        si[field] = value;
+        
+        // Если меняем тип или сам товар — подтягиваем цену из базы
+        if (field === 'type' || field === 'itemId') {
+            const list = si.type === 'product' ? baseData.products : baseData.bundles;
+            const found = list.find(x => x.id == si.itemId);
+            if (found) si.customPrice = found.sale;
+        }
+        save();
+    }
+
+    function addNewSale() {
+        const defaultType = baseData.products.length ? 'product' : 'bundle';
+        const item = defaultType === 'product' ? baseData.products[0] : baseData.bundles[0];
+        sales.unshift({
+            id: Date.now(),
+            timestamp: Date.now(),
+            date: new Date().toLocaleDateString('ru-RU', {day:'2-digit', month:'2-digit'}),
+            items: [{ type: defaultType, itemId: item ? item.id : 0, qty: 1, customPrice: item ? item.sale : 0 }],
+            status: 'transit',
+            comment: ''
+        });
+        save();
+    }
+
+    function render() {
+        const sBody = document.getElementById('salesTable');
+        sBody.innerHTML = '';
+        let stats = { paidCash: 0, paidProfit: 0, transitCash: 0, transitProfit: 0 };
+        let monthProfitValue = 0, monthRevenueValue = 0;
+        let stockUsage = {};
+
+        const now = new Date();
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+
+        sales.forEach((s, sIdx) => {
+            let orderCash = 0, orderProfit = 0;
+            let itemsHtml = s.items.map((si, iIdx) => {
+                const item = si.type === 'product' ? baseData.products.find(p => p.id == si.itemId) : baseData.bundles.find(b => b.id == si.itemId);
+                if (item) {
+                    const cost = si.type === 'product' ? getProductFullCost(item) : getBundleCost(item);
+                    const currentPrice = si.customPrice !== undefined ? si.customPrice : item.sale;
+                    orderCash += currentPrice * si.qty;
+                    orderProfit += (currentPrice - cost) * si.qty;
+                    const prods = si.type === 'product' ? [item] : (item.items ? item.items.map(id => baseData.products.find(p=>p.id==id)) : []);
+                    prods.forEach(p => { if(p) stockUsage[p.id] = (stockUsage[p.id]||0) + (p.dose * si.qty); });
+                }
+                return `
+                    <div class="flex items-center gap-2 mb-1.5 bg-slate-900/40 p-2 rounded-lg border border-slate-700/20 text-[10px]">
+                        <select onchange="updateItemData(${sIdx}, ${iIdx}, 'type', this.value)" class="bg-slate-700 text-[8px] uppercase px-1 rounded text-blue-300 outline-none">
+                            <option value="product" ${si.type==='product'?'selected':''}>Товар</option>
+                            <option value="bundle" ${si.type==='bundle'?'selected':''}>Набор</option>
+                        </select>
+                        <select onchange="updateItemData(${sIdx}, ${iIdx}, 'itemId', this.value)" class="bg-transparent flex-1 outline-none text-white font-medium overflow-hidden">
+                            ${(si.type==='product' ? baseData.products : baseData.bundles).map(x => `<option value="${x.id}" ${si.itemId==x.id?'selected':''} class="bg-slate-800">${x.name}</option>`).join('')}
+                        </select>
+                        <input type="number" value="${si.customPrice}" onchange="updateItemData(${sIdx}, ${iIdx}, 'customPrice', parseFloat(this.value)||0)" class="w-12 bg-slate-800 border border-slate-700 rounded text-center py-1 text-blue-400 font-bold">
+                        <input type="number" value="${si.qty}" onchange="updateItemData(${sIdx}, ${iIdx}, 'qty', parseInt(this.value)||1)" class="w-8 bg-slate-700 rounded text-center py-1">
+                        ${s.items.length > 1 ? `<button onclick="sales[${sIdx}].items.splice(${iIdx},1); save()" class="text-slate-600 hover:text-red-400 px-1">✕</button>` : ''}
+                    </div>
+                `;
+            }).join('');
+
+            if(s.status === 'paid') { 
+                stats.paidCash += orderCash; stats.paidProfit += orderProfit; 
+                if((s.timestamp || Date.now()) >= startOfMonth) { monthProfitValue += orderProfit; monthRevenueValue += orderCash; }
+            } else { stats.transitCash += orderCash; stats.transitProfit += orderProfit; }
+
+            sBody.innerHTML += `
+                <tr class="border-b border-slate-700/30 ${s.status === 'paid' ? 'bg-green-500/5' : 'bg-amber-500/5'}">
+                    <td class="p-5 align-top">
+                        <div class="text-[10px] text-slate-500 font-bold italic mb-4">${s.date}</div>
+                        <button onclick="if(confirm('Удалить?')) { sales.splice(${sIdx},1); save(); }" class="text-slate-700 hover:text-red-500 p-2 border border-slate-700/30 rounded-lg transition-colors">✕</button>
+                    </td>
+                    <td class="p-5">
+                        <div class="flex gap-2 mb-3">
+                            <select onchange="sales[${sIdx}].status=this.value; save()" class="text-[9px] uppercase px-2 py-1 rounded font-black ${s.status==='paid'?'bg-green-600':'bg-amber-600'}">
+                                <option value="transit" ${s.status==='transit'?'selected':''}>🚚 В ПУТИ</option>
+                                <option value="paid" ${s.status==='paid'?'selected':''}>✅ ОПЛАЧЕНО</option>
+                            </select>
+                            <button onclick="sales[${sIdx}].items.push({type:'product', itemId:baseData.products[0]?.id||0, qty:1, customPrice:baseData.products[0]?.sale||0}); save()" class="text-[9px] bg-slate-700 px-2 rounded hover:text-blue-400 font-bold uppercase tracking-tighter">+ ДОПРОДАЖА</button>
+                        </div>
+                        ${itemsHtml}
+                        <div class="mt-2">
+                            <input type="text" placeholder="Заметка..." value="${s.comment || ''}" onchange="sales[${sIdx}].comment=this.value; save()"
+                                class="w-full bg-slate-900/60 border border-slate-700/50 rounded-lg p-2 text-[10px] text-slate-400 outline-none focus:border-blue-500/50">
+                        </div>
+                    </td>
+                    <td class="p-5 text-right align-top">
+                        <div class="text-sm font-black text-white">${Math.round(orderCash)} ₴</div>
+                        <div class="text-[9px] text-slate-500 italic font-medium mb-1">${toUSD(orderCash)}</div>
+                        <div class="text-[10px] text-slate-400 font-bold">P: ${Math.round(orderProfit)} ₴</div>
+                    </td>
+                </tr>
+            `;
+        });
+
+        const stList = document.getElementById('stockList');
+        stList.innerHTML = '';
+        baseData.products.forEach(p => {
+            const current = p.vol - (stockUsage[p.id] || 0);
+            const perc = Math.max(0, (current / p.vol) * 100);
+            stList.innerHTML += `<div class="bg-slate-900/50 p-3 rounded-xl border border-slate-700/50"><div class="flex justify-between text-[10px] mb-1"><span class="text-slate-400 uppercase font-black">${p.name}</span><span class="${current < p.dose*3 ? 'text-red-500 animate-pulse' : 'text-blue-400'} font-bold">${Math.round(current)}г</span></div><div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden"><div class="bg-blue-600 h-full transition-all duration-1000" style="width:${perc}%"></div></div></div>`;
+        });
+
+        document.getElementById('usdRateInput').value = settings.usdRate;
+        document.getElementById('monthCurrentProfit').innerText = Math.round(monthProfitValue);
+        document.getElementById('targetProfitInput').value = settings.targetProfit;
+        document.getElementById('profitBar').style.width = Math.min(100, (monthProfitValue/settings.targetProfit)*100) + '%';
+        document.getElementById('profitPerc').innerText = Math.round((monthProfitValue/settings.targetProfit)*100) || 0;
+        document.getElementById('profitLeft').innerText = Math.max(0, settings.targetProfit - Math.round(monthProfitValue));
+
+        document.getElementById('monthCurrentRevenue').innerText = Math.round(monthRevenueValue);
+        document.getElementById('targetRevenueInput').value = settings.targetRevenue;
+        document.getElementById('revenueBar').style.width = Math.min(100, (monthRevenueValue/settings.targetRevenue)*100) + '%';
+        document.getElementById('revenuePerc').innerText = Math.round((monthRevenueValue/settings.targetRevenue)*100) || 0;
+        document.getElementById('revenueLeft').innerText = Math.max(0, settings.targetRevenue - Math.round(monthRevenueValue));
+
+        document.getElementById('totalCash').innerText = Math.round(stats.paidCash) + ' ₴';
+        document.getElementById('totalProfit').innerText = Math.round(stats.paidProfit) + ' ₴';
+        document.getElementById('pendingCash').innerText = Math.round(stats.transitCash) + ' ₴';
+        document.getElementById('pendingProfit').innerText = Math.round(stats.transitProfit) + ' ₴';
+    }
+
+    function exportToExcel() {
+        const data = [];
+        sales.forEach(s => s.items.forEach(si => {
+            const item = si.type === 'product' ? baseData.products.find(p => p.id == si.itemId) : baseData.bundles.find(b => b.id == si.itemId);
+            const cost = item ? (si.type === 'product' ? getProductFullCost(item) : getBundleCost(item)) : 0;
+            data.push({ "Дата": s.date, "Статус": s.status, "Объект": item?.name, "Кол-во": si.qty, "Цена": si.customPrice, "Комментарий": s.comment });
+        }));
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sales");
+        XLSX.writeFile(wb, "Brosco_Finance.xlsx");
+    }
+
+    function clearJournal() { if (confirm("Очистить всё?")) { sales = []; save(); } }
+    render();
+</script>
+</body>
+</html>

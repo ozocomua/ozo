@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brosco Profit 6.1 - Smart Bundles</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        input:focus { background-color: #fff !important; box-shadow: 0 0 0 2px #3b82f6 inset; outline: none; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-900 pb-32">
+
+<div class="max-w-7xl mx-auto p-4 md:p-6">
+    <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <div>
+            <h1 class="text-3xl font-black text-slate-800 tracking-tight">Brosco Profit <span class="text-blue-600">6.1</span></h1>
+            <div class="flex items-center gap-2">
+                <span id="saveStatus" class="w-2 h-2 bg-green-500 rounded-full"></span>
+                <p id="statusText" class="text-slate-500 text-xs font-bold uppercase tracking-widest">Умный расчет наборов</p>
+            </div>
+        </div>
+        <button onclick="resetData()" class="bg-white text-slate-400 px-5 py-2.5 rounded-2xl border hover:text-red-500 transition text-xs font-bold uppercase">
+            🔄 Сбросить данные
+        </button>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <aside class="lg:col-span-3 space-y-6">
+            <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-black text-xs uppercase tracking-widest text-slate-400">📦 Тара и Расходники</h3>
+                    <button onclick="addNewAddon()" class="bg-blue-600 text-white w-6 h-6 rounded-lg font-black hover:bg-blue-700 transition">+</button>
+                </div>
+                <div id="addonContainer" class="space-y-3 max-h-[600px] overflow-y-auto pr-2 custom-scroll"></div>
+            </div>
+        </aside>
+
+        <main class="lg:col-span-9 space-y-8">
+            <section>
+                <h2 class="text-xl font-black text-slate-800 mb-4 px-2">Средства и Автохимия</h2>
+                <div class="bg-white rounded-[2rem] shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50 border-b border-slate-100 text-slate-400 text-[10px] uppercase font-black tracking-widest">
+                                <tr>
+                                    <th class="p-5">Наименование</th>
+                                    <th class="p-5 text-center">Закуп (факт)</th>
+                                    <th class="p-5 text-center">Объем/г</th>
+                                    <th class="p-5 text-center">Порция</th>
+                                    <th class="p-5 text-center">Себ.</th>
+                                    <th class="p-5 text-center">Цена продажи</th>
+                                    <th class="p-5 text-right">Выгода</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productTable" class="divide-y divide-slate-50 text-sm font-medium"></tbody>
+                        </table>
+                    </div>
+                    <div class="p-5 bg-slate-50/50 border-t flex justify-center">
+                        <button onclick="addNewProduct()" class="text-xs font-black text-slate-500 hover:text-blue-600 transition uppercase tracking-widest">+ Добавить позицию</button>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex justify-between items-end mb-4 px-2">
+                    <h2 class="text-xl font-black text-slate-800">Комбо-Наборы</h2>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tight italic">* В наборах тара из позиций химии не учитывается</p>
+                </div>
+                <div class="bg-white rounded-[2rem] shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-100 border-b border-slate-100 text-slate-400 text-[10px] uppercase font-black tracking-widest">
+                                <tr>
+                                    <th class="p-5">Название набора и состав</th>
+                                    <th class="p-5 text-center">Себ. набора</th>
+                                    <th class="p-5 text-center">Цена продажи</th>
+                                    <th class="p-5 text-right">Выгода</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bundleTable" class="divide-y divide-slate-50 text-sm font-medium"></tbody>
+                        </table>
+                    </div>
+                    <div class="p-5 bg-slate-50/50 border-t flex justify-center">
+                        <button onclick="addNewBundle()" class="text-xs font-black text-blue-600 hover:text-blue-800 transition uppercase tracking-widest">+ Собрать новый набор</button>
+                    </div>
+                </div>
+            </section>
+
+            <div class="bg-slate-900 rounded-[2.5rem] p-8 text-white flex flex-col md:flex-row justify-between items-center shadow-2xl gap-8">
+                <div>
+                    <p class="text-slate-400 text-[10px] uppercase tracking-widest font-black opacity-60 text-center md:text-left">Средняя прибыль (химия)</p>
+                    <p id="totalProfitSum" class="text-5xl font-black text-blue-400 mt-2 text-center md:text-left">0 ₴</p>
+                </div>
+                <div class="flex-1 flex justify-around w-full">
+                    <div class="text-center">
+                        <p class="text-slate-400 text-[10px] uppercase tracking-widest font-black opacity-60">Маржа</p>
+                        <p id="avgMargin" class="text-3xl font-black mt-1 text-green-400">0%</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-slate-400 text-[10px] uppercase tracking-widest font-black opacity-60">Оборот</p>
+                        <p id="totalRevenue" class="text-3xl font-black mt-1">0 ₴</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    let saveTimeout;
+    
+    const DEFAULT_STATE = {
+        addons: {
+            "t1": { name: "Флакон Окси (30мл)", val: 5.00 },
+            "t2": { name: "Ал. баночка (50мл)", val: 14.19 },
+            "t3": { name: "Пенная помпа+флакон", val: 16.50 },
+            "t4": { name: "Флакон Берлин (200мл)", val: 7.75 },
+            "t5": { name: "Флакон Глория (100мл)", val: 7.70 },
+            "k1": { name: "Флип-топ 20/410", val: 3.16 },
+            "k2": { name: "Флип-топ 24/410", val: 2.60 },
+            "r1": { name: "Губка 9.5см", val: 6.90 },
+            "r2": { name: "Щетка Horsehaire", val: 75.00 },
+            "r3": { name: "Фетр 'Монетка'", val: 4.40 },
+            "r4": { name: "Фетр 'Кружочки'", val: 0.30 }
+        },
+        products: [
+            { id: 1, name: "S99 Kiwami Wax (Темн)", buy: 1390, vol: 200, dose: 20, adds: ["t2", "r3"], sale: 450 },
+            { id: 2, name: "S99 Scratch Clear (Темн)", buy: 1390, vol: 200, dose: 20, adds: ["t2", "r1"], sale: 420 },
+            { id: 3, name: "S99 Glass Compound Z", buy: 834, vol: 100, dose: 20, adds: ["t1", "r4"], sale: 350 },
+            { id: 4, name: "S99 Glaco Roll on Max", buy: 1395, vol: 300, dose: 50, adds: ["t1"], sale: 480 },
+            { id: 5, name: "Koch Pol Star", buy: 537, vol: 1000, dose: 200, adds: ["t4", "k1"], sale: 280 },
+            { id: 6, name: "Koch Leather Star", buy: 981, vol: 1000, dose: 100, adds: ["t4", "k1", "r1"], sale: 390 },
+            { id: 7, name: "Koch Top Star", buy: 1237, vol: 1000, dose: 100, adds: ["t4", "k1"], sale: 350 },
+            { id: 8, name: "Koch MZR", buy: 623, vol: 1000, dose: 200, adds: ["t5", "k2"], sale: 250 }
+        ],
+        bundles: [
+            { id: 101, name: "Набор Кожа (Mini)", items: [6], adds: ["t4", "k1", "r2"], sale: 550 }
+        ]
+    };
+
+    let state = JSON.parse(localStorage.getItem('brosco_v6_data')) || DEFAULT_STATE;
+
+    function delayedSave() {
+        clearTimeout(saveTimeout);
+        document.getElementById('saveStatus').className = "w-2 h-2 bg-orange-500 rounded-full animate-pulse";
+        saveTimeout = setTimeout(() => {
+            save();
+            document.getElementById('saveStatus').className = "w-2 h-2 bg-green-500 rounded-full";
+        }, 800);
+    }
+
+    function save() {
+        localStorage.setItem('brosco_v6_data', JSON.stringify(state));
+        renderAll();
+    }
+
+    function resetData() {
+        if(confirm('Сбросить все к базовому списку?')) {
+            state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+            save();
+        }
+    }
+
+    // Расчет чистой жидкости (без тары)
+    function getLiquidOnlyCost(p) {
+        if(!p) return 0;
+        return (p.buy / (p.vol || 1)) * p.dose;
+    }
+
+    // Расчет полной себестоимости позиции (с тарой)
+    function getProductFullCost(p) {
+        if(!p) return 0;
+        const liquid = getLiquidOnlyCost(p);
+        let addsCost = 0;
+        p.adds.forEach(id => { if(state.addons[id]) addsCost += state.addons[id].val; });
+        return liquid + addsCost;
+    }
+
+    function renderAddons() {
+        const container = document.getElementById('addonContainer');
+        container.innerHTML = '';
+        Object.keys(state.addons).forEach(id => {
+            const item = state.addons[id];
+            const div = document.createElement('div');
+            div.className = "group bg-slate-50 p-3 rounded-2xl border border-transparent transition relative";
+            div.innerHTML = `
+                <div class="flex justify-between items-center mb-1">
+                    <input type="text" value="${item.name}" oninput="state.addons['${id}'].name=this.value; delayedSave()" class="bg-transparent font-bold text-[10px] text-slate-700 outline-none w-full uppercase">
+                    <button onclick="deleteAddon('${id}')" class="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 font-black transition">×</button>
+                </div>
+                <div class="flex items-center gap-2">
+                    <input type="number" step="any" value="${item.val}" oninput="state.addons['${id}'].val=parseFloat(this.value)||0; delayedSave()" class="bg-white px-2 py-1 rounded-lg text-xs font-mono w-full border border-slate-100">
+                    <span class="text-[9px] font-black text-slate-300">₴</span>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function deleteAddon(id) {
+        delete state.addons[id];
+        state.products.forEach(p => p.adds = p.adds.filter(a => a !== id));
+        save();
+    }
+
+    function addNewAddon() {
+        const id = 'a' + Date.now();
+        state.addons[id] = { name: "Новая позиция", val: 0 };
+        save();
+    }
+
+    function renderProducts() {
+        const tbody = document.getElementById('productTable');
+        tbody.innerHTML = '';
+        state.products.forEach((p, idx) => {
+            const cost = getProductFullCost(p);
+            const profit = p.sale - cost;
+            const row = document.createElement('tr');
+            row.className = "hover:bg-slate-50/50 transition-colors group align-top";
+            row.innerHTML = `
+                <td class="p-5 min-w-[200px] relative">
+                    <div class="flex items-center gap-2 mb-2">
+                        <button onclick="state.products.splice(${idx},1); save()" class="text-red-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition text-[10px]">🗑️</button>
+                        <input type="text" value="${p.name}" oninput="state.products[${idx}].name=this.value; delayedSave()" class="font-black text-slate-700 bg-transparent outline-none w-full text-sm">
+                    </div>
+                    <div class="flex flex-wrap gap-1">
+                        ${p.adds.map(aid => `<span class="bg-blue-50 text-blue-600 text-[8px] font-black px-1.5 py-0.5 rounded uppercase">${state.addons[aid]?.name || '...'}</span>`).join('')}
+                        <button onclick="event.stopPropagation(); togglePop(${idx}, 'prod')" class="text-[8px] bg-slate-100 text-slate-400 px-1.5 py-0.5 rounded hover:bg-blue-600 hover:text-white transition font-black uppercase">+</button>
+                    </div>
+                    <div id="pop-prod-${idx}" class="hidden absolute left-5 z-50 bg-white border shadow-2xl rounded-2xl p-4 mt-2 w-64 max-h-60 overflow-y-auto custom-scroll">
+                         ${Object.keys(state.addons).map(aid => `
+                            <label class="flex items-center gap-2 p-1.5 hover:bg-slate-50 rounded-lg cursor-pointer">
+                                <input type="checkbox" ${p.adds.includes(aid)?'checked':''} onchange="toggleItemLink(${idx}, '${aid}')" class="rounded border-slate-300 text-blue-600">
+                                <span class="text-[11px] font-bold text-slate-600">${state.addons[aid].name}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </td>
+                <td class="p-5 text-center"><input type="number" value="${p.buy}" oninput="state.products[${idx}].buy=parseFloat(this.value)||0; delayedSave()" class="w-20 p-2 bg-slate-50 rounded-xl font-black text-xs text-center text-blue-600"></td>
+                <td class="p-5 text-center"><input type="number" value="${p.vol}" oninput="state.products[${idx}].vol=parseFloat(this.value)||0; delayedSave()" class="w-16 bg-transparent outline-none text-center font-mono text-xs text-slate-400"></td>
+                <td class="p-5 text-center"><input type="number" value="${p.dose}" oninput="state.products[${idx}].dose=parseFloat(this.value)||0; delayedSave()" class="w-16 p-2 bg-blue-50 text-blue-600 rounded-xl font-black text-center text-xs"></td>
+                <td class="p-5 text-center font-bold text-slate-400 text-xs">${cost.toFixed(1)}</td>
+                <td class="p-5 text-center"><input type="number" value="${p.sale}" oninput="state.products[${idx}].sale=parseFloat(this.value)||0; delayedSave()" class="w-20 p-2 border-b-2 border-blue-100 bg-transparent font-black text-center text-sm focus:border-blue-500 outline-none"></td>
+                <td class="p-5 text-right font-black ${profit > 0 ? 'text-green-500' : 'text-red-400'} whitespace-nowrap">${Math.round(profit)} ₴</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function addNewProduct() {
+        state.products.push({ id: Date.now(), name: "Новое средство", buy: 0, vol: 1000, dose: 100, adds: [], sale: 0 });
+        save();
+    }
+
+    // Расчет себестоимости набора: Химия (только жидкость) + Допы набора
+    function getBundleCost(b) {
+        let total = 0;
+        // 1. Добавляем чистую стоимость химии (без их собственной тары)
+        b.items.forEach(pid => {
+            const prod = state.products.find(p => p.id === pid);
+            if(prod) total += getLiquidOnlyCost(prod);
+        });
+        // 2. Добавляем только те допы, которые выбраны прямо в наборе
+        b.adds.forEach(aid => {
+            if(state.addons[aid]) total += state.addons[aid].val;
+        });
+        return total;
+    }
+
+    function renderBundles() {
+        const tbody = document.getElementById('bundleTable');
+        tbody.innerHTML = '';
+        state.bundles.forEach((b, bIdx) => {
+            const cost = getBundleCost(b);
+            const profit = b.sale - cost;
+            const row = document.createElement('tr');
+            row.className = "hover:bg-slate-50/50 transition-colors group";
+            row.innerHTML = `
+                <td class="p-5 relative">
+                    <div class="flex items-center gap-2 mb-3">
+                         <button onclick="state.bundles.splice(${bIdx},1); save()" class="text-red-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition text-[10px]">🗑️</button>
+                         <input type="text" value="${b.name}" oninput="state.bundles[${bIdx}].name=this.value; delayedSave()" class="font-black text-slate-800 bg-transparent outline-none w-full text-base">
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        ${b.items.map((pid, iIdx) => {
+                            const p = state.products.find(x => x.id === pid);
+                            return `<span class="bg-blue-600 text-white text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
+                                ${p?.name || '...'} 
+                                <button onclick="state.bundles[${bIdx}].items.splice(${iIdx},1); save()" class="hover:text-red-200 ml-1">×</button>
+                            </span>`;
+                        }).join('')}
+                        ${b.adds.map((aid, aIdx) => {
+                            const a = state.addons[aid];
+                            return `<span class="bg-slate-800 text-slate-100 text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
+                                ${a?.name || '...'} 
+                                <button onclick="state.bundles[${bIdx}].adds.splice(${aIdx},1); save()" class="hover:text-red-400 ml-1">×</button>
+                            </span>`;
+                        }).join('')}
+                        <button onclick="event.stopPropagation(); togglePop(${bIdx}, 'bundle')" class="text-[9px] bg-blue-50 text-blue-600 px-3 py-1 rounded-lg hover:bg-blue-600 hover:text-white transition font-black border border-blue-100">+ СОСТАВ</button>
+                    </div>
+                    <div id="pop-bundle-${bIdx}" class="hidden absolute left-5 z-50 bg-white border shadow-2xl rounded-2xl p-4 mt-2 w-72 max-h-80 overflow-y-auto custom-scroll">
+                        <p class="text-[10px] font-black text-slate-400 mb-2 uppercase">Добавить химию (без тары):</p>
+                        <div class="space-y-1 mb-4">
+                            ${state.products.map(p => `
+                                <div onclick="state.bundles[${bIdx}].items.push(${p.id}); save()" class="text-[11px] p-2 hover:bg-blue-50 rounded-lg cursor-pointer font-bold text-slate-600 flex justify-between items-center">
+                                    <span>${p.name}</span> <span class="text-blue-500 text-[10px] font-mono">${getLiquidOnlyCost(p).toFixed(1)}₴</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <p class="text-[10px] font-black text-slate-400 mb-2 uppercase">Добавить тару/расходники:</p>
+                        <div class="space-y-1">
+                            ${Object.keys(state.addons).map(aid => `
+                                <div onclick="state.bundles[${bIdx}].adds.push('${aid}'); save()" class="text-[11px] p-2 hover:bg-slate-100 rounded-lg cursor-pointer font-bold text-slate-500 flex justify-between items-center">
+                                    <span>${state.addons[aid].name}</span> <span class="font-mono text-[10px]">${state.addons[aid].val}₴</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </td>
+                <td class="p-5 text-center font-black text-slate-500 text-lg">${Math.round(cost)} ₴</td>
+                <td class="p-5 text-center">
+                    <input type="number" value="${b.sale}" oninput="state.bundles[${bIdx}].sale=parseFloat(this.value)||0; delayedSave()" class="w-24 p-3 bg-blue-50 rounded-2xl font-black text-center text-lg text-blue-700 outline-none">
+                </td>
+                <td class="p-5 text-right font-black ${profit > 0 ? 'text-green-500' : 'text-red-400'} text-xl whitespace-nowrap">${Math.round(profit)} ₴</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function addNewBundle() {
+        state.bundles.push({ id: Date.now(), name: "Новый комбо-набор", items: [], adds: [], sale: 0 });
+        save();
+    }
+
+    function togglePop(idx, type) {
+        const id = `pop-${type}-${idx}`;
+        const el = document.getElementById(id);
+        const isHidden = el.classList.contains('hidden');
+        document.querySelectorAll('[id^="pop-"]').forEach(p => p.classList.add('hidden'));
+        if(isHidden) el.classList.remove('hidden');
+    }
+
+    function toggleItemLink(idx, aid) {
+        const arr = state.products[idx].adds;
+        const i = arr.indexOf(aid);
+        if(i > -1) arr.splice(i,1); else arr.push(aid);
+        save();
+    }
+
+    function renderAll() {
+        renderAddons();
+        renderProducts();
+        renderBundles();
+        
+        let totalProfit = 0, totalRev = 0, count = 0;
+        state.products.forEach(p => {
+            totalProfit += (p.sale - getProductFullCost(p));
+            totalRev += p.sale; count++;
+        });
+        
+        document.getElementById('totalProfitSum').innerText = Math.round(count ? totalProfit/count : 0) + ' ₴';
+        document.getElementById('totalRevenue').innerText = Math.round(totalRev) + ' ₴';
+        document.getElementById('avgMargin').innerText = Math.round(totalRev ? (totalProfit/totalRev)*100 : 0) + '%';
+    }
+
+    window.onclick = e => { 
+        if (!e.target.closest('button') && !e.target.closest('input') && !e.target.closest('[id^="pop-"]')) {
+            document.querySelectorAll('[id^="pop-"]').forEach(p => p.classList.add('hidden'));
+        }
+    };
+
+    renderAll();
+</script>
+</body>
+</html>

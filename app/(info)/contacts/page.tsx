@@ -1,0 +1,99 @@
+import { MessageSquare, Phone, Instagram, Send } from "lucide-react"
+import TikTokIcon from "@/components/icons/tiktok-icon" // Імпортуйте нову іконку
+
+export default function ContactsPage() {
+  return (
+    <div className="max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <header className="mb-12 space-y-2">
+        <h1 className="text-4xl md:text-5xl font-serif italic text-foreground">Контакти</h1>
+        <p className="text-[10px] uppercase font-bold opacity-30 tracking-[0.3em]">Brosco Design / Зв'язок з нами</p>
+      </header>
+
+      <div className="space-y-12">
+        {/* Телефони та Месенджери */}
+        <section className="space-y-6">
+          <h2 className="text-xs uppercase font-black tracking-widest opacity-40">Телефон та Viber</h2>
+          <div className="flex flex-wrap gap-4">
+            <a 
+              href="tel:+380689464743" 
+              className="flex items-center gap-3 px-6 py-4 bg-foreground text-background rounded-2xl hover:bg-foreground/90 transition-all w-full sm:w-auto"
+            >
+              <Phone size={18} />
+              <span className="font-bold">+38 (068) 946-47-43</span>
+            </a>
+            <a 
+              href="viber://chat?number=%2B380689464743" 
+              className="flex items-center gap-3 px-6 py-4 bg-[#7360f2]/10 text-[#7360f2] rounded-2xl hover:bg-[#7360f2] hover:text-white transition-all w-full sm:w-auto"
+            >
+              <MessageSquare size={18} />
+              <span className="font-bold italic font-serif">Viber</span>
+            </a>
+          </div>
+        </section>
+
+        {/* Соціальні мережі */}
+        <section className="space-y-6">
+          <h2 className="text-xs uppercase font-black tracking-widest opacity-40">Соціальні мережі</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <a 
+              href="https://t.me/broscodesign" 
+              target="_blank" 
+              rel="noopener noreferrer nofollow"
+              className="group flex items-center justify-between p-6 bg-card border border-border rounded-2xl hover:border-primary transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-sky-500/10 text-sky-500 rounded-xl group-hover:bg-sky-500 group-hover:text-white transition-colors">
+                  <Send size={20} />
+                </div>
+                <span className="font-bold">Telegram</span>
+              </div>
+              <span className="text-[10px] opacity-30 group-hover:opacity-100 transition-opacity">@broscodesign</span>
+            </a>
+
+            <a 
+              href="https://instagram.com/brosco.design" 
+              target="_blank" 
+              rel="noopener noreferrer nofollow"
+              className="group flex items-center justify-between p-6 bg-card border border-border rounded-2xl hover:border-primary transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-pink-500/10 text-pink-500 rounded-xl group-hover:bg-pink-500 group-hover:text-white transition-colors">
+                  <Instagram size={20} />
+                </div>
+                <span className="font-bold">Instagram</span>
+              </div>
+              <span className="text-[10px] opacity-30 group-hover:opacity-100 transition-opacity">@brosco.design</span>
+            </a>
+
+            {/* Оновлена кнопка TikTok з правильним значком */}
+            <a 
+              href="https://tiktok.com/@brosco.design" 
+              target="_blank" 
+              rel="noopener noreferrer nofollow"
+              className="group flex items-center justify-between p-6 bg-card border border-border rounded-2xl hover:border-primary transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-black/10 text-black rounded-xl group-hover:bg-black group-hover:text-white transition-colors">
+                  <TikTokIcon size={20} /> {/* Використовуйте TikTokIcon замість Video */}
+                </div>
+                <span className="font-bold">TikTok</span>
+              </div>
+              <span className="text-[10px] opacity-30 group-hover:opacity-100 transition-opacity">@brosco.design</span>
+            </a>
+          </div>
+        </section>
+
+        {/* Графік роботи */}
+        <section className="pt-8 border-t border-border">
+          <div className="flex items-start gap-6 opacity-60">
+            <div className="space-y-1">
+              <p className="text-[10px] uppercase font-bold tracking-widest font-sans">Графік обробки замовлень</p>
+              <p className="text-sm mt-2 italic">Щодня з 09:00 до 23:00</p>
+              <p className="text-xs mt-2 italic">Відправки здійснюються з смт. Врадіївка</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  )
+}
