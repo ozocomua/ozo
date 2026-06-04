@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Скрипт для получения NP_SENDER_* переменных через API Новой Почты
-# Замени ТВОЙ_ГОРОД ниже на название города отправки (uk)
+# Ищет СУЩЕСТВУЮЩЕГО контрагента-отправителя (ФОП / компания)
 set -e
 
 API_KEY="8b46a9fb0e7c74d921df00a4dff9087b"
@@ -69,58 +69,76 @@ echo ""
 read -p "Введи Ref вибраного відділення: " WAREHOUSE_REF
 
 echo ""
-echo "=== Створення контрагента-відправника ==="
-read -p "Назва компанії / ПІБ відправника: " SENDER_NAME
-read -p "Телефон відправника (напр. 380501234567): " SENDER_PHONE
-
-PARTS=($SENDER_NAME)
-LAST_NAME="${PARTS[0]}"
-FIRST_NAME="${PARTS[1]:-}"
-MIDDLE_NAME="${PARTS[*]:2}"
+echo "=== Пошук існуючого контрагента-відправника ==="
+read -p "Назва ФОП / компанії (як у кабінеті НП): " SENDER_NAME
 
 CP_RESPONSE=$(curl -s -X POST "$API_URL" \
   -H "Content-Type: application/json" \
   -d "{
     \"apiKey\": \"$API_KEY\",
     \"modelName\": \"Counterparty\",
-    \"calledMethod\": \"save\",
+    \"calledMethod\": \"getCounterparties\",
     \"methodProperties\": {
-      \"FirstName\": \"$FIRST_NAME\",
-      \"MiddleName\": \"$MIDDLE_NAME\",
-      \"LastName\": \"$LAST_NAME\",
-      \"Phone\": \"$SENDER_PHONE\",
-      \"CounterpartyType\": \"PrivatePerson\",
-      \"CounterpartyProperty\": \"Sender\"
+      \"FindByString\": \"$SENDER_NAME\",
+      \"CounterpartyProperty\": \"Sender\",
+      \"Limit\": \"10\"
     }
   }")
 
-SENDER_REF=$(echo "$CP_RESPONSE" | python3 -c "
+echo ""
+echo "Знайдені контрагенти-відправники:"
+echo "$CP_RESPONSE" | python3 -c "
 import json,sys
 d=json.load(sys.stdin)
-if d.get('success') and d.get('data') and len(d['data'])>0:
-    print(d['data'][0]['Ref'])
+if d.get('success') and d.get('data'):
+    for i,cp in enumerate(d['data'][:10]):
+        name = cp.get('Description','')
+        edrpou = cp.get('EDRPOU','')
+        ref = cp.get('Ref','')
+        print(f\"  [{i}] {name}\" + (f\" (ЄДРПОУ: {edrpou})\" if edrpou else '') + f\"  Ref: {ref}\")
 else:
-    print('ERROR')
-")
+    print('Помилка:', d.get('errors', 'невідома'))
+"
 
-CONTACT_REF=$(echo "$CP_RESPONSE" | python3 -c "
+echo ""
+read -p "Введи Ref вибраного контрагента: " SENDER_REF
+
+echo ""
+echo "=== Отримання контактних осіб ==="
+
+CONTACTS_RESPONSE=$(curl -s -X POST "$API_URL" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"apiKey\": \"$API_KEY\",
+    \"modelName\": \"Counterparty\",
+    \"calledMethod\": \"getCounterpartyContactPersons\",
+    \"methodProperties\": {
+      \"Ref\": \"$SENDER_REF\",
+      \"Page\": \"1\"
+    }
+  }")
+
+echo ""
+echo "Контактні особи:"
+echo "$CONTACTS_RESPONSE" | python3 -c "
 import json,sys
 d=json.load(sys.stdin)
-if d.get('success') and d.get('data') and len(d['data'])>0:
-    contacts = d['data'][0].get('ContactPerson',{}).get('data',[])
-    if contacts:
-        print(contacts[0]['Ref'])
-    else:
-        print('')
+if d.get('success') and d.get('data'):
+    for i,p in enumerate(d['data'][:10]):
+        name = p.get('Description','')
+        phones = p.get('Phones','')
+        ref = p.get('Ref','')
+        print(f\"  [{i}] {name}  тел: {phones}  Ref: {ref}\")
 else:
-    print('')
-")
+    print('Помилка:', d.get('errors', 'невідома'))
+"
 
-if [ "$SENDER_REF" = "ERROR" ] || [ -z "$SENDER_REF" ]; then
-  echo "Помилка створення контрагента:"
-  echo "$CP_RESPONSE"
-  exit 1
-fi
+echo ""
+read -p "Введи Ref контактної особи (або Enter якщо не потрібно): " CONTACT_REF
+
+echo ""
+echo "=== Телефон відправника ==="
+read -p "Телефон (напр. 380501234567): " SENDER_PHONE
 
 echo ""
 echo "===================================="
