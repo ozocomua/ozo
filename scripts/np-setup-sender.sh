@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 # Скрипт для получения NP_SENDER_* переменных через API Новой Почты
 # Ищет СУЩЕСТВУЮЩЕГО контрагента-отправителя (ФОП / компания)
-# Город и контакты тянет из данных контрагента автоматически
-set -e
-
 API_KEY="8b46a9fb0e7c74d921df00a4dff9087b"
 API_URL="https://api.novaposhta.ua/v2.0/json/"
 
@@ -35,7 +32,7 @@ if d.get('success') and d.get('data'):
         ref = cp.get('Ref','')
         city = cp.get('City','')
         city_desc = cp.get('CityDescription','')
-        print(f\"  [{i}] {name}\" + (f\" (ЄДРПОУ: {edrpou})\" if edrpou else '') + f\"  Місто: {city_desc}  Ref: {ref}\")
+        print(f\"  [{i}] {name}\" + (f\" (ЄДРПОУ: {edrpou})\" if edrpou else '') + f\"  Місто: {city_desc or '—'}  Ref: {ref}\")
 else:
     print('Помилка:', d.get('errors', 'невідома'))
 "
@@ -51,17 +48,54 @@ ref='$SENDER_REF'
 if d.get('success') and d.get('data'):
     for cp in d['data']:
         if cp.get('Ref') == ref:
-            print(cp.get('City',''))
+            city = cp.get('City','')
+            if city and city != '00000000-0000-0000-0000-000000000000':
+                print(city)
             break
 ")
 
+# Если город не определился из контрагента — спрашиваем вручную
 if [ -z "$CITY_REF" ]; then
-  echo "Не вдалося визначити місто контрагента."
+  echo ""
+  echo "⚠️  Місто не визначено в даних контрагента."
+  echo ""
+  echo "=== Пошук міста вручну ==="
+  read -p "Введи місто відправника (uk): " CITY_NAME
+
+  CITY_RESPONSE=$(curl -s -X POST "$API_URL" \
+    -H "Content-Type: application/json" \
+    -d "{
+      \"apiKey\": \"$API_KEY\",
+      \"modelName\": \"Address\",
+      \"calledMethod\": \"getCities\",
+      \"methodProperties\": {
+        \"FindByString\": \"$CITY_NAME\",
+        \"Limit\": \"5\"
+      }
+    }")
+
+  echo ""
+  echo "Знайдені міста:"
+  echo "$CITY_RESPONSE" | python3 -c "
+  import json,sys
+  d=json.load(sys.stdin)
+  if d.get('success') and d.get('data'):
+      for i,c in enumerate(d['data'][:5]):
+          print(f\"  [{i}] {c['Description']}  (Ref: {c['Ref']})\")
+  else:
+      print('Помилка:', d.get('errors', 'невідома'))
+  "
+  echo ""
+  read -p "Введи Ref вибраного міста: " CITY_REF
+fi
+
+if [ -z "$CITY_REF" ]; then
+  echo "Не вдалося визначити місто."
   exit 1
 fi
 
 echo ""
-echo "Місто контрагента: $CITY_REF"
+echo "Місто: $CITY_REF"
 echo ""
 
 echo "=== Пошук відділення ==="
