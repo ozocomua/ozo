@@ -1,42 +1,69 @@
 #!/usr/bin/env bash
 # Скрипт для получения NP_SENDER_* переменных через API Новой Почты
 # Ищет СУЩЕСТВУЮЩЕГО контрагента-отправителя (ФОП / компания)
+# Город и контакты тянет из данных контрагента автоматически
 set -e
 
 API_KEY="8b46a9fb0e7c74d921df00a4dff9087b"
 API_URL="https://api.novaposhta.ua/v2.0/json/"
 
-echo "=== Пошук міста ==="
-read -p "Місто відправника (uk): " CITY_NAME
+echo "=== Пошук існуючого контрагента-відправника ==="
+read -p "Назва ФОП / компанії (як у кабінеті НП): " SENDER_NAME
 
-CITY_RESPONSE=$(curl -s -X POST "$API_URL" \
+CP_RESPONSE=$(curl -s -X POST "$API_URL" \
   -H "Content-Type: application/json" \
   -d "{
     \"apiKey\": \"$API_KEY\",
-    \"modelName\": \"Address\",
-    \"calledMethod\": \"getCities\",
+    \"modelName\": \"Counterparty\",
+    \"calledMethod\": \"getCounterparties\",
     \"methodProperties\": {
-      \"FindByString\": \"$CITY_NAME\",
-      \"Limit\": \"5\"
+      \"FindByString\": \"$SENDER_NAME\",
+      \"CounterpartyProperty\": \"Sender\",
+      \"Limit\": \"10\"
     }
   }")
 
 echo ""
-echo "Знайдені міста:"
-echo "$CITY_RESPONSE" | python3 -c "
+echo "Знайдені контрагенти-відправники:"
+echo "$CP_RESPONSE" | python3 -c "
 import json,sys
 d=json.load(sys.stdin)
 if d.get('success') and d.get('data'):
-    for i,c in enumerate(d['data'][:5]):
-        print(f\"  [{i}] {c['Description']}  (Ref: {c['Ref']})\")
+    for i,cp in enumerate(d['data'][:10]):
+        name = cp.get('Description','')
+        edrpou = cp.get('EDRPOU','')
+        ref = cp.get('Ref','')
+        city = cp.get('City','')
+        city_desc = cp.get('CityDescription','')
+        print(f\"  [{i}] {name}\" + (f\" (ЄДРПОУ: {edrpou})\" if edrpou else '') + f\"  Місто: {city_desc}  Ref: {ref}\")
 else:
     print('Помилка:', d.get('errors', 'невідома'))
 "
 
 echo ""
-read -p "Введи Ref вибраного міста: " CITY_REF
+read -p "Введи Ref вибраного контрагента: " SENDER_REF
+
+# Извлекаем город контрагента из ответа
+CITY_REF=$(echo "$CP_RESPONSE" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+ref='$SENDER_REF'
+if d.get('success') and d.get('data'):
+    for cp in d['data']:
+        if cp.get('Ref') == ref:
+            print(cp.get('City',''))
+            break
+")
+
+if [ -z "$CITY_REF" ]; then
+  echo "Не вдалося визначити місто контрагента."
+  exit 1
+fi
 
 echo ""
+echo "Місто контрагента: $CITY_REF"
+echo ""
+
 echo "=== Пошук відділення ==="
 read -p "Номер або адреса відділення (напр. '1'): " WAREHOUSE_QUERY
 
@@ -67,41 +94,6 @@ else:
 
 echo ""
 read -p "Введи Ref вибраного відділення: " WAREHOUSE_REF
-
-echo ""
-echo "=== Пошук існуючого контрагента-відправника ==="
-read -p "Назва ФОП / компанії (як у кабінеті НП): " SENDER_NAME
-
-CP_RESPONSE=$(curl -s -X POST "$API_URL" \
-  -H "Content-Type: application/json" \
-  -d "{
-    \"apiKey\": \"$API_KEY\",
-    \"modelName\": \"Counterparty\",
-    \"calledMethod\": \"getCounterparties\",
-    \"methodProperties\": {
-      \"FindByString\": \"$SENDER_NAME\",
-      \"CounterpartyProperty\": \"Sender\",
-      \"Limit\": \"10\"
-    }
-  }")
-
-echo ""
-echo "Знайдені контрагенти-відправники:"
-echo "$CP_RESPONSE" | python3 -c "
-import json,sys
-d=json.load(sys.stdin)
-if d.get('success') and d.get('data'):
-    for i,cp in enumerate(d['data'][:10]):
-        name = cp.get('Description','')
-        edrpou = cp.get('EDRPOU','')
-        ref = cp.get('Ref','')
-        print(f\"  [{i}] {name}\" + (f\" (ЄДРПОУ: {edrpou})\" if edrpou else '') + f\"  Ref: {ref}\")
-else:
-    print('Помилка:', d.get('errors', 'невідома'))
-"
-
-echo ""
-read -p "Введи Ref вибраного контрагента: " SENDER_REF
 
 echo ""
 echo "=== Отримання контактних осіб ==="
