@@ -1,28 +1,40 @@
 #!/usr/bin/env bash
-# Скрипт для получения NP_SENDER_* переменных через API Новой Почты
-# Ищет СУЩЕСТВУЮЩЕГО контрагента-отправителя (ФОП / компания)
+# Скрипт настройки отправителя НП — всё подтягивается автоматически
+# Достаточно ввести название ФОП или Ref отправителя
+set -e
+
 API_KEY="8b46a9fb0e7c74d921df00a4dff9087b"
 API_URL="https://api.novaposhta.ua/v2.0/json/"
 
-echo "=== Пошук існуючого контрагента-відправника ==="
-read -p "Назва ФОП / компанії (як у кабінеті НП): " SENDER_NAME
-
-CP_RESPONSE=$(curl -s -X POST "$API_URL" \
-  -H "Content-Type: application/json" \
-  -d "{
-    \"apiKey\": \"$API_KEY\",
-    \"modelName\": \"Counterparty\",
-    \"calledMethod\": \"getCounterparties\",
-    \"methodProperties\": {
-      \"FindByString\": \"$SENDER_NAME\",
-      \"CounterpartyProperty\": \"Sender\",
-      \"Limit\": \"10\"
-    }
-  }")
-
+echo "=== Налаштування відправника Нової Пошти ==="
 echo ""
-echo "Знайдені контрагенти-відправники:"
-echo "$CP_RESPONSE" | python3 -c "
+echo "Варіант 1: введи назву ФОП — знайду автоматично"
+echo "Варіант 2: введи готовий Ref відправника одразу"
+echo ""
+read -p "Назва ФОП або Ref: " INPUT
+
+# Определяем, Ref это или название
+if [[ "$INPUT" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]]; then
+  SENDER_REF="$INPUT"
+else
+  echo ""
+  echo "Шукаю контрагента..."
+  CP_RESPONSE=$(curl -s -X POST "$API_URL" \
+    -H "Content-Type: application/json" \
+    -d "{
+      \"apiKey\": \"$API_KEY\",
+      \"modelName\": \"Counterparty\",
+      \"calledMethod\": \"getCounterparties\",
+      \"methodProperties\": {
+        \"FindByString\": \"$INPUT\",
+        \"CounterpartyProperty\": \"Sender\",
+        \"Limit\": \"10\"
+      }
+    }")
+
+  echo ""
+  echo "Знайдені:"
+  echo "$CP_RESPONSE" | python3 -c "
 import json,sys
 d=json.load(sys.stdin)
 if d.get('success') and d.get('data'):
@@ -30,108 +42,92 @@ if d.get('success') and d.get('data'):
         name = cp.get('Description','')
         edrpou = cp.get('EDRPOU','')
         ref = cp.get('Ref','')
-        city = cp.get('City','')
         city_desc = cp.get('CityDescription','')
-        print(f\"  [{i}] {name}\" + (f\" (ЄДРПОУ: {edrpou})\" if edrpou else '') + f\"  Місто: {city_desc or '—'}  Ref: {ref}\")
+        print(f'  [{i}] {name}' + (f' (ЄДРПОУ: {edrpou})' if edrpou else '') + f'  Місто: {city_desc or \"—\"}')
+        print(f'      Ref: {ref}')
 else:
     print('Помилка:', d.get('errors', 'невідома'))
 "
-
-echo ""
-read -p "Введи Ref вибраного контрагента: " SENDER_REF
-
-# Извлекаем город контрагента из ответа
-CITY_REF=$(echo "$CP_RESPONSE" | python3 -c "
-import json,sys
-d=json.load(sys.stdin)
-ref='$SENDER_REF'
-if d.get('success') and d.get('data'):
-    for cp in d['data']:
-        if cp.get('Ref') == ref:
-            city = cp.get('City','')
-            if city and city != '00000000-0000-0000-0000-000000000000':
-                print(city)
-            break
-")
-
-# Если город не определился из контрагента — спрашиваем вручную
-if [ -z "$CITY_REF" ]; then
   echo ""
-  echo "⚠️  Місто не визначено в даних контрагента."
-  echo ""
-  echo "=== Пошук міста вручну ==="
-  read -p "Введи місто відправника (uk): " CITY_NAME
-
-  CITY_RESPONSE=$(curl -s -X POST "$API_URL" \
-    -H "Content-Type: application/json" \
-    -d "{
-      \"apiKey\": \"$API_KEY\",
-      \"modelName\": \"Address\",
-      \"calledMethod\": \"getCities\",
-      \"methodProperties\": {
-        \"FindByString\": \"$CITY_NAME\",
-        \"Limit\": \"5\"
-      }
-    }")
-
-  echo ""
-  echo "Знайдені міста:"
-  echo "$CITY_RESPONSE" | python3 -c "
-  import json,sys
-  d=json.load(sys.stdin)
-  if d.get('success') and d.get('data'):
-      for i,c in enumerate(d['data'][:5]):
-          print(f\"  [{i}] {c['Description']}  (Ref: {c['Ref']})\")
-  else:
-      print('Помилка:', d.get('errors', 'невідома'))
-  "
-  echo ""
-  read -p "Введи Ref вибраного міста: " CITY_REF
-fi
-
-if [ -z "$CITY_REF" ]; then
-  echo "Не вдалося визначити місто."
-  exit 1
+  read -p "Введи Ref вибраного: " SENDER_REF
 fi
 
 echo ""
-echo "Місто: $CITY_REF"
-echo ""
+echo "Підтягую дані автоматично..."
 
-echo "=== Пошук відділення ==="
-read -p "Номер або адреса відділення (напр. '1'): " WAREHOUSE_QUERY
-
-WH_RESPONSE=$(curl -s -X POST "$API_URL" \
+# Получаем детальную инфу о контрагенте
+CP_INFO=$(curl -s -X POST "$API_URL" \
   -H "Content-Type: application/json" \
   -d "{
     \"apiKey\": \"$API_KEY\",
-    \"modelName\": \"Address\",
-    \"calledMethod\": \"getWarehouses\",
+    \"modelName\": \"Counterparty\",
+    \"calledMethod\": \"getCounterparties\",
     \"methodProperties\": {
-      \"CityRef\": \"$CITY_REF\",
-      \"FindByString\": \"$WAREHOUSE_QUERY\",
-      \"Limit\": \"10\"
+      \"Ref\": \"$SENDER_REF\",
+      \"CounterpartyProperty\": \"Sender\"
+    }
+  }")
+
+CITY_REF=$(echo "$CP_INFO" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+if d.get('success') and d.get('data') and len(d['data'])>0:
+    c = d['data'][0].get('City','')
+    if c and c != '00000000-0000-0000-0000-000000000000':
+        print(c)
+")
+
+CITY_NAME=$(echo "$CP_INFO" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+if d.get('success') and d.get('data') and len(d['data'])>0:
+    print(d['data'][0].get('CityDescription',''))
+")
+
+# Адрес отправителя
+ADDR_RESPONSE=$(curl -s -X POST "$API_URL" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"apiKey\": \"$API_KEY\",
+    \"modelName\": \"Counterparty\",
+    \"calledMethod\": \"getCounterpartyAddresses\",
+    \"methodProperties\": {
+      \"Ref\": \"$SENDER_REF\",
+      \"CounterpartyProperty\": \"Sender\"
     }
   }")
 
 echo ""
-echo "Знайдені відділення:"
-echo "$WH_RESPONSE" | python3 -c "
+echo "Адреси відправника:"
+echo "$ADDR_RESPONSE" | python3 -c "
 import json,sys
 d=json.load(sys.stdin)
 if d.get('success') and d.get('data'):
-    for i,w in enumerate(d['data'][:10]):
-        print(f\"  [{i}] {w['Description']}  (Ref: {w['Ref']})\")
+    for i,a in enumerate(d['data'][:10]):
+        desc = a.get('Description','')
+        ref = a.get('Ref','')
+        city_desc = a.get('CityDescription','')
+        print(f'  [{i}] {city_desc}, {desc}  (Ref: {ref})')
 else:
     print('Помилка:', d.get('errors', 'невідома'))
 "
 
-echo ""
-read -p "Введи Ref вибраного відділення: " WAREHOUSE_REF
+if [ -z "$CITY_REF" ]; then
+  # Берём город из первого адреса
+  CITY_REF=$(echo "$ADDR_RESPONSE" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+if d.get('success') and d.get('data') and len(d['data'])>0:
+    city = d['data'][0].get('CityRef','')
+    if city:
+        print(city)
+")
+fi
 
 echo ""
-echo "=== Отримання контактних осіб ==="
+read -p "Введи Ref адреси відправника: " WAREHOUSE_REF
 
+# Контакты
 CONTACTS_RESPONSE=$(curl -s -X POST "$API_URL" \
   -H "Content-Type: application/json" \
   -d "{
@@ -146,7 +142,7 @@ CONTACTS_RESPONSE=$(curl -s -X POST "$API_URL" \
 
 echo ""
 echo "Контактні особи:"
-echo "$CONTACTS_RESPONSE" | python3 -c "
+PHONE=$(echo "$CONTACTS_RESPONSE" | python3 -c "
 import json,sys
 d=json.load(sys.stdin)
 if d.get('success') and d.get('data'):
@@ -154,17 +150,36 @@ if d.get('success') and d.get('data'):
         name = p.get('Description','')
         phones = p.get('Phones','')
         ref = p.get('Ref','')
-        print(f\"  [{i}] {name}  тел: {phones}  Ref: {ref}\")
-else:
-    print('Помилка:', d.get('errors', 'невідома'))
-"
+        print(f'  [{i}] {name}  тел: {phones}  Ref: {ref}')
+    # автоподбор первого телефона
+    if len(d['data'])>0:
+        phones = d['data'][0].get('Phones','')
+        if phones:
+            print('__PHONE__:' + phones.replace(' ','').replace('-','').replace('(','').replace(')','').replace('+',''))
+")
+
+# Автоподбор телефона
+AUTO_PHONE=$(echo "$PHONE" | grep '__PHONE__:' | head -1 | cut -d: -f2)
+echo "$PHONE" | grep -v '__PHONE__:' || true
 
 echo ""
-read -p "Введи Ref контактної особи (або Enter якщо не потрібно): " CONTACT_REF
+read -p "Введи Ref контактної особи (Enter — перша): " CONTACT_REF
 
-echo ""
-echo "=== Телефон відправника ==="
-read -p "Телефон (напр. 380501234567): " SENDER_PHONE
+if [ -z "$CONTACT_REF" ]; then
+  CONTACT_REF=$(echo "$CONTACTS_RESPONSE" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+if d.get('success') and d.get('data') and len(d['data'])>0:
+    print(d['data'][0].get('Ref',''))
+")
+fi
+
+if [ -n "$AUTO_PHONE" ]; then
+  read -p "Телефон [$AUTO_PHONE]: " SENDER_PHONE
+  SENDER_PHONE=${SENDER_PHONE:-$AUTO_PHONE}
+else
+  read -p "Телефон (напр. 380501234567): " SENDER_PHONE
+fi
 
 echo ""
 echo "===================================="
