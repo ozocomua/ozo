@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const post = await getPostBySlug(slug)
   if (!post) return {}
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://brosco.com.ua"
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3002"
   return {
     title: post.metaTitle || post.title,
     description: post.metaDescription || post.excerpt || undefined,

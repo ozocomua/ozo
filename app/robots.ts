@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin", "/api/", "/checkout/success"],
       },
     ],
-    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL || "https://brosco.com.ua"}/sitemap.xml`,
+    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3002"}/sitemap.xml`,
   }
 }
