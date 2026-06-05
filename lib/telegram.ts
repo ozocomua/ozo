@@ -211,11 +211,20 @@ export async function sendOrderNotification(order: {
   const ttnUrl = `${siteUrl}${adminGatePath}/orders/${order.id}/create-ttn`
   console.log("[telegram] ttnUrl:", ttnUrl)
 
-  const body = {
+  const isLocalUrl = siteUrl.includes("localhost") || siteUrl.includes("127.0.0.1") || siteUrl.startsWith("http://10.") || siteUrl.startsWith("http://192.168.")
+
+  const body: Record<string, unknown> = {
     chat_id: adminChatId,
     parse_mode: "HTML",
     text,
-    reply_markup: {
+  }
+
+  if (isLocalUrl) {
+    // Telegram не принимает localhost в inline-кнопках — добавляем ссылку текстом
+    body.text = text + `\n\n🔗 <a href="${ttnUrl}">Создать ТТН в Новой Почте</a>`
+    console.log("[telegram] local URL detected, link added as text instead of button")
+  } else {
+    body.reply_markup = {
       inline_keyboard: [
         [
           {
@@ -224,7 +233,7 @@ export async function sendOrderNotification(order: {
           },
         ],
       ],
-    },
+    }
   }
 
   console.log("[telegram] sending to:", `https://api.telegram.org/bot***/sendMessage`)
