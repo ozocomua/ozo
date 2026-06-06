@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     other: [{ rel: "icon", url: "/favicon.ico" }],
   },
   alternates: {
-    canonical: process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3002",
+    canonical: process.env.NEXT_PUBLIC_SITE_URL?.trim() || "",
   },
 }
 

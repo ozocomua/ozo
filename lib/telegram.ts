@@ -206,7 +206,7 @@ export async function sendOrderNotification(order: {
     commentText,
   ].filter(Boolean).join("\n")
 
-  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3002").replace(/\/+$/, "")
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || "").replace(/\/+$/, "")
   const adminGatePath = process.env.ADMIN_GATE_PATH?.trim() || "/admin"
   const ttnUrl = `${siteUrl}${adminGatePath}/orders/${order.id}/create-ttn`
   console.log("[telegram] ttnUrl:", ttnUrl)

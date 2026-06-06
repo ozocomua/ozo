@@ -16,7 +16,7 @@ export default function JsonLd({ data }: { data: object }) {
   return null
 }
 
-const STORE_BASE = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3002"
+const STORE_BASE = process.env.NEXT_PUBLIC_SITE_URL?.trim() || ""
 
 const STORE_SCHEMA = {
   "@context": "https://schema.org",

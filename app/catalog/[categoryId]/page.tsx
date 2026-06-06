@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { categoryId } = await params
   const category = await getCategoryBySlug(categoryId)
   if (!category) return {}
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3002"
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || ""
   return {
     title: category.metaTitle || category.name,
     description: category.metaDescription || category.description,

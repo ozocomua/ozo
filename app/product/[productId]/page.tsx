@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { productId } = await params
   const product = await getProductBySlug(productId)
   if (!product) return {}
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3002"
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || ""
 
   const metaTitle = cleanMetaTitle(product.metaTitle, product.name)
   const metaDescription = cleanMetaDescription(product.metaDescription, product.description, product.name)
@@ -139,7 +139,7 @@ export default async function ProductPage({ params }: Props) {
     },
   }
 
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3002"
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || ""
 
   const breadcrumbPositions: { "@type": string; position: number; name: string; item: string }[] = [
     { "@type": "ListItem", position: 1, name: "Головна", item: SITE_URL + "/" },
