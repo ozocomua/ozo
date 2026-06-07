@@ -51,10 +51,10 @@ export default function DeliveryBanner() {
           <div className="flex items-center justify-center whitespace-nowrap text-[3.1vw] md:text-sm text-background tracking-normal md:tracking-[0.15em] gap-[1.5vw] md:gap-4 px-3">
 
             <a
-              href="tel:+380778687777"
+              href="tel:0778687777"
               className="font-medium hover:text-background/80 transition-colors inline-block"
             >
-              +38 (068) 946 47-43
+              077 868 7777
             </a>
 
             <span className="text-background/20">|</span>

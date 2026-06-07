@@ -139,14 +139,14 @@ export default function ReturnsPage() {
           <ul className="space-y-2 text-sm">
             <li>
               <strong>Телефон:</strong>{" "}
-              <a href="tel:+380778687777" className="hover:underline">
-                +38 (068) 946-47-43
+              <a href="tel:0778687777" className="hover:underline">
+                077 868 7777
               </a>
             </li>
             <li>
               <strong>Viber:</strong>{" "}
               <a href="viber://chat?number=%2B380778687777" className="hover:underline">
-                +38 (068) 946-47-43
+                077 868 7777
               </a>
             </li>
           </ul>
