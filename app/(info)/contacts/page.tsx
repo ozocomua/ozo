@@ -15,14 +15,14 @@ export default function ContactsPage() {
           <h2 className="text-xs uppercase font-black tracking-widest opacity-40">Телефон та Viber</h2>
           <div className="flex flex-wrap gap-4">
             <a 
-              href="tel:+380689464743" 
+              href="tel:+380778687777" 
               className="flex items-center gap-3 px-6 py-4 bg-foreground text-background rounded-2xl hover:bg-foreground/90 transition-all w-full sm:w-auto"
             >
               <Phone size={18} />
               <span className="font-bold">+38 (068) 946-47-43</span>
             </a>
             <a 
-              href="viber://chat?number=%2B380689464743" 
+              href="viber://chat?number=%2B380778687777" 
               className="flex items-center gap-3 px-6 py-4 bg-[#7360f2]/10 text-[#7360f2] rounded-2xl hover:bg-[#7360f2] hover:text-white transition-all w-full sm:w-auto"
             >
               <MessageSquare size={18} />

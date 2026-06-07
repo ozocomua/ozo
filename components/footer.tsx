@@ -33,18 +33,18 @@ export default function Footer() {
               Контакти
             </p>
             <div className="space-y-3">
-              <a href="tel:+380689464743" className="block text-sm font-bold hover:opacity-60 transition-opacity">
+              <a href="tel:+380778687777" className="block text-sm font-bold hover:opacity-60 transition-opacity">
                 +38 (068) 946-47-43
               </a>
               <div className="flex flex-col gap-2">
                 <a 
-                  href="viber://chat?number=%2B380689464743" 
+                  href="viber://chat?number=%2B380778687777" 
                   className="inline-flex items-center gap-2 px-4 py-2 bg-[#7360f2]/10 text-[#7360f2] rounded-xl text-[11px] font-bold uppercase tracking-tight hover:bg-[#7360f2] hover:text-white transition-all w-fit"
                 >
                   <MessageSquare size={14} /> Viber
                 </a>
                 <a 
-                  href="tel:+380689464743" 
+                  href="tel:+380778687777" 
                   className="inline-flex items-center gap-2 px-4 py-2 bg-black/5 text-black rounded-xl text-[11px] font-bold uppercase tracking-tight hover:bg-black hover:text-white transition-all w-fit"
                 >
                   <Phone size={14} /> Зателефонувати

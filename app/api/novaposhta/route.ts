@@ -217,7 +217,7 @@ export async function POST(req: Request) {
       ContactSender: "eba8f2f7-09a4-11eb-8513-b88303659df5", // Ваш Contact Sender Ref
       CitySender: "06f87958-4079-11de-b509-001d92f78698", // Врадіївка
       SenderAddress: "336de192-e1c2-11e3-8c4a-0050568002cf", // Відділення №1
-      SendersPhone: "380689464743",
+      SendersPhone: "380778687777",
       
       // Дані отримувача
       Recipient: recipientRef, // Ref контрагента-отримувача (завжди "Приватна особа")

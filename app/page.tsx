@@ -185,7 +185,7 @@ export default async function HomePage() {
               Зв&apos;яжіться з нами у Viber — відповідаємо швидко
             </p>
             <a
-              href="viber://chat?number=%2B380689464743"
+              href="viber://chat?number=%2B380778687777"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center bg-foreground text-background text-sm font-medium px-6 py-3 rounded-xl hover:bg-foreground/90 transition-colors"
