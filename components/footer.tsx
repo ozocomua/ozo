@@ -33,8 +33,8 @@ export default function Footer() {
               Контакти
             </p>
             <div className="space-y-3">
-              <a href="tel:0778687777" className="block text-sm font-bold hover:opacity-60 transition-opacity">
-                077 868 7777
+              <a href="tel:+380778687777" className="block text-sm font-bold hover:opacity-60 transition-opacity">
+                +38 (077) 868 77-77
               </a>
               <div className="flex flex-col gap-2">
                 <a 
@@ -44,7 +44,7 @@ export default function Footer() {
                   <MessageSquare size={14} /> Viber
                 </a>
                 <a 
-                  href="tel:0778687777" 
+                  href="tel:+380778687777" 
                   className="inline-flex items-center gap-2 px-4 py-2 bg-black/5 text-black rounded-xl text-[11px] font-bold uppercase tracking-tight hover:bg-black hover:text-white transition-all w-fit"
                 >
                   <Phone size={14} /> Зателефонувати
