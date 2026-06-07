@@ -50,7 +50,7 @@ export async function createCategory(data: {
 }) {
   if (!data.name?.trim()) return { success: false, error: "Название обязательно" }
   const slug = data.slug?.trim() || slugify(data.name)
-  const metaTitle = data.metaTitle?.trim() || `${data.name.trim()} | Brosco`
+  const metaTitle = data.metaTitle?.trim() || `${data.name.trim()} | OZO`
   const metaDescription = data.metaDescription?.trim() || (data.description || "").slice(0, 150)
   const seoAlt = data.seoAlt?.trim() || data.name.trim()
   try {
@@ -89,7 +89,7 @@ export async function updateCategory(
 ) {
   if (!data.name?.trim()) return { success: false, error: "Название обязательно" }
   const slug = data.slug?.trim() || slugify(data.name)
-  const metaTitle = data.metaTitle?.trim() || `${data.name.trim()} | Brosco`
+  const metaTitle = data.metaTitle?.trim() || `${data.name.trim()} | OZO`
   const metaDescription = data.metaDescription?.trim() || (data.description || "").slice(0, 150)
   const seoAlt = data.seoAlt?.trim() || data.name.trim()
   try {
@@ -171,7 +171,7 @@ export async function createProduct(data: {
 
     const isPublished = data.status === "PUBLISHED";
     const slug = data.slug?.trim() || slugify(data.name)
-    const metaTitle = data.metaTitle?.trim() || `${data.name.trim()} | Brosco`
+    const metaTitle = data.metaTitle?.trim() || `${data.name.trim()} | OZO`
     const metaDescription = data.metaDescription?.trim() || (data.description || "").slice(0, 150)
     const seoAlt = data.seoAlt?.trim() || data.name.trim()
 

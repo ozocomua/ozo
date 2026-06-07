@@ -51,7 +51,7 @@ export function StoreReviewModal({ open, onOpenChange }: StoreReviewModalProps) 
       <div className="relative bg-background rounded-xl border border-border shadow-xl w-full max-w-md mx-4 p-6 space-y-5">
         <div>
           <h3 className="text-lg font-semibold">Написати відгук</h3>
-          <p className="text-sm text-muted-foreground mt-1">Поділіться враженнями про магазин Brosco</p>
+          <p className="text-sm text-muted-foreground mt-1">Поділіться враженнями про магазин OZO</p>
         </div>
 
         <div>

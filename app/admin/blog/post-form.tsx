@@ -221,7 +221,7 @@ export function PostForm({ post, products }: PostFormProps) {
                 <Input
                   value={metaTitle}
                   onChange={(e) => setMetaTitle(e.target.value)}
-                  placeholder="[Назва] | Brosco"
+                  placeholder="[Назва] | OZO"
                 />
               </div>
               <div>

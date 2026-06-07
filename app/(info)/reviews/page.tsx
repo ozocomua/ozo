@@ -3,8 +3,8 @@ import type { Metadata } from "next"
 import { StoreReviewsClient } from "./store-reviews-client"
 
 export const metadata: Metadata = {
-  title: "Відгуки | Brosco Design",
-  description: "Відгуки клієнтів про автохімію Brosco",
+  title: "Відгуки | OZO",
+  description: "Відгуки клієнтів про автохімію OZO",
 }
 
 function StarSvg({ filled }: { filled: boolean }) {

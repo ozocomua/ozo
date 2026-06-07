@@ -9,7 +9,7 @@ import type { Metadata } from "next"
 export const revalidate = 0
 
 export const metadata: Metadata = {
-  title: "Каталог — Brosco Design",
+  title: "Каталог — OZO",
   description: "Каталог преміальної автохімії",
 }
 

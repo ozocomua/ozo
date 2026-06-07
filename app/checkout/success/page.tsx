@@ -115,7 +115,7 @@ function SuccessContent() {
       </div>
 
       <div className="text-center mt-8 opacity-20">
-        <p className="text-[9px] font-bold uppercase tracking-[0.4em]">Brosco Design</p>
+        <p className="text-[9px] font-bold uppercase tracking-[0.4em]">OZO</p>
       </div>
     </div>
   )
@@ -123,7 +123,7 @@ function SuccessContent() {
 
 export default function SuccessPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#F9F9F7] font-serif italic opacity-20 animate-pulse uppercase tracking-[0.3em]">Brosco Design...</div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#F9F9F7] font-serif italic opacity-20 animate-pulse uppercase tracking-[0.3em]">OZO...</div>}>
       <SuccessContent />
     </Suspense>
   )

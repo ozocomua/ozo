@@ -7,7 +7,7 @@ import { AdminNav } from "./admin-nav"
 import { AdminLogoutButton } from "./logout-button"
 
 export const metadata: Metadata = {
-  title: "Адмін — Brosco Design",
+  title: "Адмін — OZO",
   robots: { index: false, follow: false },
 }
 

@@ -21,7 +21,7 @@ const STORE_BASE = process.env.NEXT_PUBLIC_SITE_URL?.trim() || ""
 const STORE_SCHEMA = {
   "@context": "https://schema.org",
   "@type": "OnlineStore",
-  name: "Brosco Design",
+  name: "OZO",
   url: STORE_BASE,
   logo: `${STORE_BASE}/logo.png`,
   description:

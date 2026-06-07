@@ -11,7 +11,7 @@ export async function createPaymentLink(amount: number, orderId: string) {
       receiver_code: process.env.MYIBAN_CODE,
       amount: amount,
       purpose: `Поповнення рахунку`,
-      display: `Brosco: Замовлення #${orderId}`
+      display: `OZO: Замовлення #${orderId}`
     }),
   });
 

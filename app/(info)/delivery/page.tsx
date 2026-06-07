@@ -3,7 +3,7 @@ export default function DeliveryPage() {
     <div className="max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-700">
       <header className="mb-12 space-y-2">
         <h1 className="text-4xl md:text-5xl font-serif italic">Доставка та оплата</h1>
-        <p className="text-[10px] uppercase font-bold opacity-30 tracking-[0.3em]">Brosco Design / Логістика</p>
+        <p className="text-[10px] uppercase font-bold opacity-30 tracking-[0.3em]">OZO / Логістика</p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 opacity-80">

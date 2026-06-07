@@ -2,9 +2,9 @@ import type { Metadata } from "next"
 import { Shield, RefreshCw, CreditCard, Truck, Phone } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Обмін та повернення товару | Brosco Design",
+  title: "Обмін та повернення товару | OZO",
   description:
-    "Інформація про умови обміну та повернення товарів, автохімії та автокосметики в інтернет-магазині Brosco Design.",
+    "Інформація про умови обміну та повернення товарів, автохімії та автокосметики в інтернет-магазині OZO.",
 }
 
 export default function ReturnsPage() {
@@ -12,14 +12,14 @@ export default function ReturnsPage() {
     <div className="max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-700">
       <header className="mb-12 space-y-2">
         <h1 className="text-4xl md:text-5xl font-serif italic">Обмін та повернення товару</h1>
-        <p className="text-[10px] uppercase font-bold opacity-30 tracking-[0.3em]">Brosco Design / Політика сервісу</p>
+        <p className="text-[10px] uppercase font-bold opacity-30 tracking-[0.3em]">OZO / Політика сервісу</p>
       </header>
 
       <div className="space-y-12 text-sm md:text-base leading-relaxed opacity-80">
         <section className="space-y-4">
           <p>
             Ми прагнемо, щоб ви були впевнені у якості преміальної автохімії, яку обираєте в інтернет-магазині{" "}
-            <span className="text-foreground font-bold">Brosco</span>. Оскільки ми спеціалізуємося на відвантаженні
+            <span className="text-foreground font-bold">OZO</span>. Оскільки ми спеціалізуємося на відвантаженні
             товарів у спеціальну тару певного об&apos;єму (на розлив), умови повернення та обміну мають свою
             специфіку, що базується на Законі України «Про захист прав споживачів».
           </p>
@@ -97,7 +97,7 @@ export default function ReturnsPage() {
               <p className="text-sm">
                 Якщо ви виявили помилку з нашого боку (не той товар, не той об&apos;єм) або пошкодження тари під час
                 транспортування з нашої вини — всі витрати на доставку в обидва боки оплачує магазин{" "}
-                <span className="font-bold">Brosco</span>.
+                <span className="font-bold">OZO</span>.
               </p>
             </div>
           </div>

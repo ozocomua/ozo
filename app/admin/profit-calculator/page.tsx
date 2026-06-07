@@ -197,7 +197,7 @@ export default function ProfitCalculatorPage() {
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-black text-slate-800 tracking-tight">
-            Brosco Profit <span className="text-blue-600">6.2</span>
+            OZO Profit <span className="text-blue-600">6.2</span>
           </h1>
           <div className="flex items-center gap-2">
             <span className={`w-2 h-2 ${saveDot} rounded-full`} />

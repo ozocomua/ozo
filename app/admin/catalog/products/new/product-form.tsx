@@ -382,7 +382,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
               <FormField control={form.control} name="metaTitle" render={({ field }) => (
                 <FormItem>
                   <FormLabel>Meta Title</FormLabel>
-                  <FormControl><Input placeholder="Автоматически: [Название] | Brosco" {...field} /></FormControl>
+                  <FormControl><Input placeholder="Автоматически: [Название] | OZO" {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )} />

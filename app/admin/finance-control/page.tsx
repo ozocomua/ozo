@@ -261,7 +261,7 @@ export default function FinanceControlPage() {
     const ws = XLSX.utils.json_to_sheet(data)
     const wb = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(wb, ws, "Finance")
-    XLSX.writeFile(wb, "Brosco_Finance.xlsx")
+    XLSX.writeFile(wb, "OZO_Finance.xlsx")
   }
 
   const updateStock = async (productId: number, newVol: number) => {
@@ -348,7 +348,7 @@ export default function FinanceControlPage() {
     <div className="max-w-6xl mx-auto">
       <header className="flex justify-between items-end mb-10">
         <div>
-          <h1 className="text-4xl font-black italic uppercase tracking-tighter text-blue-500">Brosco Control</h1>
+          <h1 className="text-4xl font-black italic uppercase tracking-tighter text-blue-500">OZO Control</h1>
           <div className="flex items-center gap-2 mt-1">
             <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Курс $:</p>
             <input

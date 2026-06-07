@@ -18,7 +18,7 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  title: "Brosco Design — Розлив преміальної хімії для автомобілів",
+  title: "OZO — Розлив преміальної хімії для автомобілів",
   description: "Преміальна автохімія на розлив. Засоби для догляду за склом, кузовом та інтер'єром авто. Вигідні ціни та швидка доставка Новою Поштою по Україні 1-3 дні.",
   generator: "v0.app",
   manifest: "/site.webmanifest",

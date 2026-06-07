@@ -85,10 +85,10 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
             onClick={() => setMenuOpen(false)}
           >
             <span className="font-serif text-lg font-bold tracking-tight text-foreground">
-              BROSCO
+              OZO
             </span>
             <span className="text-[10px] font-sans tracking-[0.2em] text-muted-foreground uppercase">
-              Design
+              Store
             </span>
           </Link>
 

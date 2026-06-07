@@ -6,7 +6,7 @@ export default function ContactsPage() {
     <div className="max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-700">
       <header className="mb-12 space-y-2">
         <h1 className="text-4xl md:text-5xl font-serif italic text-foreground">Контакти</h1>
-        <p className="text-[10px] uppercase font-bold opacity-30 tracking-[0.3em]">Brosco Design / Зв'язок з нами</p>
+        <p className="text-[10px] uppercase font-bold opacity-30 tracking-[0.3em]">OZO / Зв'язок з нами</p>
       </header>
 
       <div className="space-y-12">

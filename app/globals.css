@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Brosco Design — clean premium automotive palette */
+  /* OZO — clean premium automotive palette */
   --background: oklch(0.985 0.002 60);        /* warm off-white */
   --foreground: oklch(0.13 0 0);              /* near-black */
   --card: oklch(1 0 0);                        /* pure white cards */
