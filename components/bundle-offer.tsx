@@ -94,7 +94,7 @@ export default function BundleOffer({ current, partner, bundleProduct }: BundleO
             <div className="mt-auto pt-3">
               <button
                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleBuyBundle() }}
-                className="w-full bg-primary text-primary-foreground text-xs font-semibold py-2 rounded-md hover:bg-primary-hover active:scale-95 transition-all"
+                className="w-full bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white text-xs font-semibold py-2 rounded-md hover:from-[#0c5db8] hover:to-[#00c5e3] active:scale-95 transition-all"
               >
                 Додати до кошика
               </button>
@@ -151,7 +151,7 @@ export default function BundleOffer({ current, partner, bundleProduct }: BundleO
             )}
             <button
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleBuyBundle() }}
-              className="mt-1 bg-primary text-primary-foreground text-xs font-semibold py-1.5 px-3 rounded-md hover:bg-primary-hover active:scale-95 transition-all self-start"
+              className="mt-1 bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white text-xs font-semibold py-1.5 px-3 rounded-md hover:from-[#0c5db8] hover:to-[#00c5e3] active:scale-95 transition-all self-start"
             >
               Додати до кошика
             </button>

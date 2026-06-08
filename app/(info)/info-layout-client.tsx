@@ -50,7 +50,7 @@ export function InfoLayoutClient({
                   href={item.href}
                   className={`block text-[11px] uppercase tracking-[0.2em] font-bold transition-all font-sans ${
                     pathname === item.href
-                      ? "text-primary border-l-2 border-primary pl-5 opacity-100"
+                      ? "text-[#00B5D1] border-l-2 border-[#00B5D1] pl-5 opacity-100"
                       : "text-foreground opacity-30 hover:opacity-100 pl-0"
                   }`}
                 >

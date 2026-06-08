@@ -142,7 +142,7 @@ export default function CatalogProducts({ initialProducts, total, pageSize = 24,
           <button
             onClick={loadMore}
             disabled={loading}
-            className="border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all px-8 py-3 text-sm uppercase tracking-wider font-medium"
+            className="border border-[#00B5D1] text-[#00B5D1] hover:bg-gradient-to-r hover:from-[#0B53A4] hover:to-[#00B5D1] hover:text-white hover:border-transparent transition-all px-8 py-3 text-sm uppercase tracking-wider font-medium"
           >
             {loading ? "Завантаження..." : "Показати ще"}
           </button>

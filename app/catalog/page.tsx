@@ -74,7 +74,7 @@ export default async function CatalogIndexPage({ searchParams }: { searchParams:
                   href={`/catalog?brand=${b.slug}`}
                   className={`px-3 py-1.5 border rounded-full text-xs transition-colors ${
                     brand === b.slug
-                      ? "bg-primary text-primary-foreground border-primary"
+                      ? "bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white border-transparent"
                       : "bg-card border-border text-muted-foreground hover:text-foreground hover:border-foreground/30"
                   }`}
                 >

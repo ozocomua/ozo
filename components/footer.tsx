@@ -36,7 +36,7 @@ export default function Footer() {
               <div className="flex flex-col gap-2">
                 <a 
                   href="tel:+380778687777" 
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-black/5 text-black rounded-xl text-[11px] font-bold uppercase tracking-tight hover:bg-black hover:text-white transition-all w-fit"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white rounded-xl text-[11px] font-bold uppercase tracking-tight hover:from-[#0c5db8] hover:to-[#00c5e3] transition-all w-fit"
                 >
                   <Phone size={14} /> Зателефонувати
                 </a>

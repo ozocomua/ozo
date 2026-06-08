@@ -4,67 +4,67 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* OZO — sky blue minimal palette */
+  /* OZO — blue-to-turquoise branding */
   --background: #ffffff;
   --foreground: #1a1a1a;
   --card: #ffffff;
   --card-foreground: #1a1a1a;
   --popover: #ffffff;
   --popover-foreground: #1a1a1a;
-  --primary: #87CEFA;                       /* Sky Blue accent */
-  --primary-foreground: #1a1a1a;            /* dark text on sky blue */
-  --primary-hover: #6bb5d4;                 /* darker for hover states */
-  --secondary: #f4f8fb;                     /* sky-tinted light gray */
+  --primary: #0B53A4;
+  --primary-foreground: #ffffff;
+  --primary-hover: #00B5D1;
+  --secondary: #eef5fb;
   --secondary-foreground: #1a1a1a;
-  --muted: #eef3f7;
-  --muted-foreground: #5c6b7a;
-  --accent: #87CEFA;
-  --accent-foreground: #1a1a1a;
+  --muted: #e8f0f8;
+  --muted-foreground: #4a6a8a;
+  --accent: #00B5D1;
+  --accent-foreground: #ffffff;
   --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-  --border: #e5eaef;
-  --input: #e5eaef;
-  --ring: #87CEFA;
+  --border: #dce5f0;
+  --input: #dce5f0;
+  --ring: #00B5D1;
   --radius: 0.5rem;
   --sidebar: #ffffff;
   --sidebar-foreground: #1a1a1a;
-  --sidebar-primary: #87CEFA;
-  --sidebar-primary-foreground: #1a1a1a;
-  --sidebar-accent: rgba(135, 206, 250, 0.12);
+  --sidebar-primary: #0B53A4;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(11, 83, 164, 0.08);
   --sidebar-accent-foreground: #1a1a1a;
-  --sidebar-border: #e5eaef;
-  --sidebar-ring: #87CEFA;
+  --sidebar-border: #dce5f0;
+  --sidebar-ring: #00B5D1;
 }
 
 .dark {
-  --background: #0f172a;
+  --background: #0a1525;
   --foreground: #e2e8f0;
-  --card: #1e293b;
+  --card: #0f1d33;
   --card-foreground: #e2e8f0;
-  --popover: #1e293b;
+  --popover: #0f1d33;
   --popover-foreground: #e2e8f0;
-  --primary: #87CEFA;
-  --primary-foreground: #1a1a1a;
-  --primary-hover: #6bb5d4;
-  --secondary: #1e293b;
+  --primary: #0B53A4;
+  --primary-foreground: #ffffff;
+  --primary-hover: #00B5D1;
+  --secondary: #132a45;
   --secondary-foreground: #e2e8f0;
-  --muted: #334155;
-  --muted-foreground: #94a3b8;
-  --accent: rgba(135, 206, 250, 0.2);
-  --accent-foreground: #87CEFA;
+  --muted: #1a3555;
+  --muted-foreground: #7ea4c0;
+  --accent: rgba(0, 181, 209, 0.2);
+  --accent-foreground: #00B5D1;
   --destructive: #b91c1c;
   --destructive-foreground: #fee2e2;
-  --border: #334155;
-  --input: #334155;
-  --ring: #87CEFA;
-  --sidebar: #1e293b;
+  --border: #1e3a5f;
+  --input: #1e3a5f;
+  --ring: #00B5D1;
+  --sidebar: #0f1d33;
   --sidebar-foreground: #e2e8f0;
-  --sidebar-primary: #87CEFA;
-  --sidebar-primary-foreground: #1a1a1a;
-  --sidebar-accent: rgba(135, 206, 250, 0.15);
+  --sidebar-primary: #0B53A4;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(0, 181, 209, 0.15);
   --sidebar-accent-foreground: #e2e8f0;
-  --sidebar-border: #334155;
-  --sidebar-ring: #87CEFA;
+  --sidebar-border: #1e3a5f;
+  --sidebar-ring: #00B5D1;
 }
 
 @theme inline {
@@ -91,11 +91,11 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: #87CEFA;
-  --color-chart-2: #6bb5d4;
-  --color-chart-3: #4a9fc0;
-  --color-chart-4: #38bdf8;
-  --color-chart-5: #7dd3fc;
+  --color-chart-1: #0B53A4;
+  --color-chart-2: #00B5D1;
+  --color-chart-3: #0077b6;
+  --color-chart-4: #00a8cc;
+  --color-chart-5: #0d6cb8;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -117,6 +117,11 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Gradients shared utility */
+.ozo-gradient {
+  background: linear-gradient(90deg, #0B53A4 0%, #00B5D1 100%);
 }
 
 /* Rich text editor — Quill snow overrides */

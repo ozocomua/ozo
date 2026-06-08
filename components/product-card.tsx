@@ -95,7 +95,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           ) : (
             <button 
               onClick={handleBuyClick}
-              className="text-xs bg-primary text-primary-foreground font-semibold px-4 py-2 rounded-md hover:bg-primary-hover active:scale-95 transition-all"
+              className="text-xs bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white font-semibold px-4 py-2 rounded-md hover:from-[#0c5db8] hover:to-[#00c5e3] active:scale-95 transition-all"
             >
               Купити
             </button>

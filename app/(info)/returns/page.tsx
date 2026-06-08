@@ -92,7 +92,7 @@ export default function ReturnsPage() {
                 <span className="text-foreground font-bold">покупець</span>.
               </p>
             </div>
-            <div className="p-5 bg-primary text-primary-foreground rounded-2xl">
+            <div className="p-5 bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white rounded-2xl">
               <p className="text-xs font-bold uppercase tracking-tight opacity-60 mb-1">Брак або помилка магазину</p>
               <p className="text-sm">
                 Якщо ви виявили виробничий брак, пошкодження при транспортуванні або помилку з нашого боку (надіслали

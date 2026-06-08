@@ -20,34 +20,34 @@ export default function DeliveryBanner() {
   ]
 
   return (
-    <section className="bg-primary text-primary-foreground">
+    <section className="bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white">
       <div className="max-w-5xl mx-auto px-4 py-2.5 md:py-3.5">
 
         <div className="grid grid-cols-2 gap-4 md:hidden">
           {features.slice(0, 2).map((f) => (
             <div key={f.title} className="flex items-center gap-2.5">
-              <f.icon size={18} className="shrink-0 opacity-70" />
+              <f.icon size={18} className="shrink-0 opacity-80" />
               <div>
                 <p className="text-xs font-semibold">{f.title}</p>
-                <p className="text-[11px] opacity-50 leading-tight">{f.desc}</p>
+                <p className="text-[11px] opacity-60 leading-tight">{f.desc}</p>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="hidden md:grid md:grid-cols-3 md:divide-x md:divide-primary-foreground/20">
+        <div className="hidden md:grid md:grid-cols-3 md:divide-x md:divide-white/20">
           {features.map((f) => (
             <div key={f.title} className="flex flex-col items-start md:items-center text-left md:text-center flex-1 px-6 first:pl-0 last:pr-0">
               <div className="flex items-center md:justify-center gap-2 mb-1">
-                <f.icon size={18} className="shrink-0 opacity-70" />
+                <f.icon size={18} className="shrink-0 opacity-80" />
                 <p className="text-sm font-medium">{f.title}</p>
               </div>
-              <p className="text-xs opacity-60">{f.desc}</p>
+              <p className="text-xs opacity-70">{f.desc}</p>
             </div>
           ))}
         </div>
 
-        <div className="w-full mt-4 md:mt-5 pt-3 border-t border-primary-foreground/10 text-center">
+        <div className="w-full mt-4 md:mt-5 pt-3 border-t border-white/15 text-center">
           <div className="flex items-center justify-center whitespace-nowrap text-[3.1vw] md:text-sm tracking-normal md:tracking-[0.15em] gap-[1.5vw] md:gap-4 px-3">
 
             <a
@@ -57,9 +57,9 @@ export default function DeliveryBanner() {
               +38 (077) 868 77-77
             </a>
 
-            <span className="opacity-20">|</span>
+            <span className="opacity-30">|</span>
 
-            <span className="opacity-60 font-light">
+            <span className="opacity-70 font-light">
               Графік роботи: Пн-Нд 09:00 - 21:00
             </span>
 
