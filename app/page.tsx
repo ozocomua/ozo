@@ -25,7 +25,7 @@ export default async function HomePage() {
 
       <main>
         <StoreSchema />
-        <section className="hidden md:block bg-[#87CEFA] text-[#1A1A1A] px-4 pt-1 pb-3 md:pt-3 md:pb-2">
+        <section className="hidden md:block bg-primary text-primary-foreground px-4 pt-1 pb-3 md:pt-3 md:pb-2">
           <div className="max-w-5xl mx-auto">
             <h1 className="font-serif text-xl md:text-3xl font-bold leading-tight text-balance">
               OZO — все для птахівництва
@@ -117,7 +117,7 @@ export default async function HomePage() {
                     <Link
                       key={b.id}
                       href={`/catalog?brand=${b.slug}`}
-                      className="snap-center shrink-0 px-5 py-2 text-sm border border-border rounded-full hover:bg-foreground hover:text-background transition-colors"
+                      className="snap-center shrink-0 px-5 py-2 text-sm border border-primary text-primary rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
                     >
                       {b.name}
                     </Link>
@@ -188,7 +188,7 @@ export default async function HomePage() {
               href="viber://chat?number=%2B380778687777"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center bg-foreground text-background text-sm font-medium px-6 py-3 rounded-xl hover:bg-foreground/90 transition-colors"
+              className="inline-flex items-center justify-center bg-primary text-primary-foreground text-sm font-medium px-6 py-3 rounded-xl hover:bg-primary-hover transition-colors"
             >
               Написати у Viber
             </a>

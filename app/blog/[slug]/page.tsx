@@ -93,7 +93,7 @@ export default async function BlogPostPage({ params }: Props) {
             <div className="mt-10 text-center">
               <a
                 href={post.ctaUrl}
-                className="inline-flex items-center justify-center bg-foreground text-background text-sm font-medium px-8 py-3 rounded-xl hover:bg-foreground/90 transition-colors"
+                className="inline-flex items-center justify-center bg-primary text-primary-foreground text-sm font-medium px-8 py-3 rounded-xl hover:bg-primary-hover transition-colors"
               >
                 {post.ctaText}
               </a>

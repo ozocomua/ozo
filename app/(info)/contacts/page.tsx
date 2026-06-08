@@ -16,7 +16,7 @@ export default function ContactsPage() {
           <div className="flex flex-wrap gap-4">
             <a 
               href="tel:+380778687777" 
-              className="flex items-center gap-3 px-6 py-4 bg-foreground text-background rounded-2xl hover:bg-foreground/90 transition-all w-full sm:w-auto"
+              className="flex items-center gap-3 px-6 py-4 bg-primary text-primary-foreground rounded-2xl hover:bg-primary-hover transition-all w-full sm:w-auto"
             >
               <Phone size={18} />
               <span className="font-bold">+38 (077) 868 77-77</span>

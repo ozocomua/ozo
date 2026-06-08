@@ -20,7 +20,7 @@ export default function DeliveryBanner() {
   ]
 
   return (
-    <section className="bg-[#87CEFA] text-[#1A1A1A]">
+    <section className="bg-primary text-primary-foreground">
       <div className="max-w-5xl mx-auto px-4 py-2.5 md:py-3.5">
 
         <div className="grid grid-cols-2 gap-4 md:hidden">
@@ -35,7 +35,7 @@ export default function DeliveryBanner() {
           ))}
         </div>
 
-        <div className="hidden md:grid md:grid-cols-3 md:divide-x md:divide-[#1A1A1A]/20">
+        <div className="hidden md:grid md:grid-cols-3 md:divide-x md:divide-primary-foreground/20">
           {features.map((f) => (
             <div key={f.title} className="flex flex-col items-start md:items-center text-left md:text-center flex-1 px-6 first:pl-0 last:pr-0">
               <div className="flex items-center md:justify-center gap-2 mb-1">
@@ -47,7 +47,7 @@ export default function DeliveryBanner() {
           ))}
         </div>
 
-        <div className="w-full mt-4 md:mt-5 pt-3 border-t border-[#1A1A1A]/10 text-center">
+        <div className="w-full mt-4 md:mt-5 pt-3 border-t border-primary-foreground/10 text-center">
           <div className="flex items-center justify-center whitespace-nowrap text-[3.1vw] md:text-sm tracking-normal md:tracking-[0.15em] gap-[1.5vw] md:gap-4 px-3">
 
             <a

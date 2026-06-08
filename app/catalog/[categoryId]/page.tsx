@@ -79,7 +79,7 @@ export default async function CatalogPage({ params, searchParams }: Props) {
             <div className="flex flex-nowrap md:flex-wrap overflow-x-auto gap-2 pb-1">
               <Link
                 href={`/catalog/${categoryId}`}
-                className="shrink-0 px-4 py-2 bg-foreground text-background border border-foreground rounded-full text-sm font-medium transition-colors"
+                className="shrink-0 px-4 py-2 bg-primary text-primary-foreground border border-primary rounded-full text-sm font-medium transition-colors"
               >
                 Всі товари
               </Link>
@@ -120,7 +120,7 @@ export default async function CatalogPage({ params, searchParams }: Props) {
                   <Link
                     key={b.id}
                     href={`/catalog?brand=${b.slug}`}
-                    className="snap-center shrink-0 px-5 py-2 text-sm border border-border rounded-full hover:bg-foreground hover:text-background transition-colors"
+                    className="snap-center shrink-0 px-5 py-2 text-sm border border-primary text-primary rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
                   >
                     {b.name}
                   </Link>

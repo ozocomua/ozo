@@ -30,7 +30,7 @@ export default function AddToCartButton({ product }: { product: any }) {
         productId: product.id,
         maxStock: product.stock,
       })}
-      className="flex items-center justify-center gap-2 bg-foreground text-background text-sm font-semibold py-4 rounded-xl hover:bg-foreground/90 active:scale-[0.98] transition-all duration-150 mb-3 w-full"
+      className="flex items-center justify-center gap-2 bg-primary text-primary-foreground text-sm font-semibold py-4 rounded-xl hover:bg-primary-hover active:scale-[0.98] transition-all duration-150 mb-3 w-full"
     >
       <ShoppingCart size={16} />
       Додати до кошика
