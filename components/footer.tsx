@@ -41,18 +41,18 @@ export default function Footer() {
                   <MessageSquare size={14} /> Viber
                 </a>
                 <a 
-                  href="tel:+380778687777" 
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-black/5 text-black rounded-xl text-[11px] font-bold uppercase tracking-tight hover:bg-black hover:text-white transition-all w-fit"
-                >
-                  <Phone size={14} /> Зателефонувати
-                </a>
-                <a 
                   href="https://t.me/ozo_owner" 
                   target="_blank"
                   rel="noopener noreferrer nofollow"
                   className="inline-flex items-center gap-2 px-4 py-2 bg-[#0088cc]/10 text-[#0088cc] rounded-xl text-[11px] font-bold uppercase tracking-tight hover:bg-[#0088cc] hover:text-white transition-all w-fit"
                 >
                   <Send size={14} /> Telegram
+                </a>
+                <a 
+                  href="tel:+380778687777" 
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-black/5 text-black rounded-xl text-[11px] font-bold uppercase tracking-tight hover:bg-black hover:text-white transition-all w-fit"
+                >
+                  <Phone size={14} /> Зателефонувати
                 </a>
               </div>
             </div>
