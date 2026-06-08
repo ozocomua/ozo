@@ -18,6 +18,14 @@ export default function DeliveryPage() {
               <li>— Адресна доставка</li>
             </ul>
           </div>
+          <div className="space-y-4">
+            <p className="font-bold text-foreground">Укрпошта</p>
+            <p className="text-sm">Доставка до будь-якого населеного пункту України за тарифами перевізника.</p>
+            <ul className="text-xs space-y-2 list-none font-bold opacity-60">
+              <li>— Відділення</li>
+              <li>— Експрес або Стандарт</li>
+            </ul>
+          </div>
         </section>
 
         <section className="space-y-4">
@@ -29,7 +37,7 @@ export default function DeliveryPage() {
             </div>
             <div>
               <p className="font-bold text-foreground mb-1 text-base">При отриманні</p>
-              <p>Оплата у відділенні Нової Пошти після огляду товару.</p>
+              <p>Оплата у відділенні перевізника після огляду товару.</p>
             </div>
           </div>
         </section>
