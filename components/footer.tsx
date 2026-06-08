@@ -18,9 +18,6 @@ export default function Footer() {
               <span className="font-serif text-xl font-bold tracking-tight text-foreground">
                 OZO
               </span>
-              <span className="text-[10px] font-sans tracking-[0.2em] text-muted-foreground uppercase">
-                Store
-              </span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Все для птахівництва та фермерських господарств

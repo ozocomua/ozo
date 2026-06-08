@@ -87,9 +87,6 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
             <span className="font-serif text-lg font-bold tracking-tight text-foreground">
               OZO
             </span>
-            <span className="text-[10px] font-sans tracking-[0.2em] text-muted-foreground uppercase">
-              Store
-            </span>
           </Link>
 
           {/* Desktop search */}
