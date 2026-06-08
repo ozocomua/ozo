@@ -78,13 +78,13 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
   return (
     <>
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border px-4">
-        <div className="max-w-5xl mx-auto h-14 flex items-center justify-between relative">
+        <div className="max-w-5xl mx-auto h-16 flex items-center justify-between relative">
           <Link
             href="/"
-            className="flex flex-col leading-none flex-shrink-0"
+            className="flex-shrink-0 leading-none"
             onClick={() => setMenuOpen(false)}
           >
-            <span className="font-serif text-lg font-bold tracking-tight text-foreground">
+            <span className="font-serif text-2xl md:text-3xl font-black tracking-wider text-foreground">
               OZO
             </span>
           </Link>
@@ -183,7 +183,7 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
       </header>
 
       {menuOpen && (
-        <div className="fixed inset-0 z-40 bg-background flex flex-col pt-14 animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-40 bg-background flex flex-col pt-16 animate-in fade-in duration-200">
           <nav className="flex flex-col px-4 pt-6 gap-1">
             <p className="text-xs tracking-widest text-muted-foreground uppercase mb-4 font-bold">
               Категорії
