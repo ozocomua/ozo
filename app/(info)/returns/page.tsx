@@ -4,7 +4,7 @@ import { Shield, RefreshCw, CreditCard, Truck, Phone } from "lucide-react"
 export const metadata: Metadata = {
   title: "Обмін та повернення товару | OZO",
   description:
-    "Інформація про умови обміну та повернення товарів, автохімії та автокосметики в інтернет-магазині OZO.",
+    "Інформація про умови обміну та повернення товарів для птахівництва в інтернет-магазині OZO.",
 }
 
 export default function ReturnsPage() {
@@ -18,9 +18,8 @@ export default function ReturnsPage() {
       <div className="space-y-12 text-sm md:text-base leading-relaxed opacity-80">
         <section className="space-y-4">
           <p>
-            Ми прагнемо, щоб ви були впевнені у якості преміальної автохімії, яку обираєте в інтернет-магазині{" "}
-            <span className="text-foreground font-bold">OZO</span>. Оскільки ми спеціалізуємося на відвантаженні
-            товарів у спеціальну тару певного об&apos;єму (на розлив), умови повернення та обміну мають свою
+            Ми прагнемо, щоб ви були впевнені у якості обладнання для птахівництва, яке обираєте в інтернет-магазині{" "}
+            <span className="text-foreground font-bold">OZO</span>. Умови повернення та обміну мають свою
             специфіку, що базується на Законі України «Про захист прав споживачів».
           </p>
         </section>

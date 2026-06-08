@@ -4,7 +4,7 @@ import { StoreReviewsClient } from "./store-reviews-client"
 
 export const metadata: Metadata = {
   title: "Відгуки | OZO",
-  description: "Відгуки клієнтів про автохімію OZO",
+  description: "Відгуки клієнтів про обладнання OZO",
 }
 
 function StarSvg({ filled }: { filled: boolean }) {

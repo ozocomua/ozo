@@ -28,9 +28,9 @@ export default async function HomePage() {
         <section className="hidden md:block bg-foreground text-background px-4 pt-1 pb-3 md:pt-3 md:pb-2">
           <div className="max-w-5xl mx-auto">
             <h1 className="font-serif text-xl md:text-3xl font-bold leading-tight text-balance">
-              Преміальна автохімія
+              OZO — все для птахівництва
               <br />
-              <span className="text-background/70">для вашого авто</span>
+              <span className="text-background/70">якісне обладнання</span>
             </h1>
           </div>
         </section>

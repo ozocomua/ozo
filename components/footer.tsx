@@ -23,7 +23,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Преміальна автохімія та засоби для детейлінгу
+              Все для птахівництва та фермерських господарств
             </p>
           </div>
 

@@ -10,7 +10,7 @@ export const revalidate = 0
 
 export const metadata: Metadata = {
   title: "Каталог — OZO",
-  description: "Каталог преміальної автохімії",
+  description: "Каталог обладнання для птахівництва",
 }
 
 export default async function CatalogIndexPage({ searchParams }: { searchParams: Promise<{ brand?: string }> }) {
