@@ -168,7 +168,7 @@ export async function sendOrderNotification(order: {
 
   if (!botToken || !adminChatId) {
     console.warn("[telegram] TELEGRAM_BOT_TOKEN or TELEGRAM_ADMIN_TOKEN is not set; skipping notification")
-    console.warn("[telegram] Check /home/brosco/.env — must contain TELEGRAM_BOT_TOKEN=... and TELEGRAM_ADMIN_TOKEN=...")
+    console.warn("[telegram] Check /home/ozo/.env — must contain TELEGRAM_BOT_TOKEN=... and TELEGRAM_ADMIN_TOKEN=...")
     return
   }
 

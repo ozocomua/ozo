@@ -39,7 +39,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
-    const savedCart = localStorage.getItem('brosco-cart')
+    const savedCart = localStorage.getItem('ozo-cart')
     if (savedCart) {
       const parsed = JSON.parse(savedCart)
       setCart(parsed)
@@ -102,7 +102,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [isModalOpen])
 
   useEffect(() => {
-    localStorage.setItem('brosco-cart', JSON.stringify(cart))
+    localStorage.setItem('ozo-cart', JSON.stringify(cart))
   }, [cart])
 
   const addToCart = (product: any) => {

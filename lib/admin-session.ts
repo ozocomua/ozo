@@ -3,7 +3,7 @@
  * Set `ADMIN_ACCESS_SECRET` in `.env` (server-only, never NEXT_PUBLIC_*).
  * Open admin: go to `/admin/gate`, enter the secret, then you are redirected to `/admin`.
  */
-const COOKIE_NAME = "brosco_admin"
+const COOKIE_NAME = "ozo_admin"
 const TOKEN_PREFIX = "v1"
 const te = new TextEncoder()
 

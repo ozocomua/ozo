@@ -19,7 +19,7 @@ function jsonLd(items: Crumb[]) {
     "@type": "ListItem",
     position: i + 1,
     name: item.label,
-    item: `https://brosco.design${item.href}`,
+    item: `${process.env.NEXT_PUBLIC_SITE_URL?.trim() || ""}${item.href}`,
   }))
 
   return {

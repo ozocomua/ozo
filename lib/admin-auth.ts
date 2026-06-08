@@ -1,7 +1,7 @@
 import crypto from "node:crypto" // Змінюємо імпорт для кращої сумісності
 
-export const ADMIN_SESSION_COOKIE = "brosco_admin_session"
-export const ADMIN_ENTRY_HEADER = "x-brosco-admin-entry"
+export const ADMIN_SESSION_COOKIE = "ozo_admin_session"
+export const ADMIN_ENTRY_HEADER = "x-ozo-admin-entry"
 
 export function normalizePathname(pathname: string): string {
   let p = pathname
@@ -27,7 +27,7 @@ export function adminSessionTokenValue(): string | null {
   if (!login || !password) return null
   return crypto
     .createHmac("sha256", `${login}:${password}`)
-    .update("brosco-admin-session-v2")
+    .update("ozo-admin-session-v2")
     .digest("hex")
 }
 
@@ -37,7 +37,7 @@ export function adminEntrySecretValue(): string | null {
   if (!login || !password) return null
   const gate = parseAdminGatePath()
   if (!gate) return null
-  return crypto.createHmac("sha256", password).update(`brosco-admin-entry|${gate}`).digest("hex")
+  return crypto.createHmac("sha256", password).update(`ozo-admin-entry|${gate}`).digest("hex")
 }
 
 export function verifyAdminSessionCookie(value: string | undefined): boolean {

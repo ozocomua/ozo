@@ -15,13 +15,13 @@ let loggedAdminGatePathWithoutCredentials = false
 function logInvalidAdminGatePathOnce() {
   if (loggedInvalidAdminGatePath) return
   loggedInvalidAdminGatePath = true
-  console.warn("[brosco/admin] ADMIN_GATE_PATH is invalid or unsafe; admin is disabled.")
+  console.warn("[ozo/admin] ADMIN_GATE_PATH is invalid or unsafe; admin is disabled.")
 }
 
 function logGatePathWithoutPasswordOnce() {
   if (loggedAdminGatePathWithoutCredentials) return
   loggedAdminGatePathWithoutCredentials = true
-  console.warn("[brosco/admin] ADMIN_GATE_PATH is set but ADMIN_PASSWORD is missing; admin is disabled.")
+  console.warn("[ozo/admin] ADMIN_GATE_PATH is set but ADMIN_PASSWORD is missing; admin is disabled.")
 }
 
 export function proxy(request: NextRequest) {

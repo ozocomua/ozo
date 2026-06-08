@@ -147,7 +147,7 @@
         ]
     };
 
-    let state = JSON.parse(localStorage.getItem('brosco_v6_data')) || DEFAULT_STATE;
+    let state = JSON.parse(localStorage.getItem('ozo_v6_data')) || DEFAULT_STATE;
 
     function delayedSave() {
         clearTimeout(saveTimeout);
@@ -159,7 +159,7 @@
     }
 
     function save() {
-        localStorage.setItem('brosco_v6_data', JSON.stringify(state));
+        localStorage.setItem('ozo_v6_data', JSON.stringify(state));
         renderAll();
     }
 

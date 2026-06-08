@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "brosco",
+      name: "ozo",
       script: "npm",
       args: "run start",
       cwd: __dirname,
@@ -10,7 +10,7 @@ module.exports = {
         PORT: 3002,
       },
       // после git pull пересобрать:
-      // pm2 restart brosco --update-env
+      // pm2 restart ozo --update-env
     },
   ],
 }
