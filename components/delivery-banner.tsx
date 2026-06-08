@@ -15,7 +15,7 @@ export default function DeliveryBanner() {
     {
       icon: ShieldCheck,
       title: "Гарантія якості",
-      desc: "Все для птахівництва",
+      desc: "Якість для фермерів",
     },
   ]
 
