@@ -15,11 +15,11 @@ export default function ContactsPage() {
           <h2 className="text-xs uppercase font-black tracking-widest opacity-40">Телефон та месенджери</h2>
           <div className="flex flex-wrap gap-4">
             <a 
-              href="viber://chat?number=%2B380778687777" 
-              className="flex items-center gap-3 px-6 py-4 bg-[#7360f2]/10 text-[#7360f2] rounded-2xl hover:bg-[#7360f2] hover:text-white transition-all w-full sm:w-auto"
+              href="tel:+380778687777" 
+              className="flex items-center gap-3 px-6 py-4 bg-primary text-primary-foreground rounded-2xl hover:bg-primary-hover transition-all w-full sm:w-auto"
             >
-              <MessageSquare size={18} />
-              <span className="font-bold">Viber</span>
+              <Phone size={18} />
+              <span className="font-bold">+38 (077) 868 77-77</span>
             </a>
             <a 
               href="https://t.me/ozo_owner" 
@@ -31,11 +31,11 @@ export default function ContactsPage() {
               <span className="font-bold">Telegram</span>
             </a>
             <a 
-              href="tel:+380778687777" 
-              className="flex items-center gap-3 px-6 py-4 bg-primary text-primary-foreground rounded-2xl hover:bg-primary-hover transition-all w-full sm:w-auto"
+              href="viber://chat?number=%2B380778687777" 
+              className="flex items-center gap-3 px-6 py-4 bg-[#7360f2]/10 text-[#7360f2] rounded-2xl hover:bg-[#7360f2] hover:text-white transition-all w-full sm:w-auto"
             >
-              <Phone size={18} />
-              <span className="font-bold">+38 (077) 868 77-77</span>
+              <MessageSquare size={18} />
+              <span className="font-bold">Viber</span>
             </a>
           </div>
         </section>
