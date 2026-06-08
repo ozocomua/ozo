@@ -50,29 +50,30 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Інфо — Тепер тут всі посилання */}
-          <div className="space-y-4">
-            <p className="text-xs tracking-widest text-muted-foreground uppercase font-bold">
-              Інформація
-            </p>
-            <div className="flex flex-col gap-2 text-sm text-foreground/80">
-              <Link href="/blog" className="hover:opacity-60 transition-opacity">Блог</Link>
-              <Link href="/delivery" className="hover:opacity-60 transition-opacity">Оплата та доставка</Link>
-              <Link href="/returns" className="hover:opacity-60 transition-opacity">Обмін та повернення</Link>
-              <Link href="/reviews" className="hover:opacity-60 transition-opacity">Відгуки</Link>
-              <Link href="/contacts" className="hover:opacity-60 transition-opacity">Контакти</Link>
+          {/* Інфо + Social — на мобилке в 2 колонки */}
+          <div className="grid grid-cols-2 gap-4 md:contents">
+            <div className="space-y-4">
+              <p className="text-xs tracking-widest text-muted-foreground uppercase font-bold">
+                Інформація
+              </p>
+              <div className="flex flex-col gap-2 text-sm text-foreground/80">
+                <Link href="/blog" className="hover:opacity-60 transition-opacity">Блог</Link>
+                <Link href="/delivery" className="hover:opacity-60 transition-opacity">Оплата та доставка</Link>
+                <Link href="/returns" className="hover:opacity-60 transition-opacity">Обмін та повернення</Link>
+                <Link href="/reviews" className="hover:opacity-60 transition-opacity">Відгуки</Link>
+                <Link href="/contacts" className="hover:opacity-60 transition-opacity">Контакти</Link>
+              </div>
             </div>
-          </div>
 
-          {/* Social */}
-          <div className="space-y-4">
-            <p className="text-xs tracking-widest text-muted-foreground uppercase font-bold">
-              Ми в мережах
-            </p>
-            <div className="flex flex-col gap-2 text-sm text-foreground/80">
-              <a href="https://t.me/broscodesign" target="_blank" rel="noopener noreferrer nofollow" className="hover:opacity-60 transition-opacity">Telegram</a>
-              <a href="https://tiktok.com/@brosco.design" target="_blank" rel="noopener noreferrer nofollow" className="hover:opacity-60 transition-opacity">TikTok</a>
-              <a href="https://instagram.com/brosco.design" target="_blank" rel="noopener noreferrer nofollow" className="hover:opacity-60 transition-opacity">Instagram</a>
+            <div className="space-y-4">
+              <p className="text-xs tracking-widest text-muted-foreground uppercase font-bold">
+                Ми в мережах
+              </p>
+              <div className="flex flex-col gap-2 text-sm text-foreground/80">
+                <a href="https://t.me/broscodesign" target="_blank" rel="noopener noreferrer nofollow" className="hover:opacity-60 transition-opacity">Telegram</a>
+                <a href="https://tiktok.com/@brosco.design" target="_blank" rel="noopener noreferrer nofollow" className="hover:opacity-60 transition-opacity">TikTok</a>
+                <a href="https://instagram.com/brosco.design" target="_blank" rel="noopener noreferrer nofollow" className="hover:opacity-60 transition-opacity">Instagram</a>
+              </div>
             </div>
           </div>
         </div>
