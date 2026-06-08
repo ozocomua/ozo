@@ -1,4 +1,4 @@
-import { MessageSquare, Phone, Instagram, Send } from "lucide-react"
+import { MessageSquare, Phone, Instagram, Send, Youtube, Facebook } from "lucide-react"
 import TikTokIcon from "@/components/icons/tiktok-icon" // Імпортуйте нову іконку
 
 export default function ContactsPage() {
@@ -88,6 +88,36 @@ export default function ContactsPage() {
                 <span className="font-bold">TikTok</span>
               </div>
               <span className="text-[10px] opacity-30 group-hover:opacity-100 transition-opacity">@ozo.com.ua</span>
+            </a>
+
+            <a 
+              href="https://www.facebook.com/share/16szMEhHWR/?mibextid=wwXIfr" 
+              target="_blank" 
+              rel="noopener noreferrer nofollow"
+              className="group flex items-center justify-between p-6 bg-card border border-border rounded-2xl hover:border-primary transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-blue-600/10 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                  <Facebook size={20} />
+                </div>
+                <span className="font-bold">Facebook</span>
+              </div>
+              <span className="text-[10px] opacity-30 group-hover:opacity-100 transition-opacity">@ozo.com.ua</span>
+            </a>
+
+            <a 
+              href="https://www.youtube.com/@ozo_com_ua" 
+              target="_blank" 
+              rel="noopener noreferrer nofollow"
+              className="group flex items-center justify-between p-6 bg-card border border-border rounded-2xl hover:border-primary transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-red-600/10 text-red-600 rounded-xl group-hover:bg-red-600 group-hover:text-white transition-colors">
+                  <Youtube size={20} />
+                </div>
+                <span className="font-bold">YouTube</span>
+              </div>
+              <span className="text-[10px] opacity-30 group-hover:opacity-100 transition-opacity">@ozo_com_ua</span>
             </a>
           </div>
         </section>

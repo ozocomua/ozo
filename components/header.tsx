@@ -199,10 +199,12 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
               </Link>
             ))}
           </nav>
-          <div className="mt-auto px-4 pb-8 flex gap-6">
+          <div className="mt-auto px-4 pb-8 flex gap-6 flex-wrap">
             <a href="https://t.me/ozo_com_ua" target="_blank" rel="noopener noreferrer nofollow" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Telegram</a>
             <a href="https://www.tiktok.com/@ozo.com.ua?_r=1&_t=ZM-91ouAZFUUdk" target="_blank" rel="noopener noreferrer nofollow" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">TikTok</a>
             <a href="https://www.instagram.com/ozo.com.ua" target="_blank" rel="noopener noreferrer nofollow" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Instagram</a>
+            <a href="https://www.facebook.com/share/16szMEhHWR/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer nofollow" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Facebook</a>
+            <a href="https://www.youtube.com/@ozo_com_ua" target="_blank" rel="noopener noreferrer nofollow" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">YouTube</a>
           </div>
         </div>
       )}
