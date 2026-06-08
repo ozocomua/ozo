@@ -59,7 +59,7 @@ export function InfoLayoutClient({
               ))}
             </aside>
 
-            <main className="bg-card rounded-[2.5rem] px-14 md:px-16 py-8 md:py-16 shadow-sm border border-border min-h-[500px] overflow-hidden">
+            <main className="bg-card rounded-[2.5rem] px-12 sm:px-14 md:px-16 py-8 md:py-16 shadow-sm border border-border min-h-[500px] overflow-hidden">
               {children}
             </main>
           </div>
