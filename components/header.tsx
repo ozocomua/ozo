@@ -84,7 +84,7 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
             className="flex-shrink-0 leading-none"
             onClick={() => setMenuOpen(false)}
           >
-            <span className="text-2xl md:text-3xl font-black tracking-wider text-foreground" style={{ fontFamily: '"Arial Black", "Arial Black", Gadget, sans-serif' }}>
+            <span className="font-serif text-2xl md:text-3xl font-black tracking-wider text-foreground">
               OZO
             </span>
           </Link>
