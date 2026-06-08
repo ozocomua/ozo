@@ -27,7 +27,7 @@ export default async function HomePage() {
         <StoreSchema />
         <section className="hidden md:block bg-foreground text-background px-4 pt-1 pb-3 md:pt-3 md:pb-2">
           <div className="max-w-5xl mx-auto">
-            <h1 className="font-serif text-xl md:text-3xl font-bold leading-tight text-balance">
+            <h1 className="text-xl md:text-3xl font-bold leading-tight text-balance" style={{ fontFamily: '"Arial Black", "Arial Black", Gadget, sans-serif' }}>
               OZO — все для птахівництва
               <br />
               <span className="text-background/70">якісне обладнання</span>

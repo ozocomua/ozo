@@ -15,7 +15,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="space-y-4">
             <div className="leading-none">
-              <span className="font-serif text-2xl md:text-3xl font-black tracking-wider text-foreground">
+              <span className="text-2xl md:text-3xl font-black tracking-wider text-foreground" style={{ fontFamily: '"Arial Black", "Arial Black", Gadget, sans-serif' }}>
                 OZO
               </span>
             </div>
