@@ -81,6 +81,8 @@ export default function Footer() {
                 <a href="https://t.me/ozo_com_ua" target="_blank" rel="noopener noreferrer nofollow" className="hover:opacity-60 transition-opacity">Telegram</a>
                 <a href="https://www.tiktok.com/@ozo.com.ua?_r=1&_t=ZM-91ouAZFUUdk" target="_blank" rel="noopener noreferrer nofollow" className="hover:opacity-60 transition-opacity">TikTok</a>
                 <a href="https://www.instagram.com/ozo.com.ua" target="_blank" rel="noopener noreferrer nofollow" className="hover:opacity-60 transition-opacity">Instagram</a>
+                <a href="https://www.facebook.com/share/16szMEhHWR/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer nofollow" className="hover:opacity-60 transition-opacity">Facebook</a>
+                <a href="https://www.youtube.com/@ozo_com_ua" target="_blank" rel="noopener noreferrer nofollow" className="hover:opacity-60 transition-opacity">YouTube</a>
               </div>
             </div>
           </div>
