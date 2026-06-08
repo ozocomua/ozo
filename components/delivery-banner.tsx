@@ -4,7 +4,7 @@ export default function DeliveryBanner() {
   const features = [
     {
       icon: Truck,
-      title: "Нова Пошта",
+      title: "Нова / Укр пошта",
       desc: "Доставка по всій Україні",
     },
     {
