@@ -95,6 +95,7 @@ model Product {
   stock           Int               @default(0)
   volume          String?
   containerType   String?
+  dimensions      String?
   productType     String            @default("SINGLE")
   brandId         Int?
   createdAt       DateTime          @default(now())

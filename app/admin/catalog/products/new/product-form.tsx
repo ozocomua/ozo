@@ -73,6 +73,7 @@ const productSchema = z.object({
   stock: z.coerce.number().int().min(0).default(0),
   volume: z.string().optional(),
   containerType: z.string().optional(),
+  dimensions: z.string().optional(),
   status: z.string().default("DRAFT"),
 });
 
@@ -117,6 +118,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
       stock: initialData?.stock || 0,
       volume: initialData?.volume || "",
       containerType: initialData?.containerType || "",
+      dimensions: initialData?.dimensions || "",
       status: initialData?.status || "DRAFT",
     },
   });
@@ -139,6 +141,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
         stock: initialData.stock || 0,
         volume: initialData.volume || "",
         containerType: initialData.containerType || "",
+        dimensions: initialData.dimensions || "",
         status: initialData.status || "DRAFT",
       })
     }
@@ -171,6 +174,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
         stock: values.stock,
         volume: values.volume,
         containerType: values.containerType,
+        dimensions: values.dimensions,
         productType,
         isPopular: !!isPopular,
         isNew: !!isNew,
@@ -503,9 +507,9 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
               )}
             </div>
 
-            {/* Features Auto-chemistry */}
+            {/* Характеристики товара */}
             <div className="border rounded-lg p-6 bg-card space-y-4">
-              <h2 className="text-lg font-semibold border-b pb-2">Характеристики автохимии</h2>
+              <h2 className="text-lg font-semibold border-b pb-2">Характеристики товару</h2>
               
               <FormField control={form.control} name="volume" render={({ field }) => (
                 <FormItem>
@@ -538,6 +542,17 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
                       <SelectItem value="бочка">Бочка</SelectItem>
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <FormField control={form.control} name="dimensions" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Размеры (Д × Ш × В)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Например: 30 × 20 × 15 см" {...field} />
+                  </FormControl>
+                  <FormDescription>Габариты товара в упаковке</FormDescription>
                   <FormMessage />
                 </FormItem>
               )} />
