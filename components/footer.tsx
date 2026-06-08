@@ -13,7 +13,7 @@ export default function Footer() {
       <div className="max-w-5xl mx-auto px-4 py-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Brand */}
-          <div className="space-y-4">
+          <div className="space-y-1">
             <div className="leading-none">
               <span className="font-serif text-2xl md:text-3xl font-black tracking-wider text-foreground">
                 OZO
