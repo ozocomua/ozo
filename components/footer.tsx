@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Phone, MessageSquare } from "lucide-react"
+import { Phone, MessageSquare, Send } from "lucide-react"
 
 export default function Footer() {
   const openCallback = () => {
@@ -46,6 +46,14 @@ export default function Footer() {
                 >
                   <Phone size={14} /> Зателефонувати
                 </a>
+                <a 
+                  href="https://t.me/ozo_owner" 
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#0088cc]/10 text-[#0088cc] rounded-xl text-[11px] font-bold uppercase tracking-tight hover:bg-[#0088cc] hover:text-white transition-all w-fit"
+                >
+                  <Send size={14} /> Telegram
+                </a>
               </div>
             </div>
           </div>
@@ -70,9 +78,9 @@ export default function Footer() {
                 Ми в мережах
               </p>
               <div className="flex flex-col gap-2 text-sm text-foreground/80">
-                <a href="https://t.me/broscodesign" target="_blank" rel="noopener noreferrer nofollow" className="hover:opacity-60 transition-opacity">Telegram</a>
-                <a href="https://tiktok.com/@brosco.design" target="_blank" rel="noopener noreferrer nofollow" className="hover:opacity-60 transition-opacity">TikTok</a>
-                <a href="https://instagram.com/brosco.design" target="_blank" rel="noopener noreferrer nofollow" className="hover:opacity-60 transition-opacity">Instagram</a>
+                <a href="https://t.me/ozo_com_ua" target="_blank" rel="noopener noreferrer nofollow" className="hover:opacity-60 transition-opacity">Telegram</a>
+                <a href="https://www.tiktok.com/@ozo.com.ua?_r=1&_t=ZM-91ouAZFUUdk" target="_blank" rel="noopener noreferrer nofollow" className="hover:opacity-60 transition-opacity">TikTok</a>
+                <a href="https://www.instagram.com/ozo.com.ua" target="_blank" rel="noopener noreferrer nofollow" className="hover:opacity-60 transition-opacity">Instagram</a>
               </div>
             </div>
           </div>

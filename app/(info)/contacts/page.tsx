@@ -12,7 +12,7 @@ export default function ContactsPage() {
       <div className="space-y-12">
         {/* Телефони та Месенджери */}
         <section className="space-y-6">
-          <h2 className="text-xs uppercase font-black tracking-widest opacity-40">Телефон та Viber</h2>
+          <h2 className="text-xs uppercase font-black tracking-widest opacity-40">Телефон та месенджери</h2>
           <div className="flex flex-wrap gap-4">
             <a 
               href="tel:+380778687777" 
@@ -26,7 +26,16 @@ export default function ContactsPage() {
               className="flex items-center gap-3 px-6 py-4 bg-[#7360f2]/10 text-[#7360f2] rounded-2xl hover:bg-[#7360f2] hover:text-white transition-all w-full sm:w-auto"
             >
               <MessageSquare size={18} />
-              <span className="font-bold italic font-serif">Viber</span>
+              <span className="font-bold">Viber</span>
+            </a>
+            <a 
+              href="https://t.me/ozo_owner" 
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+              className="flex items-center gap-3 px-6 py-4 bg-[#0088cc]/10 text-[#0088cc] rounded-2xl hover:bg-[#0088cc] hover:text-white transition-all w-full sm:w-auto"
+            >
+              <Send size={18} />
+              <span className="font-bold">Telegram</span>
             </a>
           </div>
         </section>
@@ -36,7 +45,7 @@ export default function ContactsPage() {
           <h2 className="text-xs uppercase font-black tracking-widest opacity-40">Соціальні мережі</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <a 
-              href="https://t.me/broscodesign" 
+              href="https://t.me/ozo_com_ua" 
               target="_blank" 
               rel="noopener noreferrer nofollow"
               className="group flex items-center justify-between p-6 bg-card border border-border rounded-2xl hover:border-primary transition-all"
@@ -47,11 +56,11 @@ export default function ContactsPage() {
                 </div>
                 <span className="font-bold">Telegram</span>
               </div>
-              <span className="text-[10px] opacity-30 group-hover:opacity-100 transition-opacity">@broscodesign</span>
+              <span className="text-[10px] opacity-30 group-hover:opacity-100 transition-opacity">@ozo_com_ua</span>
             </a>
 
             <a 
-              href="https://instagram.com/brosco.design" 
+              href="https://www.instagram.com/ozo.com.ua" 
               target="_blank" 
               rel="noopener noreferrer nofollow"
               className="group flex items-center justify-between p-6 bg-card border border-border rounded-2xl hover:border-primary transition-all"
@@ -62,12 +71,12 @@ export default function ContactsPage() {
                 </div>
                 <span className="font-bold">Instagram</span>
               </div>
-              <span className="text-[10px] opacity-30 group-hover:opacity-100 transition-opacity">@brosco.design</span>
+              <span className="text-[10px] opacity-30 group-hover:opacity-100 transition-opacity">@ozo.com.ua</span>
             </a>
 
             {/* Оновлена кнопка TikTok з правильним значком */}
             <a 
-              href="https://tiktok.com/@brosco.design" 
+              href="https://www.tiktok.com/@ozo.com.ua?_r=1&_t=ZM-91ouAZFUUdk" 
               target="_blank" 
               rel="noopener noreferrer nofollow"
               className="group flex items-center justify-between p-6 bg-card border border-border rounded-2xl hover:border-primary transition-all"
@@ -78,7 +87,7 @@ export default function ContactsPage() {
                 </div>
                 <span className="font-bold">TikTok</span>
               </div>
-              <span className="text-[10px] opacity-30 group-hover:opacity-100 transition-opacity">@brosco.design</span>
+              <span className="text-[10px] opacity-30 group-hover:opacity-100 transition-opacity">@ozo.com.ua</span>
             </a>
           </div>
         </section>

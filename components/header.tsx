@@ -200,9 +200,9 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
             ))}
           </nav>
           <div className="mt-auto px-4 pb-8 flex gap-6">
-            <a href="https://t.me/broscodesign" target="_blank" rel="noopener noreferrer nofollow" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Telegram</a>
-            <a href="https://tiktok.com/@brosco.design" target="_blank" rel="noopener noreferrer nofollow" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">TikTok</a>
-            <a href="https://instagram.com/brosco.design" target="_blank" rel="noopener noreferrer nofollow" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Instagram</a>
+            <a href="https://t.me/ozo_com_ua" target="_blank" rel="noopener noreferrer nofollow" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Telegram</a>
+            <a href="https://www.tiktok.com/@ozo.com.ua?_r=1&_t=ZM-91ouAZFUUdk" target="_blank" rel="noopener noreferrer nofollow" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">TikTok</a>
+            <a href="https://www.instagram.com/ozo.com.ua" target="_blank" rel="noopener noreferrer nofollow" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Instagram</a>
           </div>
         </div>
       )}
