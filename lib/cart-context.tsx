@@ -236,7 +236,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                   <Link 
                     href="/checkout" 
                     onClick={() => setIsModalOpen(false)}
-                    className="w-full bg-black text-white py-5 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-black/90 transition-all active:scale-[0.98]"
+                    className="w-full bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white py-5 rounded-2xl font-bold flex items-center justify-center gap-2 hover:from-[#0c5db8] hover:to-[#00c5e3] transition-all active:scale-[0.98]"
                   >
                     ОФОРМИТИ ЗАМОВЛЕННЯ
                     <ArrowRight size={18} />

@@ -72,7 +72,7 @@ export default function CallbackWidget() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Зворотній зв'язок"
-        className="w-14 h-14 bg-black text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 group"
+        className="w-14 h-14 bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 group"
       >
         {isOpen ? <X size={24} /> : <Phone size={24} className="group-hover:rotate-12 transition-transform" />}
       </button>
@@ -82,7 +82,7 @@ export default function CallbackWidget() {
           <div className="p-8">
             {status === 'success' ? (
               <div className="py-10 text-center space-y-4 animate-in zoom-in duration-500">
-                <div className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center mx-auto">
+                <div className="w-16 h-16 bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white rounded-full flex items-center justify-center mx-auto">
                   <Check size={30} />
                 </div>
                 <h3 className="text-xl font-serif italic text-black">Дякуємо!</h3>
@@ -103,7 +103,7 @@ export default function CallbackWidget() {
                     <input
                       required
                       autoComplete="name"
-                      className="w-full bg-[#F9F9F7] rounded-2xl p-4 text-sm text-black outline-none focus:ring-2 focus:ring-black transition-all"
+                      className="w-full bg-[#F9F9F7] rounded-2xl p-4 text-sm text-foreground outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
                       placeholder="Як до вас звертатися?"
                       value={formData.name}
                       onChange={e => setFormData({...formData, name: e.target.value})}
@@ -116,7 +116,7 @@ export default function CallbackWidget() {
                       required
                       type="tel"
                       autoComplete="tel"
-                      className="w-full bg-[#F9F9F7] rounded-2xl p-4 text-sm font-mono text-black outline-none focus:ring-2 focus:ring-black transition-all"
+                      className="w-full bg-[#F9F9F7] rounded-2xl p-4 text-sm font-mono text-black outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
                       value={formData.phone}
                       onChange={e => setFormData({...formData, phone: formatPhoneNumber(e.target.value)})}
                     />
@@ -127,7 +127,7 @@ export default function CallbackWidget() {
                     <input
                       type="email"
                       autoComplete="email"
-                      className="w-full bg-[#F9F9F7] rounded-2xl p-4 text-sm text-black outline-none focus:ring-2 focus:ring-black transition-all"
+                      className="w-full bg-[#F9F9F7] rounded-2xl p-4 text-sm text-black outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
                       placeholder="Для відповіді поштою"
                       value={formData.email}
                       onChange={e => setFormData({...formData, email: e.target.value})}
@@ -138,7 +138,7 @@ export default function CallbackWidget() {
                     <label className="text-[9px] uppercase font-bold opacity-40 ml-4 text-black">Ваше питання</label>
                     <textarea
                       rows={2}
-                      className="w-full bg-[#F9F9F7] rounded-2xl p-4 text-sm text-black outline-none focus:ring-2 focus:ring-black transition-all resize-none"
+                      className="w-full bg-[#F9F9F7] rounded-2xl p-4 text-sm text-black outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all resize-none"
                       placeholder="Що вас цікавить?"
                       value={formData.comment}
                       onChange={e => setFormData({...formData, comment: e.target.value})}
@@ -148,7 +148,7 @@ export default function CallbackWidget() {
 
                 <button
                   disabled={status === 'submitting' || formData.phone.length < 19 || !formData.name}
-                  className="w-full bg-black text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-20"
+                  className="w-full bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:from-[#0c5db8] hover:to-[#00c5e3] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-40"
                 >
                   {status === 'submitting' ? <Loader2 className="animate-spin" size={16} /> : "Чекаю на дзвінок"}
                 </button>

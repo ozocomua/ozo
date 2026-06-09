@@ -17,7 +17,7 @@ export default function NotFound() {
         </p>
         <Link
           href="/"
-          className="inline-flex items-center justify-center bg-background text-foreground text-sm font-medium px-8 py-3.5 rounded-xl hover:bg-background/90 transition-colors"
+          className="inline-flex items-center justify-center bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white text-sm font-medium px-8 py-3.5 rounded-xl hover:from-[#0c5db8] hover:to-[#00c5e3] transition-colors"
         >
           Повернутись на головну
         </Link>

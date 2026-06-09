@@ -98,7 +98,7 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
                 value={searchQuery}
                 onChange={(e) => handleChange(e.target.value)}
                 placeholder="Пошук..."
-                className="w-full pl-9 pr-4 py-2 text-sm bg-secondary rounded-full outline-none focus:ring-2 focus:ring-black transition-all"
+                className="w-full pl-9 pr-4 py-2 text-sm bg-secondary rounded-full outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
               />
             </div>
             {showDropdown && (
@@ -153,7 +153,7 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
                   onChange={(e) => handleChange(e.target.value)}
                   onFocus={() => setIsSearchActive(true)}
                   placeholder="Пошук..."
-                  className="w-full pl-9 pr-3 py-1.5 text-sm bg-secondary rounded-full outline-none focus:ring-2 focus:ring-black transition-all"
+                  className="w-full pl-9 pr-3 py-1.5 text-sm bg-secondary rounded-full outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
                 />
                 {showDropdown && (
                   <SearchDropdown results={results} searchQuery={searchQuery} onSelect={handleSelect} />

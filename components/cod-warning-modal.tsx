@@ -47,7 +47,7 @@ export default function CodWarningModal({
           <div className="flex flex-col gap-3 pt-2">
             <button
               onClick={onConfirm}
-              className="w-full bg-black text-white py-4 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:scale-[1.02] active:scale-95 transition-all"
+              className="w-full bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white py-4 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:from-[#0c5db8] hover:to-[#00c5e3] active:scale-95 transition-all"
             >
               {okLabel}
             </button>

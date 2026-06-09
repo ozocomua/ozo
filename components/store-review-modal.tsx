@@ -83,7 +83,7 @@ export function StoreReviewModal({ open, onOpenChange }: StoreReviewModalProps) 
         <Button
           onClick={handleSubmit}
           disabled={isPending}
-          className="w-full bg-black text-white hover:bg-black/80"
+          className="w-full bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white hover:from-[#0c5db8] hover:to-[#00c5e3]"
         >
           {isPending ? "Відправка..." : "Відправити відгук"}
         </Button>

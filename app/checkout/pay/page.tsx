@@ -34,7 +34,7 @@ function PayContent() {
 
         {/* ГОЛОВНИЙ БЛОК ОПЛАТИ */}
         <div className="bg-white rounded-[3rem] shadow-sm overflow-hidden border border-black/5 p-10 text-center space-y-8">
-          <div className="inline-flex p-6 bg-black text-white rounded-full">
+          <div className="inline-flex p-6 bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white rounded-full">
             <CreditCard size={32} />
           </div>
           
@@ -50,14 +50,14 @@ function PayContent() {
               href={paymentUrl || "#"} 
               target="_blank"
               rel="noopener noreferrer"
-              className="block w-full bg-black text-white py-6 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10"
+              className="block w-full bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white py-6 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:from-[#0c5db8] hover:to-[#00c5e3] active:scale-95 transition-all shadow-xl shadow-[#00B5D1]/20"
             >
               Сплатити {total} ₴
             </a>
           </div>
 
           <div className="bg-black/5 rounded-2xl p-6 flex items-start gap-4 text-left border border-black/5">
-            <div className="bg-black text-white p-2 rounded-lg shrink-0">
+            <div className="bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white p-2 rounded-lg shrink-0">
               <Info size={16} />
             </div>
             <p className="text-[11px] font-bold uppercase leading-relaxed tracking-tight">

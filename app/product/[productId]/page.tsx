@@ -254,7 +254,7 @@ export default async function ProductPage({ params }: Props) {
                   Версії товару
                 </p>
                 <div className="flex flex-col items-center gap-2">
-                  <span className="inline-block w-full text-center px-3.5 py-1.5 text-sm rounded-full truncate bg-black text-white border border-black">
+                  <span className="inline-block w-full text-center px-3.5 py-1.5 text-sm rounded-full truncate bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white border border-transparent">
                     {product.relatedLabels?.[product.id] || product.name}
                   </span>
                   {product.relatedVersions.map((v) => (

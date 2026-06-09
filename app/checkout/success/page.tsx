@@ -29,7 +29,7 @@ function SuccessContent() {
       <div className="max-w-2xl mx-auto bg-white rounded-[2.5rem] shadow-sm overflow-hidden border border-black/5">
         
         {/* Статус-бар (Чорний блок) */}
-        <div className="bg-black text-white p-8 md:p-10">
+        <div className="bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white p-8 md:p-10">
            <div className="space-y-2">
               <div className="flex items-center gap-2 opacity-50 text-[10px] uppercase font-bold tracking-[0.2em]">
                 <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
@@ -79,7 +79,7 @@ function SuccessContent() {
               <span className="text-[11px] uppercase font-bold opacity-30 tracking-wider">Спосіб оплати</span>
               <p className="text-lg font-bold uppercase">{payment || "Післяплата"}</p>
               {paymentUrl && (
-                <a href={paymentUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest mt-1">
+                <a href={paymentUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest mt-1 hover:from-[#0c5db8] hover:to-[#00c5e3] transition-all">
                   Оплатити <ExternalLink size={12} />
                 </a>
               )}
@@ -105,7 +105,7 @@ function SuccessContent() {
           <div className="pt-4">
             <Link 
               href="/" 
-              className="block w-full bg-black text-white py-5 rounded-2xl font-black uppercase text-[11px] tracking-[0.2em] text-center hover:opacity-90 transition-all active:scale-[0.98]"
+              className="block w-full bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white py-5 rounded-2xl font-black uppercase text-[11px] tracking-[0.2em] text-center hover:from-[#0c5db8] hover:to-[#00c5e3] transition-all active:scale-[0.98]"
             >
               На головну
             </Link>

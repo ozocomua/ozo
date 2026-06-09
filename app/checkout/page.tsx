@@ -242,9 +242,9 @@ export default function CheckoutPage() {
             
             <div className="space-y-8">
               <div className="grid md:grid-cols-3 gap-4">
-                <input className="w-full bg-white rounded-2xl p-5 shadow-sm outline-none focus:ring-2 focus:ring-black transition-all" placeholder="Прізвище" onChange={e => setFormData({...formData, lastName: e.target.value})} />
-                <input className="w-full bg-white rounded-2xl p-5 shadow-sm outline-none focus:ring-2 focus:ring-black transition-all" placeholder="Ім'я" onChange={e => setFormData({...formData, firstName: e.target.value})} />
-                <input className="w-full bg-white rounded-2xl p-5 shadow-sm outline-none focus:ring-2 focus:ring-black transition-all" placeholder="По батькові" onChange={e => setFormData({...formData, middleName: e.target.value})} />
+                <input className="w-full bg-white rounded-2xl p-5 shadow-sm outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all" placeholder="Прізвище" onChange={e => setFormData({...formData, lastName: e.target.value})} />
+                <input className="w-full bg-white rounded-2xl p-5 shadow-sm outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all" placeholder="Ім'я" onChange={e => setFormData({...formData, firstName: e.target.value})} />
+                <input className="w-full bg-white rounded-2xl p-5 shadow-sm outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all" placeholder="По батькові" onChange={e => setFormData({...formData, middleName: e.target.value})} />
               </div>
               
               <div className="flex flex-col md:flex-row gap-6 items-end">
@@ -252,7 +252,7 @@ export default function CheckoutPage() {
                   <label className="text-[10px] uppercase font-bold opacity-40 ml-4">Номер телефону</label>
                   <input 
                     type="tel"
-                    className="w-full bg-white rounded-2xl p-5 shadow-sm outline-none focus:ring-2 focus:ring-black font-mono tracking-widest text-lg transition-all" 
+                    className="w-full bg-white rounded-2xl p-5 shadow-sm outline-none focus:ring-2 focus:ring-[#00B5D1] font-mono tracking-widest text-lg transition-all" 
                     value={formData.phone} 
                     onChange={handlePhoneChange} 
                   />
@@ -267,7 +267,7 @@ export default function CheckoutPage() {
                         checked={formData.noCall} 
                         onChange={() => setFormData({...formData, noCall: !formData.noCall})} 
                       />
-                      <div className="w-6 h-6 border-2 border-black/10 rounded-lg bg-white peer-checked:bg-black peer-checked:border-black transition-all flex items-center justify-center">
+                      <div className="w-6 h-6 border-2 border-black/10 rounded-lg bg-white peer-checked:bg-gradient-to-r peer-checked:from-[#0B53A4] peer-checked:to-[#00B5D1] peer-checked:border-transparent transition-all flex items-center justify-center">
                         <Check size={14} className="text-white scale-0 peer-checked:scale-100 transition-transform" />
                       </div>
                     </div>
@@ -284,7 +284,7 @@ export default function CheckoutPage() {
               <div className="relative">
                 <label className="text-[10px] uppercase font-bold opacity-40 ml-4">Місто доставки</label>
                 <input 
-                  className="w-full bg-white rounded-2xl p-5 mt-2 shadow-sm outline-none focus:ring-2 focus:ring-black transition-all"
+                  className="w-full bg-white rounded-2xl p-5 mt-2 shadow-sm outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
                   value={cityInput} placeholder="Почніть вводити назву..."
                   onFocus={() => setShowCities(true)}
                   onBlur={() => setTimeout(() => setShowCities(false), 200)}
@@ -293,7 +293,7 @@ export default function CheckoutPage() {
                 {showCities && cities.length > 0 && (
                   <div className="absolute top-full left-0 right-0 bg-white shadow-2xl z-[70] rounded-2xl mt-1 max-h-60 overflow-y-auto border border-black/5">
                     {cities.map(c => (
-                      <div key={c.Ref} className="p-4 hover:bg-black hover:text-white cursor-pointer text-sm transition-colors border-b border-black/5 last:border-0" 
+                      <div key={c.Ref} className="p-4 hover:bg-gradient-to-r hover:from-[#0B53A4] hover:to-[#00B5D1] hover:text-white cursor-pointer text-sm transition-colors border-b border-black/5 last:border-0" 
                         onClick={() => { setSelectedCity({ref: c.Ref, name: c.Description}); setCityInput(c.Description); setShowCities(false); }}>
                         {c.Description}
                       </div>
@@ -309,7 +309,7 @@ export default function CheckoutPage() {
                   { id: 'courier', label: 'Кур\'єр', icon: Home },
                 ].map((t) => (
                   <button key={t.id} type="button" onClick={() => { setDeliveryType(t.id as any); setPointInput(''); setSelectedPoint(''); }}
-                    className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${deliveryType === t.id ? 'border-black bg-black text-white' : 'border-transparent bg-white text-black opacity-40'}`}
+                    className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${deliveryType === t.id ? 'border-transparent bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white' : 'border-transparent bg-white text-black opacity-40'}`}
                   >
                     <t.icon size={20} />
                     <span className="text-[10px] font-black uppercase tracking-tighter">{t.label}</span>
@@ -322,7 +322,7 @@ export default function CheckoutPage() {
                   {deliveryType === 'courier' ? 'Вулиця' : 'Оберіть точку видачі'}
                 </label>
                 <div className="relative">
-                  <input disabled={!selectedCity.ref} className="w-full bg-white rounded-2xl p-5 mt-2 shadow-sm outline-none focus:ring-2 focus:ring-black disabled:opacity-20 transition-all"
+                  <input disabled={!selectedCity.ref} className="w-full bg-white rounded-2xl p-5 mt-2 shadow-sm outline-none focus:ring-2 focus:ring-[#00B5D1] disabled:opacity-20 transition-all"
                     placeholder={!selectedCity.ref ? "Спочатку оберіть місто" : "Наприклад: Центральна..."}
                     value={pointInput}
                     onFocus={() => setShowPoints(true)}
@@ -334,7 +334,7 @@ export default function CheckoutPage() {
                 {showPoints && deliveryPoints.length > 0 && (
                   <div className="absolute top-full left-0 right-0 bg-white shadow-2xl z-50 rounded-2xl mt-1 max-h-60 overflow-y-auto border border-black/5">
                     {deliveryPoints.map(p => (
-                      <div key={p.Ref} className="p-4 hover:bg-black hover:text-white cursor-pointer text-sm border-b border-black/5 last:border-0"
+                      <div key={p.Ref} className="p-4 hover:bg-gradient-to-r hover:from-[#0B53A4] hover:to-[#00B5D1] hover:text-white cursor-pointer text-sm border-b border-black/5 last:border-0"
                         onClick={() => { setSelectedPoint(p.Description || p.Present); setPointInput(p.Description || p.Present); setShowPoints(false); }}>
                         {p.Description || p.Present}
                       </div>
@@ -345,10 +345,10 @@ export default function CheckoutPage() {
 
               {deliveryType === 'courier' && selectedPoint && (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-in fade-in slide-in-from-top-2">
-                  <input className="bg-white rounded-xl p-4 shadow-sm outline-none focus:ring-1 focus:ring-black" placeholder="Буд." onChange={e => setCourierData({...courierData, house: e.target.value})} />
-                  <input className="bg-white rounded-xl p-4 shadow-sm outline-none focus:ring-1 focus:ring-black" placeholder="Кв." onChange={e => setCourierData({...courierData, apartment: e.target.value})} />
-                  <input className="bg-white rounded-xl p-4 shadow-sm outline-none focus:ring-1 focus:ring-black" placeholder="Під'їзд" onChange={e => setCourierData({...courierData, entrance: e.target.value})} />
-                  <input className="bg-white rounded-xl p-4 shadow-sm outline-none focus:ring-1 focus:ring-black" placeholder="Поверх" onChange={e => setCourierData({...courierData, floor: e.target.value})} />
+                  <input className="bg-white rounded-xl p-4 shadow-sm outline-none focus:ring-1 focus:ring-[#00B5D1]" placeholder="Буд." onChange={e => setCourierData({...courierData, house: e.target.value})} />
+                  <input className="bg-white rounded-xl p-4 shadow-sm outline-none focus:ring-1 focus:ring-[#00B5D1]" placeholder="Кв." onChange={e => setCourierData({...courierData, apartment: e.target.value})} />
+                  <input className="bg-white rounded-xl p-4 shadow-sm outline-none focus:ring-1 focus:ring-[#00B5D1]" placeholder="Під'їзд" onChange={e => setCourierData({...courierData, entrance: e.target.value})} />
+                  <input className="bg-white rounded-xl p-4 shadow-sm outline-none focus:ring-1 focus:ring-[#00B5D1]" placeholder="Поверх" onChange={e => setCourierData({...courierData, floor: e.target.value})} />
                 </div>
               )}
             </section>
@@ -360,7 +360,7 @@ export default function CheckoutPage() {
                 <button 
                   type="button" 
                   onClick={() => setPaymentType('card')} 
-                  className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all ${paymentType === 'card' ? 'border-black bg-black text-white' : 'bg-white opacity-60'}`}
+                  className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all ${paymentType === 'card' ? 'border-transparent bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white' : 'bg-white opacity-60'}`}
                 >
                   <CreditCard size={20} />
                   <div className="text-left">
@@ -378,7 +378,7 @@ export default function CheckoutPage() {
                        setPaymentType('cod')
                      }
                    }} 
-                  className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all ${paymentType === 'cod' ? 'border-black bg-black text-white' : 'bg-white opacity-60'}`}
+                  className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all ${paymentType === 'cod' ? 'border-transparent bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white' : 'bg-white opacity-60'}`}
                 >
                   <Wallet size={20} />
                   <div className="text-left">
@@ -392,7 +392,7 @@ export default function CheckoutPage() {
                 <label className="text-[10px] uppercase font-bold opacity-40 ml-4">Коментар до замовлення</label>
                 <textarea 
                   rows={3} 
-                  className="w-full bg-white rounded-2xl p-5 shadow-sm outline-none focus:ring-2 focus:ring-black transition-all resize-none" 
+                  className="w-full bg-white rounded-2xl p-5 shadow-sm outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all resize-none" 
                   placeholder="Напишіть ваші побажання..." 
                   onChange={e => setFormData({...formData, comment: e.target.value})} 
                 />
@@ -415,7 +415,7 @@ export default function CheckoutPage() {
                     !formData.firstName.trim() ||
                     !formData.lastName.trim()
                   }
-                  className="w-full bg-black text-white py-6 rounded-2xl font-black uppercase text-[13px] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-20"
+                  className="w-full bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white py-6 rounded-2xl font-black uppercase text-[13px] hover:from-[#0c5db8] hover:to-[#00c5e3] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-40"
                 >
                   {isSubmitting ? <Loader2 className="animate-spin" size={16} /> : "Замовити зараз"}
                 </button>
@@ -423,7 +423,7 @@ export default function CheckoutPage() {
             </section>
           </div>
 
-          <div className="sticky top-10 bg-black text-white rounded-[3rem] p-8 md:p-10 h-fit shadow-2xl">
+          <div className="sticky top-10 bg-gradient-to-b from-[#0B53A4] to-[#00B5D1] text-white rounded-[3rem] p-8 md:p-10 h-fit shadow-2xl">
             <h3 className="text-xl font-serif italic mb-8 opacity-60">Підсумок</h3>
             
             <div className="space-y-6 mb-10 max-h-[450px] overflow-y-auto pr-2 custom-scrollbar">

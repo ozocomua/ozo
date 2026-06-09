@@ -81,7 +81,7 @@ export function AdminGateForm({ nextPath, showConfigWarning, secretConfigured }:
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-xl bg-black py-3 text-[11px] font-black uppercase tracking-widest text-white hover:opacity-90 disabled:opacity-40"
+          className="w-full rounded-xl bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] py-3 text-[11px] font-black uppercase tracking-widest text-white hover:from-[#0c5db8] hover:to-[#00c5e3] disabled:opacity-40"
         >
           {loading ? "Перевірка…" : "Увійти"}
         </button>
