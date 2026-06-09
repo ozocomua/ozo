@@ -71,12 +71,12 @@ export default async function HomePage() {
             ))}
           </div>
 
-          <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mt-4">
+          <div className="hidden md:grid grid-cols-4 lg:grid-cols-5 gap-4 mt-4">
             {categories.map((cat, i) => (
               <Link
                 key={cat.id}
                 href={`/catalog/${cat.slug}`}
-                className="relative group aspect-video w-full rounded-sm overflow-hidden bg-zinc-900"
+                className="relative group aspect-[3/4] w-full rounded-sm overflow-hidden bg-zinc-900"
               >
                 <Image
                   src={normalizeImageUrl(cat.imageUrl)}
@@ -85,7 +85,7 @@ export default async function HomePage() {
                   unoptimized
                   priority={i === 0}
                   className="object-cover transition-all duration-500 group-hover:scale-105"
-                  sizes="(max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                  sizes="(max-width: 768px) 50vw, 25vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
