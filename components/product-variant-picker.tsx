@@ -32,6 +32,7 @@ export default function ProductVariantPicker({
     ? {
         ...product,
         id: selected.id,
+        productId: product.id,
         price: selected.priceRetail,
         variantSize: selected.size || selected.volume,
       }

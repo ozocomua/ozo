@@ -103,7 +103,7 @@ export default function CallbackWidget() {
                     <input
                       required
                       autoComplete="name"
-                      className="w-full bg-[#F9F9F7] rounded-2xl p-4 text-sm text-foreground outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
+                      className="w-full bg-[#F9F9F7] rounded-2xl p-4 text-base text-foreground outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
                       placeholder="Як до вас звертатися?"
                       value={formData.name}
                       onChange={e => setFormData({...formData, name: e.target.value})}
@@ -116,7 +116,7 @@ export default function CallbackWidget() {
                       required
                       type="tel"
                       autoComplete="tel"
-                      className="w-full bg-[#F9F9F7] rounded-2xl p-4 text-sm font-mono text-black outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
+                      className="w-full bg-[#F9F9F7] rounded-2xl p-4 text-base font-mono text-black outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
                       value={formData.phone}
                       onChange={e => setFormData({...formData, phone: formatPhoneNumber(e.target.value)})}
                     />
@@ -127,7 +127,7 @@ export default function CallbackWidget() {
                     <input
                       type="email"
                       autoComplete="email"
-                      className="w-full bg-[#F9F9F7] rounded-2xl p-4 text-sm text-black outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
+                      className="w-full bg-[#F9F9F7] rounded-2xl p-4 text-base text-black outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
                       placeholder="Для відповіді поштою"
                       value={formData.email}
                       onChange={e => setFormData({...formData, email: e.target.value})}
@@ -138,7 +138,7 @@ export default function CallbackWidget() {
                     <label className="text-[9px] uppercase font-bold opacity-40 ml-4 text-black">Ваше питання</label>
                     <textarea
                       rows={2}
-                      className="w-full bg-[#F9F9F7] rounded-2xl p-4 text-sm text-black outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all resize-none"
+                      className="w-full bg-[#F9F9F7] rounded-2xl p-4 text-base text-black outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all resize-none"
                       placeholder="Що вас цікавить?"
                       value={formData.comment}
                       onChange={e => setFormData({...formData, comment: e.target.value})}
