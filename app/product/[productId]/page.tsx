@@ -179,7 +179,7 @@ export default async function ProductPage({ params }: Props) {
             Назад
           </Link>
 
-          <nav aria-label="Хлібні крихти" className="text-xs text-muted-foreground mb-3">
+          <nav aria-label="Хлібні крихти" className="text-xs sm:text-sm text-muted-foreground mb-3">
             <Link href="/" className="hover:text-foreground transition-colors">
               Головна
             </Link>
@@ -197,7 +197,7 @@ export default async function ProductPage({ params }: Props) {
         </div>
 
         {/* BLOK 1: Two-column layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 w-full max-w-full">
 
           {/* LEFT: Photos only */}
           <div className="w-full min-w-0">
@@ -213,17 +213,17 @@ export default async function ProductPage({ params }: Props) {
           {/* RIGHT: Commercial info */}
           <div className="flex flex-col justify-start space-y-4 w-full min-w-0 max-w-full">
 
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-neutral-900">
+            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground">
               {product.name}
             </h1>
             <div className="flex items-center gap-4 flex-wrap">
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 Артикул: {product.sku}
               </p>
               {product.reviewCount > 0 && (
                 <div className="flex items-center gap-1.5">
                   <StarRating rating={product.avgRating} size={12} />
-                  <span className="text-xs text-muted-foreground">({product.reviewCount})</span>
+                  <span className="text-xs sm:text-sm text-muted-foreground">({product.reviewCount})</span>
                 </div>
               )}
             </div>
@@ -270,12 +270,12 @@ export default async function ProductPage({ params }: Props) {
               </div>
             )}
 
-            <p className="text-center text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+            <p className="text-center text-[11px] sm:text-xs text-muted-foreground uppercase tracking-[0.2em]">
               Безкоштовна консультація при замовленні
             </p>
 
             <div className="bg-secondary rounded-xl p-4 flex gap-3">
-              <Truck size={18} className="shrink-0 text-muted-foreground mt-0.5" />
+              <Truck size={18} sm:size={20} className="shrink-0 text-muted-foreground mt-0.5" />
               <div>
                 <p className="text-sm font-medium text-foreground">
                   Доставка Новою Поштою та Укрпоштою

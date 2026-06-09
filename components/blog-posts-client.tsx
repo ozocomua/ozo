@@ -59,7 +59,7 @@ export default function BlogPostsClient({ initialPosts, total, pageSize = 12 }: 
               />
             </div>
             <div className="p-4 flex flex-col flex-1">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
+              <p className="text-[11px] sm:text-xs uppercase tracking-widest text-muted-foreground mb-2">
                 {new Date(post.createdAt).toLocaleDateString("uk-UA", {
                   day: "numeric",
                   month: "long",

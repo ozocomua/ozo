@@ -8,13 +8,13 @@ export default function ProductDescription({ html }: { html: string }) {
 
   return (
     <div className="mt-12 w-full border-t pt-8">
-      <h2 className="text-xs tracking-[0.2em] text-muted-foreground uppercase mb-4">
+      <h2 className="text-xs sm:text-sm tracking-[0.2em] text-muted-foreground uppercase mb-4">
         Опис
       </h2>
       <div className="relative">
         <div
-          className={`product-description text-sm text-muted-foreground leading-relaxed w-full max-w-full whitespace-pre-wrap break-normal block overflow-hidden transition-all duration-300 ${
-            expanded ? "max-h-[2000px]" : "max-h-[300px] md:max-h-[200px]"
+          className={`product-description text-sm text-muted-foreground leading-relaxed w-full max-w-full whitespace-pre-wrap break-words block overflow-hidden transition-all duration-300 ${
+            expanded ? "max-h-[2000px]" : "max-h-[250px] sm:max-h-[200px]"
           }`}
           dangerouslySetInnerHTML={{
             __html: html

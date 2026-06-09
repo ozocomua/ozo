@@ -25,9 +25,9 @@ export default async function HomePage() {
 
       <main>
         <StoreSchema />
-        <section className="hidden md:block bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white px-4 pt-1 pb-3 md:pt-3 md:pb-2">
+        <section className="bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white px-4 pt-1 pb-3 md:pt-3 md:pb-2">
           <div className="max-w-5xl mx-auto">
-            <h1 className="font-serif text-xl md:text-3xl font-bold leading-tight text-balance">
+            <h1 className="font-serif text-2xl md:text-4xl font-bold leading-tight text-balance">
               OZO — все для птахівництва
               <br />
               <span className="text-white/60">якісне обладнання</span>
@@ -37,7 +37,7 @@ export default async function HomePage() {
 
         <DeliveryBanner />
 
-        <section className="max-w-[1100px] mx-auto px-4 pt-8 pb-2">
+        <section className="max-w-5xl md:max-w-6xl mx-auto px-4 pt-8 pb-2">
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-xs tracking-[0.2em] text-muted-foreground uppercase">
               Категорії
@@ -45,7 +45,7 @@ export default async function HomePage() {
           </div>
 
           {/* МОБИЛЬНАЯ СЕТКА КАТЕГОРИЙ — СТРОГАЯ ГЕОМЕТРИЯ В 2 КОЛОНКИ */}
-          <div className="md:hidden grid grid-cols-2 gap-3 mt-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:hidden gap-3 mt-4">
             {categories.map((cat, i) => (
               <Link
                 key={cat.id}
@@ -71,7 +71,7 @@ export default async function HomePage() {
             ))}
           </div>
 
-          <div className="hidden md:grid grid-cols-4 gap-4 mt-4">
+          <div className="hidden md:grid grid-cols-4 lg:grid-cols-5 gap-4 mt-4">
             {categories.map((cat, i) => (
               <Link
                 key={cat.id}
@@ -104,7 +104,7 @@ export default async function HomePage() {
         />
 
         {brands.length > 0 && (
-          <section className="max-w-5xl mx-auto px-4 pt-8 pb-2">
+          <section className="max-w-5xl md:max-w-6xl mx-auto px-4 pt-8 pb-2">
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-xs tracking-[0.2em] text-muted-foreground uppercase">
                 Бренди
@@ -156,7 +156,7 @@ export default async function HomePage() {
                     />
                   </div>
                   <div className="p-3">
-                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
+                    <p className="text-[11px] sm:text-xs uppercase tracking-widest text-muted-foreground mb-1">
                       {new Date(post.createdAt).toLocaleDateString("uk-UA", {
                         day: "numeric",
                         month: "long",

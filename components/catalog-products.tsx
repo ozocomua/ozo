@@ -94,7 +94,7 @@ export default function CatalogProducts({ initialProducts, total, pageSize = 24,
   return (
     <>
       <div className="flex items-center justify-between mb-4">
-        <div className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">
+        <div className="text-[11px] sm:text-xs uppercase font-bold tracking-widest text-muted-foreground">
           {total} товарів
         </div>
 
@@ -111,7 +111,7 @@ export default function CatalogProducts({ initialProducts, total, pageSize = 24,
           {dropdownOpen && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setDropdownOpen(false)} />
-              <div className="absolute right-0 top-full mt-1 z-50 bg-background border border-border rounded-2xl shadow-lg overflow-hidden min-w-[220px]">
+              <div className="absolute right-0 top-full mt-1 z-50 bg-background border border-border rounded-2xl shadow-lg overflow-hidden min-w-[200px] sm:min-w-[220px] max-w-[90vw]">
                 {SORT_OPTIONS.map((option) => (
                   <button
                     key={option.value}
@@ -131,7 +131,7 @@ export default function CatalogProducts({ initialProducts, total, pageSize = 24,
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
@@ -142,7 +142,7 @@ export default function CatalogProducts({ initialProducts, total, pageSize = 24,
           <button
             onClick={loadMore}
             disabled={loading}
-            className="border border-[#00B5D1] text-[#00B5D1] hover:bg-gradient-to-r hover:from-[#0B53A4] hover:to-[#00B5D1] hover:text-white hover:border-transparent transition-all px-8 py-3 text-sm uppercase tracking-wider font-medium"
+            className="border border-[#00B5D1] text-[#00B5D1] hover:bg-gradient-to-r hover:from-[#0B53A4] hover:to-[#00B5D1] hover:text-white hover:border-transparent transition-all px-6 sm:px-8 py-2.5 sm:py-3 text-sm uppercase tracking-wider font-medium"
           >
             {loading ? "Завантаження..." : "Показати ще"}
           </button>

@@ -81,7 +81,7 @@ export default function ProductVariantPicker({
         className="w-full flex items-center justify-between gap-3 px-4 py-3 bg-muted/60 rounded-xl border border-border hover:border-[#00B5D1]/50 transition-all group"
       >
         <div className="flex items-center gap-2.5 min-w-0">
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground shrink-0">
+          <span className="text-[11px] sm:text-[12px] font-bold uppercase tracking-[0.2em] text-muted-foreground shrink-0">
             Розмір
           </span>
           <span className="text-sm font-semibold text-foreground truncate">
@@ -96,7 +96,7 @@ export default function ProductVariantPicker({
 
       {/* ── Price ── */}
       <div>
-        <span className="text-3xl font-bold text-foreground">
+        <span className="text-2xl sm:text-3xl font-bold text-foreground">
           {selected ? selected.priceRetail : product.price} ₴
         </span>
       </div>
@@ -180,7 +180,7 @@ export default function ProductVariantPicker({
             </div>
 
             {/* Spacer for safe-area on iPhones */}
-            <div className="h-safe pb-2 shrink-0" />
+            <div className="pb-[env(safe-area-inset-bottom)] shrink-0" />
           </div>
         </div>
       )}

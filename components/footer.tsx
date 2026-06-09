@@ -36,7 +36,7 @@ export default function Footer() {
               <div className="flex flex-col gap-2">
                 <a 
                   href="tel:+380778687777" 
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white rounded-xl text-[11px] font-bold uppercase tracking-tight hover:from-[#0c5db8] hover:to-[#00c5e3] transition-all w-fit"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white rounded-xl text-[11px] sm:text-xs font-bold uppercase tracking-tight hover:from-[#0c5db8] hover:to-[#00c5e3] transition-all w-fit"
                 >
                   <Phone size={14} /> Зателефонувати
                 </a>
@@ -44,13 +44,13 @@ export default function Footer() {
                   href="https://t.me/ozo_owner" 
                   target="_blank"
                   rel="noopener noreferrer nofollow"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#0088cc]/10 text-[#0088cc] rounded-xl text-[11px] font-bold uppercase tracking-tight hover:bg-[#0088cc] hover:text-white transition-all w-fit"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#0088cc]/10 text-[#0088cc] rounded-xl text-[11px] sm:text-xs font-bold uppercase tracking-tight hover:bg-[#0088cc] hover:text-white transition-all w-fit"
                 >
                   <Send size={14} /> Telegram
                 </a>
                 <a 
                   href="viber://chat?number=%2B380778687777" 
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#7360f2]/10 text-[#7360f2] rounded-xl text-[11px] font-bold uppercase tracking-tight hover:bg-[#7360f2] hover:text-white transition-all w-fit"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#7360f2]/10 text-[#7360f2] rounded-xl text-[11px] sm:text-xs font-bold uppercase tracking-tight hover:bg-[#7360f2] hover:text-white transition-all w-fit"
                 >
                   <MessageSquare size={14} /> Viber
                 </a>
@@ -90,17 +90,17 @@ export default function Footer() {
 
         <div className="mt-8 pt-4 border-t border-border flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-start md:items-center">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
+            <p className="text-[11px] sm:text-xs uppercase tracking-widest text-muted-foreground font-bold">
               © 2025 OZO.
             </p>
             <button 
               onClick={openCallback}
-              className="text-[10px] uppercase tracking-widest font-black border-b border-black pb-0.5 hover:opacity-50 transition-opacity"
+              className="text-[11px] sm:text-xs uppercase tracking-widest font-black border-b border-black pb-0.5 hover:opacity-50 transition-opacity"
             >
               Зворотній зв'язок
             </button>
           </div>
-          <Link href="/" className="text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors font-bold">
+          <Link href="/" className="text-[11px] sm:text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors font-bold">
             На головну
           </Link>
         </div>

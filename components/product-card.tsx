@@ -49,26 +49,26 @@ export default function ProductCard({ product }: ProductCardProps) {
           fill
           unoptimized
           className={`object-cover transition-transform duration-300 ${outOfStock ? "" : "group-hover:scale-105"}`}
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
         />
         {outOfStock ? (
-          <span className="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-medium tracking-wide px-2 py-0.5 rounded-full">
+          <span className="absolute top-2 left-2 bg-red-600 text-white text-[10px] sm:text-[11px] font-medium tracking-wide px-2 py-0.5 rounded-full">
             Немає в наявності
           </span>
         ) : (
           <>
             {product.isNew && (
-              <span className="absolute top-2 left-2 bg-foreground text-background text-[10px] font-medium tracking-wide px-2 py-0.5 rounded-full">
+              <span className="absolute top-2 left-2 bg-foreground text-background text-[10px] sm:text-[11px] font-medium tracking-wide px-2 py-0.5 rounded-full">
                 Новинка
               </span>
             )}
             {!product.isNew && product.isPopular && (
-              <span className="absolute top-2 left-2 bg-amber-500 text-white text-[10px] font-medium tracking-wide px-2 py-0.5 rounded-full">
+              <span className="absolute top-2 left-2 bg-amber-500 text-white text-[10px] sm:text-[11px] font-medium tracking-wide px-2 py-0.5 rounded-full">
                 Популярний
               </span>
             )}
             {!product.isNew && !product.isPopular && product.badge && (
-              <span className="absolute top-2 left-2 bg-foreground text-background text-[10px] font-medium tracking-wide px-2 py-0.5 rounded-full">
+              <span className="absolute top-2 left-2 bg-foreground text-background text-[10px] sm:text-[11px] font-medium tracking-wide px-2 py-0.5 rounded-full">
                 {product.badge}
               </span>
             )}
@@ -99,7 +99,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           ) : (
             <button 
               onClick={handleBuyClick}
-              className="text-xs bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white font-semibold px-4 py-2 rounded-md hover:from-[#0c5db8] hover:to-[#00c5e3] active:scale-95 transition-all"
+              className="text-xs sm:text-sm bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white font-semibold px-3 py-2 sm:px-4 sm:py-2.5 rounded-md hover:from-[#0c5db8] hover:to-[#00c5e3] active:scale-95 transition-all min-h-[40px] sm:min-h-[44px]"
             >
               Купити
             </button>

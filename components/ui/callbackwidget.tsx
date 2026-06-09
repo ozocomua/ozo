@@ -86,7 +86,7 @@ export default function CallbackWidget() {
                   <Check size={30} />
                 </div>
                 <h3 className="text-xl font-serif italic text-black">Дякуємо!</h3>
-                <p className="text-[10px] opacity-60 leading-relaxed uppercase font-bold tracking-tighter text-black">
+                <p className="text-[11px] sm:text-xs opacity-60 leading-relaxed uppercase font-bold tracking-tighter text-black">
                   Заявка прийнята. Ми зателефонуємо вам найближчим часом.
                 </p>
               </div>
@@ -94,7 +94,7 @@ export default function CallbackWidget() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-1">
                   <h3 className="text-2xl font-serif italic text-black">Допомога</h3>
-                  <p className="text-[10px] uppercase font-bold opacity-30 tracking-widest text-black">Зворотний зв'язок</p>
+                  <p className="text-[11px] sm:text-xs uppercase font-bold opacity-30 tracking-widest text-black">Зворотний зв'язок</p>
                 </div>
 
                 <div className="space-y-3 pt-2">
@@ -148,7 +148,7 @@ export default function CallbackWidget() {
 
                 <button
                   disabled={status === 'submitting' || formData.phone.length < 19 || !formData.name}
-                  className="w-full bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:from-[#0c5db8] hover:to-[#00c5e3] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-40"
+                  className="w-full bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white py-5 rounded-2xl font-black uppercase text-[11px] sm:text-xs tracking-widest hover:from-[#0c5db8] hover:to-[#00c5e3] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-40"
                 >
                   {status === 'submitting' ? <Loader2 className="animate-spin" size={16} /> : "Чекаю на дзвінок"}
                 </button>

@@ -29,7 +29,7 @@ export default function DeliveryBanner() {
               <f.icon size={18} className="shrink-0 opacity-80" />
               <div>
                 <p className="text-xs font-semibold">{f.title}</p>
-                <p className="text-[11px] opacity-60 leading-tight">{f.desc}</p>
+                <p className="text-[11px] sm:text-xs opacity-60 leading-tight md:text-sm md:opacity-70">{f.desc}</p>
               </div>
             </div>
           ))}
@@ -48,7 +48,7 @@ export default function DeliveryBanner() {
         </div>
 
         <div className="w-full mt-4 md:mt-5 pt-3 border-t border-white/15 text-center">
-          <div className="flex items-center justify-center whitespace-nowrap text-[3.1vw] md:text-sm tracking-normal md:tracking-[0.15em] gap-[1.5vw] md:gap-4 px-3">
+          <div className="flex items-center justify-center overflow-x-auto whitespace-nowrap sm:whitespace-normal text-[11px] sm:text-xs md:text-sm tracking-normal md:tracking-[0.15em] gap-1.5 sm:gap-3 md:gap-4 px-3">
 
             <a
               href="tel:+380778687777"

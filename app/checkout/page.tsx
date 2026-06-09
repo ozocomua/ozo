@@ -236,7 +236,7 @@ export default function CheckoutPage() {
           <ArrowLeft size={14} /> Назад
         </Link>
 
-        <div className="grid lg:grid-cols-[1fr_450px] gap-16">
+        <div className="grid lg:grid-cols-[1fr_450px] gap-8 lg:gap-16">
           <div className="space-y-12">
             <h2 className="text-4xl font-serif italic tracking-tight">Оформлення</h2>
             
@@ -295,14 +295,14 @@ export default function CheckoutPage() {
                     {cities.map(c => (
                       <div key={c.Ref} className="p-4 hover:bg-gradient-to-r hover:from-[#0B53A4] hover:to-[#00B5D1] hover:text-white cursor-pointer text-sm transition-colors border-b border-black/5 last:border-0" 
                         onClick={() => { setSelectedCity({ref: c.Ref, name: c.Description}); setCityInput(c.Description); setShowCities(false); }}>
-                        {c.Description}
+                        <span className="truncate block">{c.Description}</span>
                       </div>
                     ))}
                   </div>
                 )}
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
                 {[
                   { id: 'warehouse', label: 'Відділення', icon: MapPin },
                   { id: 'postomat', label: 'Поштомат', icon: Box },
@@ -312,7 +312,7 @@ export default function CheckoutPage() {
                     className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${deliveryType === t.id ? 'border-transparent bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white' : 'border-transparent bg-white text-black opacity-40'}`}
                   >
                     <t.icon size={20} />
-                    <span className="text-[10px] font-black uppercase tracking-tighter">{t.label}</span>
+                    <span className="text-[11px] sm:text-xs font-black uppercase tracking-tighter">{t.label}</span>
                   </button>
                 ))}
               </div>
@@ -336,7 +336,7 @@ export default function CheckoutPage() {
                     {deliveryPoints.map(p => (
                       <div key={p.Ref} className="p-4 hover:bg-gradient-to-r hover:from-[#0B53A4] hover:to-[#00B5D1] hover:text-white cursor-pointer text-sm border-b border-black/5 last:border-0"
                         onClick={() => { setSelectedPoint(p.Description || p.Present); setPointInput(p.Description || p.Present); setShowPoints(false); }}>
-                        {p.Description || p.Present}
+                        <span className="truncate block">{p.Description || p.Present}</span>
                       </div>
                     ))}
                   </div>

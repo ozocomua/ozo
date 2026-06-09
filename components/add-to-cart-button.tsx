@@ -12,7 +12,7 @@ export default function AddToCartButton({ product }: { product: any }) {
     return (
       <button
         disabled
-        className="flex items-center justify-center gap-2 bg-muted text-muted-foreground text-sm font-semibold py-4 rounded-xl mb-3 w-full cursor-not-allowed"
+        className="flex items-center justify-center gap-2 bg-muted text-muted-foreground text-sm md:text-base font-semibold py-4 rounded-xl mb-3 w-full cursor-not-allowed"
       >
         Немає в наявності
       </button>
@@ -31,9 +31,9 @@ export default function AddToCartButton({ product }: { product: any }) {
         variantSize: product.variantSize,
         maxStock: product.stock,
       })}
-      className="flex items-center justify-center gap-2 bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white text-sm font-semibold py-4 rounded-xl hover:from-[#0c5db8] hover:to-[#00c5e3] active:scale-[0.98] transition-all duration-150 mb-3 w-full"
+      className="flex items-center justify-center gap-2 bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white text-sm md:text-base font-semibold py-4 rounded-xl hover:from-[#0c5db8] hover:to-[#00c5e3] active:scale-[0.98] transition-all duration-150 mb-3 w-full"
     >
-      <ShoppingCart size={16} />
+      <ShoppingCart size={18} />
       Додати до кошика
     </button>
   )

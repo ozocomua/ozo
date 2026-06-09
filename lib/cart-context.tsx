@@ -195,7 +195,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                       <div className="flex-1 min-w-0">
                         {item.slug ? (
                           <Link href={`/product/${item.slug}`} onClick={() => setIsModalOpen(false)} className="block">
-                            <h4 className="font-bold text-base truncate mb-0.5 hover:opacity-70 transition-opacity">{item.name}</h4>
+                            <h4 className="font-bold text-sm md:text-base truncate mb-0.5 hover:opacity-70 transition-opacity">{item.name}</h4>
                           </Link>
                         ) : (
                           <h4 className="font-bold text-base truncate mb-0.5">{item.name}</h4>
@@ -206,15 +206,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                       <div className="flex flex-col items-end gap-2">
                          <button 
                             onClick={() => removeFromCart(item.id)}
-                            className="p-1.5 text-muted-foreground hover:text-red-500 transition-colors"
+                            className="p-2.5 text-muted-foreground hover:text-red-500 transition-colors"
                           >
                             <Trash2 size={16} />
                           </button>
 
                           <div className="flex items-center bg-secondary rounded-xl p-0.5 border border-black/[0.03]">
-                            <button onClick={() => updateQuantity(item.id, -1)} className="w-7 h-7 flex items-center justify-center hover:bg-white rounded-lg transition-all shadow-sm"><Minus size={12} /></button>
+                            <button onClick={() => updateQuantity(item.id, -1)} className="w-10 h-10 flex items-center justify-center hover:bg-white rounded-lg transition-all shadow-sm"><Minus size={16} /></button>
                             <span className="w-7 text-center text-xs font-bold">{item.quantity}</span>
-                            <button onClick={() => updateQuantity(item.id, 1)} className="w-7 h-7 flex items-center justify-center hover:bg-white rounded-lg transition-all shadow-sm"><Plus size={12} /></button>
+                            <button onClick={() => updateQuantity(item.id, 1)} className="w-10 h-10 flex items-center justify-center hover:bg-white rounded-lg transition-all shadow-sm"><Plus size={16} /></button>
                           </div>
                       </div>
                     </div>
@@ -222,7 +222,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                 ) : (
                   <div className="py-16 text-center flex flex-col items-center gap-4">
                     <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center text-muted-foreground"><ShoppingBag size={24} /></div>
-                    <p className="text-muted-foreground font-medium uppercase text-[10px] tracking-widest">Кошик порожній</p>
+                    <p className="text-muted-foreground font-medium uppercase text-xs tracking-widest">Кошик порожній</p>
                   </div>
                 )}
               </div>
@@ -230,7 +230,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
               {cart.length > 0 && (
                 <div className="flex-shrink-0 pt-4 border-t border-black/5 mt-auto">
                   <div className="flex justify-between items-end mb-8">
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-extrabold">Всього</span>
+                    <span className="text-[11px] sm:text-xs uppercase tracking-[0.2em] text-muted-foreground font-extrabold">Всього</span>
                     <span className="text-3xl font-black tracking-tighter leading-none">{cartTotal} ₴</span>
                   </div>
                   <Link 

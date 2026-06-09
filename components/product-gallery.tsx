@@ -75,7 +75,7 @@ export default function ProductGallery({
             fill
             unoptimized
             className="object-cover group-hover:scale-105 transition-transform duration-300"
-            sizes="(max-width: 768px) calc(100vw - 32px), (max-width: 1200px) 45vw, 500px"
+            sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 768px) calc(100vw - 64px), (max-width: 1200px) 45vw, 500px"
             priority
           />
           {/* subtle zoom hint */}

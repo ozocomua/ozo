@@ -115,7 +115,7 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
             >
               <ShoppingCart size={22} />
               {hydrated && cart.length > 0 && (
-                <span className="absolute top-0 right-0 w-4 h-4 bg-primary text-primary-foreground text-[10px] font-bold rounded-full flex items-center justify-center">
+                <span className="absolute top-0 right-0 min-w-[20px] h-5 bg-primary text-primary-foreground text-[10px] sm:text-[11px] font-bold rounded-full flex items-center justify-center">
                   {cart.length}
                 </span>
               )}
@@ -131,7 +131,7 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
             >
               <ShoppingCart size={22} />
               {hydrated && cart.length > 0 && (
-                <span className="absolute top-0 right-0 w-4 h-4 bg-primary text-primary-foreground text-[10px] font-bold rounded-full flex items-center justify-center">
+                <span className="absolute top-0 right-0 min-w-[20px] h-5 bg-primary text-primary-foreground text-[10px] sm:text-[11px] font-bold rounded-full flex items-center justify-center">
                   {cart.length}
                 </span>
               )}
@@ -141,7 +141,7 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
           {/* Mobile search */}
           <div
             ref={searchContainerRef}
-            className={`md:hidden flex items-center gap-1 transition-all duration-300 ${isSearchActive ? "flex-1 ml-[13px]" : ""}`}
+            className={`md:hidden flex items-center gap-1 transition-all duration-300 ${isSearchActive ? "flex-1 ml-3" : ""}`}
           >
             {isSearchActive ? (
               <div className="relative flex-1">

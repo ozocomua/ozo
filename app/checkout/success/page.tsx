@@ -25,7 +25,7 @@ function SuccessContent() {
     : 'Дякуємо! Наш оператор зв\'яжеться з вами найближчим часом.'
 
   return (
-    <div className="min-h-screen bg-[#F9F9F7] py-8 md:py-16 px-4">
+    <div className="min-h-screen bg-[#F9F9F7] py-8 md:py-16 px-4 md:px-8">
       <div className="max-w-2xl mx-auto bg-white rounded-[2.5rem] shadow-sm overflow-hidden border border-black/5">
         
         {/* Статус-бар (Чорний блок) */}
@@ -44,7 +44,7 @@ function SuccessContent() {
         <div className="p-8 md:p-10 space-y-6">
           
           {/* 1. НОМЕР ТА СУМА */}
-          <div className="flex justify-between items-baseline">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-2 sm:gap-0">
             <div className="flex flex-col">
               <span className="text-[11px] uppercase font-bold opacity-30 tracking-wider">Номер</span>
               <span className="text-3xl md:text-4xl font-black tracking-tighter">#{orderId}</span>
@@ -79,7 +79,7 @@ function SuccessContent() {
               <span className="text-[11px] uppercase font-bold opacity-30 tracking-wider">Спосіб оплати</span>
               <p className="text-lg font-bold uppercase">{payment || "Післяплата"}</p>
               {paymentUrl && (
-                <a href={paymentUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest mt-1 hover:from-[#0c5db8] hover:to-[#00c5e3] transition-all">
+                <a href={paymentUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white px-4 py-2 rounded-lg text-[11px] sm:text-xs font-bold uppercase tracking-widest mt-1 hover:from-[#0c5db8] hover:to-[#00c5e3] transition-all">
                   Оплатити <ExternalLink size={12} />
                 </a>
               )}
@@ -92,12 +92,12 @@ function SuccessContent() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-1">
               <span className="text-[11px] uppercase font-bold opacity-30 tracking-wider">Отримувач</span>
-              <p className="text-base font-bold uppercase tracking-tight leading-none">{firstName} {middleName} {lastName}</p>
-              <p className="text-sm font-medium opacity-60 leading-none">{phone}</p>
+              <p className="text-base md:text-lg font-bold uppercase tracking-tight leading-none">{firstName} {middleName} {lastName}</p>
+              <p className="text-sm md:text-base font-medium opacity-60 leading-none">{phone}</p>
             </div>
             <div className="space-y-1">
               <span className="text-[11px] uppercase font-bold opacity-30 tracking-wider">Адреса доставки</span>
-              <p className="text-sm font-medium leading-relaxed opacity-80">{delivery}</p>
+              <p className="text-sm md:text-base font-medium leading-relaxed opacity-80">{delivery}</p>
             </div>
           </div>
 

@@ -87,7 +87,7 @@ export default function BundleOffer({ current, partner, bundleProduct }: BundleO
               <span className="text-sm font-bold text-foreground">{bundlePrice} ₴</span>
             </div>
             {economy > 0 && (
-              <span className="text-[10px] font-medium text-muted-foreground mt-0.5">
+              <span className="text-[11px] sm:text-xs font-medium text-muted-foreground mt-0.5">
                 Вигода {economy} ₴
               </span>
             )}
@@ -147,7 +147,7 @@ export default function BundleOffer({ current, partner, bundleProduct }: BundleO
               <span className="text-sm font-bold text-foreground">{bundlePrice} ₴</span>
             </div>
             {economy > 0 && (
-              <span className="text-[10px] font-medium text-muted-foreground">Вигода {economy} ₴</span>
+              <span className="text-[11px] sm:text-xs font-medium text-muted-foreground">Вигода {economy} ₴</span>
             )}
             <button
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleBuyBundle() }}

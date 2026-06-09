@@ -58,7 +58,7 @@ export function ReviewsSection({ reviews, avgRating, reviewCount, productId, pro
                         {r.comment && (
                           <p className="text-sm text-muted-foreground leading-relaxed mt-1">{r.comment}</p>
                         )}
-                        <p className="text-[10px] text-muted-foreground mt-2">
+                        <p className="text-[11px] sm:text-xs text-muted-foreground mt-2">
                           {new Date(r.createdAt).toLocaleDateString("uk-UA", {
                             day: "numeric",
                             month: "long",

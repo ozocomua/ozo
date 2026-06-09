@@ -32,7 +32,7 @@ export default function HomepageProducts({ initialProducts, total, pageSize = 12
   return (
     <section className="max-w-5xl mx-auto px-4 pt-8 pb-2">
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-xs tracking-[0.2em] text-muted-foreground uppercase">
+        <h2 className="text-xs sm:text-sm tracking-[0.2em] text-muted-foreground uppercase">
           Всі продукти
         </h2>
       </div>
@@ -47,7 +47,7 @@ export default function HomepageProducts({ initialProducts, total, pageSize = 12
           <button
             onClick={loadMore}
             disabled={loading}
-            className="border border-[#00B5D1] text-[#00B5D1] hover:bg-gradient-to-r hover:from-[#0B53A4] hover:to-[#00B5D1] hover:text-white hover:border-transparent transition-all px-8 py-3 text-sm uppercase tracking-wider font-medium"
+            className="border border-[#00B5D1] text-[#00B5D1] hover:bg-gradient-to-r hover:from-[#0B53A4] hover:to-[#00B5D1] hover:text-white hover:border-transparent transition-all px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base uppercase tracking-wider font-medium"
           >
             {loading ? "Завантаження..." : "Показати ще"}
           </button>
