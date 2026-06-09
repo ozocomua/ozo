@@ -15,6 +15,9 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart()
 
   const outOfStock = product.stock === 0
+  const variantPrices = (product.variants || []).map((v: any) => v.priceRetail).filter((p: number) => p > 0)
+  const displayPrice = variantPrices.length > 0 ? Math.min(...variantPrices) : product.price
+  const hasVariants = variantPrices.length > 1
 
   const handleBuyClick = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -24,11 +27,12 @@ export default function ProductCard({ product }: ProductCardProps) {
     const v = product.variants?.[0]
     addToCart({
       id: v ? v.id : product.id,
-      name: v ? `${product.name} (${v.volume})` : product.name,
+      name: v ? `${product.name} (${v.size || v.volume})` : product.name,
       price: v ? v.priceRetail : product.price,
       image: product.image,
       slug: product.slug,
       productId: product.id,
+      variantSize: v ? (v.size || v.volume) : undefined,
       maxStock: product.stock,
     })
   }
@@ -85,7 +89,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               </span>
             )}
             <span className="text-base font-bold text-foreground whitespace-nowrap max-md:text-base max-md:font-bold max-md:text-foreground max-md:-translate-y-[2px]">
-              {product.price} ₴
+              {hasVariants ? "від " : ""}{displayPrice} ₴
             </span>
           </div>
           {outOfStock ? (

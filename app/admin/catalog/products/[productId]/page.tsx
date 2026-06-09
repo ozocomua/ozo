@@ -32,6 +32,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ pr
       volume: true,
       containerType: true,
       dimensions: true,
+      variants: { select: { id: true, size: true, volume: true, packageType: true, priceRetail: true, stock: true }, orderBy: { id: "asc" } },
       productType: true,
       oldPrice: true,
       isPopular: true,

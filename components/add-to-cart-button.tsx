@@ -23,11 +23,12 @@ export default function AddToCartButton({ product }: { product: any }) {
     <button
       onClick={() => addToCart({
         id: product.id,
-        name: product.name,
+        name: product.variantSize ? `${product.name} (${product.variantSize})` : product.name,
         price: product.price,
         image: product.image,
         slug: product.slug,
-        productId: product.id,
+        productId: product.productId || product.id,
+        variantSize: product.variantSize,
         maxStock: product.stock,
       })}
       className="flex items-center justify-center gap-2 bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white text-sm font-semibold py-4 rounded-xl hover:from-[#0c5db8] hover:to-[#00c5e3] active:scale-[0.98] transition-all duration-150 mb-3 w-full"

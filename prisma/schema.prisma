@@ -136,6 +136,7 @@ model ProductVariant {
   id             Int     @id @default(autoincrement())
   productId      Int
   sku            String
+  size           String?
   volume         String
   packageType    String
   priceRetail    Float   @default(0)

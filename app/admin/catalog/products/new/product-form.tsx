@@ -98,6 +98,9 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
   const [bundleProductId, setBundleProductId] = useState<number | null>(initialData?.bundleProductId ?? null);
   const [productType, setProductType] = useState<string>(initialData?.productType ?? "SINGLE");
   const [oldPrice, setOldPrice] = useState<number | null>(initialData?.oldPrice ?? null);
+  const [variants, setVariants] = useState<{ size: string; price: number }[]>(
+    initialData?.variants?.map((v: any) => ({ size: v.size || v.volume || "", price: v.priceRetail || 0 })) || []
+  );
   const allProducts = allProductsProp || [];
 
   const form = useForm<z.infer<typeof productSchema>>({
@@ -175,6 +178,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
         volume: values.volume,
         containerType: values.containerType,
         dimensions: values.dimensions,
+        variants: variants.length > 0 ? variants : undefined,
         productType,
         isPopular: !!isPopular,
         isNew: !!isNew,
@@ -507,10 +511,72 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
               )}
             </div>
 
-            {/* Характеристики товара */}
+            {/* Варианты товара */}
             <div className="border rounded-lg p-6 bg-card space-y-4">
-              <h2 className="text-lg font-semibold border-b pb-2">Характеристики товару</h2>
-              
+              <div className="flex items-center justify-between border-b pb-2">
+                <h2 className="text-lg font-semibold">Варианты товару (Розмір + Ціна)</h2>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setVariants((prev) => [...prev, { size: "", price: 0 }])}
+                >
+                  + Додати розмір
+                </Button>
+              </div>
+
+              {variants.length === 0 ? (
+                <p className="text-sm text-muted-foreground py-4 text-center">
+                  Немає варіантів. Додайте розміри, щоб покупець міг обрати потрібний.
+                  Якщо варіантів немає — використовується основна ціна товару.
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  {variants.map((v, idx) => (
+                    <div key={idx} className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+                      <div className="flex-1">
+                        <FormLabel className="text-xs">Розмір</FormLabel>
+                        <Input
+                          placeholder="напр. 50×20 см"
+                          value={v.size}
+                          onChange={(e) => {
+                            setVariants((prev) => {
+                              const next = [...prev]
+                              next[idx] = { ...next[idx], size: e.target.value }
+                              return next
+                            })
+                          }}
+                        />
+                      </div>
+                      <div className="w-32">
+                        <FormLabel className="text-xs">Ціна (₴)</FormLabel>
+                        <Input
+                          type="number"
+                          placeholder="300"
+                          value={v.price || ""}
+                          onChange={(e) => {
+                            setVariants((prev) => {
+                              const next = [...prev]
+                              next[idx] = { ...next[idx], price: parseFloat(e.target.value) || 0 }
+                              return next
+                            })
+                          }}
+                        />
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="mt-5 text-red-500 hover:text-red-700 hover:bg-red-50"
+                        onClick={() => setVariants((prev) => prev.filter((_, i) => i !== idx))}
+                      >
+                        <Trash className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               <FormField control={form.control} name="volume" render={({ field }) => (
                 <FormItem>
                   <FormLabel>Объём / Вес</FormLabel>

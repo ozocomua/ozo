@@ -6,6 +6,7 @@ import Footer from "@/components/footer"
 import ProductCard from "@/components/product-card"
 import ProductGallery from "@/components/product-gallery"
 import AddToCartButton from "@/components/add-to-cart-button"
+import ProductVariantPicker from "@/components/product-variant-picker"
 import BundleOffer from "@/components/bundle-offer"
 import ProductDescription from "@/components/product-description"
 import { ReviewsSection } from "@/components/reviews-section"
@@ -245,20 +246,7 @@ export default async function ProductPage({ params }: Props) {
               <WriteReviewInline productId={product.id} />
             </div>
 
-            <div>
-              <div className="flex items-center gap-3">
-                <span className="text-3xl font-bold text-foreground">
-                  {product.price} ₴
-                </span>
-                {product.oldPrice && product.oldPrice > product.price && (
-                  <span className="text-lg text-muted-foreground line-through max-md:translate-y-[1px]">
-                    {product.oldPrice} ₴
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <AddToCartButton product={product} />
+            <ProductVariantPicker product={product} variants={product.variants} />
 
             {product.relatedVersions.length > 0 && (
               <div className="border border-border rounded-xl p-4 space-y-3">

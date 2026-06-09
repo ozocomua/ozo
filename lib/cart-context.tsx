@@ -13,6 +13,7 @@ interface CartItem {
   image?: string
   slug?: string
   productId?: number
+  variantSize?: string
   maxStock?: number
 }
 

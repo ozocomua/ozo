@@ -152,6 +152,7 @@ export async function createProduct(data: {
   containerType?: string;
   dimensions?: string;
   productType?: string;
+  variants?: { size: string; price: number }[];
   oldPrice?: number | null;
   isPopular?: boolean;
   isNew?: boolean;
@@ -222,13 +223,24 @@ export async function createProduct(data: {
           })),
         },
         variants: {
-          create: {
-            sku: data.sku,
-            volume: data.volume || "",
-            packageType: data.containerType || "",
-            priceRetail: data.price,
-            stock: data.stock ?? 0,
-          },
+          create: (data.variants && data.variants.length > 0
+            ? data.variants.map((v) => ({
+                sku: `${data.sku}-${v.size.replace(/\s+/g, "-")}`,
+                size: v.size,
+                volume: v.size,
+                packageType: "",
+                priceRetail: v.price,
+                stock: data.stock ?? 0,
+              }))
+            : [{
+                sku: data.sku,
+                volume: data.volume || "",
+                packageType: data.containerType || "",
+                size: null,
+                priceRetail: data.price,
+                stock: data.stock ?? 0,
+              }]
+          ),
         },
       },
     });
@@ -443,6 +455,7 @@ export async function updateProduct(
     containerType?: string;
     dimensions?: string;
     productType?: string;
+    variants?: { size: string; price: number }[];
     oldPrice?: number | null;
     isPopular?: boolean;
     isNew?: boolean;
@@ -551,6 +564,24 @@ export async function updateProduct(
               productId,
               categoryId: c.id,
               isMain: c.isMain,
+            })),
+          });
+        }
+      }
+
+      if (data.variants) {
+        await tx.productVariant.deleteMany({ where: { productId } });
+        if (data.variants.length > 0) {
+          const sku = data.sku || existing.sku;
+          await tx.productVariant.createMany({
+            data: data.variants.map((v) => ({
+              productId,
+              sku: `${sku}-${v.size.replace(/\s+/g, "-")}`,
+              size: v.size,
+              volume: v.size,
+              packageType: "",
+              priceRetail: v.price,
+              stock: data.stock ?? 0,
             })),
           });
         }

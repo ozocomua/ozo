@@ -33,6 +33,7 @@ export type StorefrontCategory = {
 export type StorefrontVariant = {
   id: number
   sku: string
+  size: string | null
   volume: string
   packageType: string
   priceRetail: number
@@ -163,7 +164,7 @@ export async function getAllProducts(opts?: { limit?: number; skip?: number }): 
       brand: { select: { name: true } },
       categories: { select: { category: { select: { slug: true } } }, orderBy: { categoryId: "asc" }, take: 1 },
       images: { select: { url: true, sort: true, isMain: true }, orderBy: { sort: "asc" } },
-      variants: { select: { id: true, sku: true, volume: true, packageType: true, priceRetail: true, stock: true }, orderBy: { id: "asc" } },
+      variants: { select: { id: true, sku: true, size: true, volume: true, packageType: true, priceRetail: true, stock: true }, orderBy: { id: "asc" } },
       relatedProducts: { select: { id: true, slug: true, name: true } },
       reviews: { select: { id: true, rating: true, comment: true, userName: true, createdAt: true }, orderBy: { createdAt: "desc" } },
     },
@@ -174,6 +175,7 @@ export async function getAllProducts(opts?: { limit?: number; skip?: number }): 
       const variants = p.variants.map((v) => ({
         id: v.id,
         sku: v.sku,
+        size: v.size ?? null,
         volume: v.volume,
         packageType: v.packageType,
         priceRetail: v.priceRetail,
@@ -205,6 +207,7 @@ export async function getAllProducts(opts?: { limit?: number; skip?: number }): 
         image: mainImage,
         price: def ? def.priceRetail : 0,
         oldPrice: p.oldPrice ?? null,
+        size: def?.size ?? null,
         volume: def?.volume ?? "",
         stock: def?.stock ?? 0,
         variants,
@@ -294,7 +297,7 @@ export async function getProductsByCategoryId(categoryId: number | number[], opt
       brand: { select: { name: true } },
       categories: { select: { category: { select: { slug: true } } }, orderBy: { categoryId: "asc" }, take: 1 },
       images: { select: { url: true, sort: true, isMain: true }, orderBy: { sort: "asc" } },
-      variants: { select: { id: true, sku: true, volume: true, packageType: true, priceRetail: true, stock: true }, orderBy: { id: "asc" } },
+      variants: { select: { id: true, sku: true, size: true, volume: true, packageType: true, priceRetail: true, stock: true }, orderBy: { id: "asc" } },
     },
   })
 
@@ -303,6 +306,7 @@ export async function getProductsByCategoryId(categoryId: number | number[], opt
       const variants = p.variants.map((v) => ({
         id: v.id,
         sku: v.sku,
+        size: v.size ?? null,
         volume: v.volume,
         packageType: v.packageType,
         priceRetail: v.priceRetail,
@@ -334,6 +338,7 @@ export async function getProductsByCategoryId(categoryId: number | number[], opt
         image: mainImage,
         price: def ? def.priceRetail : 0,
         oldPrice: p.oldPrice ?? null,
+        size: def?.size ?? null,
         volume: def?.volume ?? "",
         stock: def?.stock ?? 0,
         variants,
@@ -374,7 +379,7 @@ export async function getProductBySlug(slug: string): Promise<StorefrontProduct 
       brand: { select: { name: true } },
       categories: { select: { category: { select: { slug: true } } }, orderBy: { categoryId: "asc" }, take: 1 },
       images: { select: { url: true, sort: true, isMain: true }, orderBy: { sort: "asc" } },
-      variants: { select: { id: true, sku: true, volume: true, packageType: true, priceRetail: true, stock: true }, orderBy: { id: "asc" } },
+      variants: { select: { id: true, sku: true, size: true, volume: true, packageType: true, priceRetail: true, stock: true }, orderBy: { id: "asc" } },
       relatedProducts: { select: { id: true, slug: true, name: true } },
       reviews: { select: { id: true, rating: true, comment: true, userName: true, createdAt: true }, orderBy: { createdAt: "desc" }, where: { isStoreReview: false, isPublished: true } },
     },
@@ -384,7 +389,8 @@ export async function getProductBySlug(slug: string): Promise<StorefrontProduct 
   const variants = p.variants.map((v) => ({
     id: v.id,
     sku: v.sku,
-    volume: v.volume,
+    size: v.size ?? null,
+        volume: v.volume,
     packageType: v.packageType,
     priceRetail: v.priceRetail,
     stock: v.stock,
@@ -421,7 +427,8 @@ export async function getProductBySlug(slug: string): Promise<StorefrontProduct 
     image: mainImage,
     price: def ? def.priceRetail : 0,
     oldPrice: p.oldPrice ?? null,
-    volume: def?.volume ?? "",
+    size: def?.size ?? null,
+        volume: def?.volume ?? "",
     stock: def?.stock ?? 0,
     variants,
     images,
@@ -451,7 +458,7 @@ export async function getProductsByIds(ids: number[]): Promise<StorefrontProduct
       brand: { select: { name: true } },
       categories: { select: { category: { select: { slug: true } } }, orderBy: { categoryId: "asc" }, take: 1 },
       images: { select: { url: true, sort: true, isMain: true }, orderBy: { sort: "asc" } },
-      variants: { select: { id: true, sku: true, volume: true, packageType: true, priceRetail: true, stock: true }, orderBy: { id: "asc" } },
+      variants: { select: { id: true, sku: true, size: true, volume: true, packageType: true, priceRetail: true, stock: true }, orderBy: { id: "asc" } },
     },
   })
 
@@ -460,6 +467,7 @@ export async function getProductsByIds(ids: number[]): Promise<StorefrontProduct
       const variants = p.variants.map((v) => ({
         id: v.id,
         sku: v.sku,
+        size: v.size ?? null,
         volume: v.volume,
         packageType: v.packageType,
         priceRetail: v.priceRetail,
@@ -485,6 +493,7 @@ export async function getProductsByIds(ids: number[]): Promise<StorefrontProduct
         image: mainImage,
         price: def ? def.priceRetail : 0,
         oldPrice: p.oldPrice ?? null,
+        size: def?.size ?? null,
         volume: def?.volume ?? "",
         stock: def?.stock ?? 0,
         variants,
@@ -536,7 +545,7 @@ export async function getProductsByBrandSlug(brandSlug: string, opts?: { limit?:
       brand: { select: { name: true } },
       categories: { select: { category: { select: { slug: true } } }, orderBy: { categoryId: "asc" }, take: 1 },
       images: { select: { url: true, sort: true, isMain: true }, orderBy: { sort: "asc" } },
-      variants: { select: { id: true, sku: true, volume: true, packageType: true, priceRetail: true, stock: true }, orderBy: { id: "asc" } },
+      variants: { select: { id: true, sku: true, size: true, volume: true, packageType: true, priceRetail: true, stock: true }, orderBy: { id: "asc" } },
     },
   })
 
@@ -545,6 +554,7 @@ export async function getProductsByBrandSlug(brandSlug: string, opts?: { limit?:
       const variants = p.variants.map((v) => ({
         id: v.id,
         sku: v.sku,
+        size: v.size ?? null,
         volume: v.volume,
         packageType: v.packageType,
         priceRetail: v.priceRetail,
@@ -570,6 +580,7 @@ export async function getProductsByBrandSlug(brandSlug: string, opts?: { limit?:
         image: mainImage,
         price: def ? def.priceRetail : 0,
         oldPrice: p.oldPrice ?? null,
+        size: def?.size ?? null,
         volume: def?.volume ?? "",
         stock: def?.stock ?? 0,
         variants,
