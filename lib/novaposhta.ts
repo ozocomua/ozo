@@ -164,18 +164,10 @@ export async function createDocument(input: NpDocumentInput): Promise<NpDocument
     RecipientName: input.recipientName,
   }
 
-  if (
-    input.backwardDeliveryRedeliveryString &&
-    parseFloat(input.backwardDeliveryRedeliveryString) > 0
-  ) {
-    props.BackwardDeliveryData = [
-      {
-        PayerType: "Sender",
-        CargoType: "Cargo",
-        RedeliveryString: input.backwardDeliveryRedeliveryString,
-      },
-    ]
-  }
+  // "Контроль оплати" для ФОП — не используем BackwardDeliveryData.
+  // NP автоматически управляет получением оплати через договор.
+  // Достаточно передать Cost. BackwardDelivery вызывает ошибку "Післяплата недоступна"
+  // если услуга "Контроль оплати" настроена на договоре, а не как отдельная услуга Післяплата.
 
   const data = await npRequest<NpDocumentResult>("InternetDocument", "save", props)
 
