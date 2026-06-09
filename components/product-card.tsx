@@ -28,7 +28,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     addToCart({
       id: v ? v.id : product.id,
       name: v ? `${product.name} (${v.size || v.volume})` : product.name,
-      price: displayPrice,
+      price: v ? v.priceRetail : product.price,
       image: product.image,
       slug: product.slug,
       productId: product.id,
