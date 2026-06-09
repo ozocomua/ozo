@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { requireAdminOr401 } from "@/lib/admin-api"
-import { createRecipient, createDocument } from "@/lib/novaposhta"
+import { createRecipient, createDocument, updateCounterpartyName } from "@/lib/novaposhta"
 import { sendTtnNotification } from "@/lib/telegram"
 
 export async function POST(req: Request) {
@@ -69,6 +69,13 @@ export async function POST(req: Request) {
       select: { orderNumber: true },
     })
     const orderNumber = order?.orderNumber ?? String(orderId)
+
+    // Ensure sender counterparty shows as "OZO" in "Створено через"
+    if (senderRef) {
+      updateCounterpartyName(senderRef, "OZO").catch((err) =>
+        console.warn("[create-document] Sender name update skipped:", err instanceof Error ? err.message : err)
+      )
+    }
 
     const { recipientRef, contactRef: recipientContactRef } = await createRecipient(
       recipientName,

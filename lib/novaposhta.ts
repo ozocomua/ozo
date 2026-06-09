@@ -111,6 +111,21 @@ export async function createRecipient(name: string, phone: string): Promise<NpRe
   return { recipientRef, contactRef }
 }
 
+export async function updateCounterpartyName(ref: string, name: string) {
+  const parts = name.trim().split(/\s+/)
+  const lastName = parts[0] ?? name
+  const firstName = parts[1] ?? ""
+  const middleName = parts.slice(2).join(" ") ?? ""
+
+  await npRequest("Counterparty", "update", {
+    Ref: ref,
+    FirstName: firstName,
+    MiddleName: middleName,
+    LastName: lastName,
+    CounterpartyType: "PrivatePerson",
+  })
+}
+
 export interface NpDocumentInput {
   senderRef: string
   senderCityRef: string
