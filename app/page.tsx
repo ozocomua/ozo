@@ -58,7 +58,7 @@ export default async function HomePage() {
                   fill
                   unoptimized
                   priority={i === 0}
-                  className="object-cover grayscale-[25%] saturate-[85%] contrast-105 transition-all duration-500 group-hover:grayscale-0 group-hover:saturate-100 group-hover:scale-105"
+                  className="object-cover grayscale-[10%] saturate-[95%] transition-all duration-500 group-hover:grayscale-0 group-hover:saturate-100 group-hover:scale-105"
                   sizes="(max-width: 768px) 50vw, 25vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
@@ -84,7 +84,7 @@ export default async function HomePage() {
                   fill
                   unoptimized
                   priority={i === 0}
-                  className="object-cover grayscale-[25%] saturate-[85%] contrast-105 transition-all duration-500 group-hover:grayscale-0 group-hover:saturate-100 group-hover:scale-105"
+                  className="object-cover grayscale-[10%] saturate-[95%] transition-all duration-500 group-hover:grayscale-0 group-hover:saturate-100 group-hover:scale-105"
                   sizes="(max-width: 768px) 50vw, 25vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
