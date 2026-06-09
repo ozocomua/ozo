@@ -170,7 +170,6 @@ export async function createDocument(input: NpDocumentInput): Promise<NpDocument
   ) {
     props.BackwardDeliveryData = [
       {
-        PayerType: "Recipient",
         CargoType: "Money",
         RedeliveryString: input.backwardDeliveryRedeliveryString,
       },
