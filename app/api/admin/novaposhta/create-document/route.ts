@@ -82,7 +82,7 @@ export async function POST(req: Request) {
       recipientPhone,
       weight: weight ?? 1,
       seatsAmount: seatsAmount ?? 1,
-      description: description ?? "Автокосметика",
+      description: description ?? "Товари",
       cost: cost ?? 0,
       backwardDeliveryRedeliveryString,
     })
