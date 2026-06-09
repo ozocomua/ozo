@@ -125,17 +125,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }
 
   const updateQuantity = (id: number | string, delta: number) => {
-    setCart(prev => prev.map(item => {
-      if (item.id !== id) return item
-      const max = item.maxStock ?? 999
-      if (delta > 0 && item.quantity >= max) {
-        toast.error(`Не можна додати більше, ніж ${max} шт., оскільки це весь доступний залишок.`)
-        return item
-      }
-      const next = item.quantity + delta
-      if (next < 1) return item
-      return { ...item, quantity: next }
-    }))
+    setCart(prev => {
+      const updated = prev.map(item => {
+        if (item.id !== id) return item
+        const max = item.maxStock ?? 999
+        if (delta > 0 && item.quantity >= max) {
+          toast.error(`Не можна додати більше, ніж ${max} шт., оскільки це весь доступний залишок.`)
+          return item
+        }
+        const next = item.quantity + delta
+        return { ...item, quantity: next }
+      })
+      return updated.filter(item => item.quantity > 0)
+    })
   }
 
   const removeFromCart = (id: number | string) => {
