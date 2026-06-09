@@ -246,7 +246,7 @@ export default async function ProductPage({ params }: Props) {
               <WriteReviewInline productId={product.id} />
             </div>
 
-            <ProductVariantPicker product={product} variants={product.variants} />
+            <ProductVariantPicker product={product} variants={product.variants.filter((v: any) => v.size != null)} />
 
             {product.relatedVersions.length > 0 && (
               <div className="border border-border rounded-xl p-4 space-y-3">
@@ -278,7 +278,7 @@ export default async function ProductPage({ params }: Props) {
               <Truck size={18} className="shrink-0 text-muted-foreground mt-0.5" />
               <div>
                 <p className="text-sm font-medium text-foreground">
-                  Доставка Новою Поштою
+                  Доставка Новою Поштою та Укрпоштою
                 </p>
                 <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
                   По всій Україні. Оплата при отриманні — платите тільки після
