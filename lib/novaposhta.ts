@@ -4,6 +4,8 @@ interface NpResponse<T> {
   success: boolean
   data: T[]
   errors: string[]
+  warnings?: string[]
+  info?: unknown
 }
 
 async function npRequest<T>(model: string, method: string, props: Record<string, unknown>): Promise<T[]> {
@@ -14,6 +16,8 @@ async function npRequest<T>(model: string, method: string, props: Record<string,
     methodProperties: props,
   }
 
+  const LOG_PREFIX = `[NP API 2.0] ${model} / ${method}`
+
   const res = await fetch(API_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -21,14 +25,27 @@ async function npRequest<T>(model: string, method: string, props: Record<string,
   })
 
   if (!res.ok) {
-    throw new Error(`Nova Poshta API error: ${res.status} ${res.statusText}`)
+    console.error(`${LOG_PREFIX} → HTTP ${res.status} ${res.statusText}`)
+    throw new Error(`Nova Poshta API error: HTTP ${res.status} ${res.statusText}`)
   }
 
   const json: NpResponse<T> = await res.json()
-  if (!json.success) {
-    throw new Error(`Nova Poshta API error: ${json.errors?.join(", ") ?? "unknown"}`)
+
+  if (json.warnings && json.warnings.length > 0) {
+    console.warn(`${LOG_PREFIX} → WARNINGS:`, json.warnings)
   }
 
+  if (!json.success) {
+    const errorList = json.errors?.join("; ") ?? "unknown"
+    console.error(`${LOG_PREFIX} → FAILED`)
+    console.error(`  REQUEST:`, JSON.stringify(props, null, 2))
+    console.error(`  RESPONSE errors:`, json.errors)
+    console.error(`  RESPONSE warnings:`, json.warnings)
+    console.error(`  RESPONSE info:`, json.info)
+    throw new Error(`${errorList}`)
+  }
+
+  console.log(`${LOG_PREFIX} → OK (${json.data.length} results)`)
   return json.data
 }
 

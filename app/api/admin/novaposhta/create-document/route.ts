@@ -119,7 +119,8 @@ export async function POST(req: Request) {
       costOnSite: doc.CostOnSite,
     })
   } catch (error) {
-    console.error("NP_CREATE_DOCUMENT_ERROR:", error)
+    console.error("[NP_CREATE_DOCUMENT_ERROR]", error instanceof Error ? error.message : error)
+    console.error("  REQUEST BODY:", JSON.stringify(body, null, 2))
     const message = error instanceof Error ? error.message : "Ошибка создания ТТН"
     return NextResponse.json({ error: message }, { status: 500 })
   }
