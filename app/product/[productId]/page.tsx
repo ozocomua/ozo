@@ -275,7 +275,7 @@ export default async function ProductPage({ params }: Props) {
             </p>
 
             <div className="bg-secondary rounded-xl p-4 flex gap-3">
-              <Truck size={18} sm:size={20} className="shrink-0 text-muted-foreground mt-0.5" />
+              <Truck size={20} className="shrink-0 text-muted-foreground mt-0.5" />
               <div>
                 <p className="text-sm font-medium text-foreground">
                   Доставка Новою Поштою та Укрпоштою
