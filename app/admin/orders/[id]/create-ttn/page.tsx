@@ -46,7 +46,7 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
 
   const [weight, setWeight] = useState(1)
   const [seats, setSeats] = useState(1)
-  const [description, setDescription] = useState("Автокосметика")
+  const [description, setDescription] = useState("Товари - опис відправлення")
   const [declaredValue, setDeclaredValue] = useState(0)
   const [backwardDelivery, setBackwardDelivery] = useState(false)
   const [redeliveryString, setRedeliveryString] = useState("")
