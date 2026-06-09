@@ -32,10 +32,10 @@ export default function CategoryCard({ category }: CategoryCardProps) {
           alt={category.name}
           fill
           unoptimized
-          className="object-cover grayscale-[40%] saturate-[65%] brightness-95 contrast-105 transition-all duration-500 group-hover:grayscale-0 group-hover:saturate-100 group-hover:scale-105"
+          className="object-cover transition-all duration-500 group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, 50vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-4">
           <h3 className="font-medium text-white text-sm leading-tight">
             {category.name}

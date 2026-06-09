@@ -47,10 +47,10 @@ export default function OtherCategoriesScroll({ categories }: { categories: Cate
                 alt={cat.name}
                 fill
                 unoptimized
-                className="object-cover grayscale-[40%] saturate-[65%] brightness-90 contrast-110 transition-all duration-500 group-hover:grayscale-0 group-hover:saturate-100 group-hover:scale-105"
+                className="object-cover transition-all duration-500 group-hover:scale-105"
                 sizes="(max-width: 768px) 160px, 192px"
               />
-              <div className="absolute inset-0 bg-neutral-900/40 group-hover:bg-neutral-900/50 transition-colors z-10" />
+              <div className="absolute inset-0 bg-neutral-900/20 group-hover:bg-neutral-900/30 transition-colors z-10" />
               <div className="absolute inset-0 flex items-center justify-center p-2 z-20 text-center">
                 <span className="text-xs md:text-sm font-bold text-white tracking-wide uppercase">
                   {cat.name}
