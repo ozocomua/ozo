@@ -63,6 +63,13 @@ export async function POST(req: Request) {
   }
 
   try {
+    // Fetch order number for NP fields
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      select: { orderNumber: true },
+    })
+    const orderNumber = order?.orderNumber ?? String(orderId)
+
     const { recipientRef, contactRef: recipientContactRef } = await createRecipient(
       recipientName,
       recipientPhone
@@ -85,6 +92,8 @@ export async function POST(req: Request) {
       description: description ?? "Товари",
       cost: cost ?? 0,
       backwardDeliveryRedeliveryString,
+      infoRegClientBarcodes: orderNumber,
+      additionalInformation: `Заказ #${orderNumber}`,
     })
 
     await prisma.order.update({

@@ -129,6 +129,8 @@ export interface NpDocumentInput {
   cost: number
   serviceType?: string
   backwardDeliveryRedeliveryString?: string
+  infoRegClientBarcodes?: string
+  additionalInformation?: string
 }
 
 interface NpDocumentResult {
@@ -162,6 +164,13 @@ export async function createDocument(input: NpDocumentInput): Promise<NpDocument
     RecipientsPhone: input.recipientPhone,
     RecipientType: "PrivatePerson",
     RecipientName: input.recipientName,
+  }
+
+  if (input.infoRegClientBarcodes) {
+    props.InfoRegClientBarcodes = input.infoRegClientBarcodes
+  }
+  if (input.additionalInformation) {
+    props.AdditionalInformation = input.additionalInformation
   }
 
   // "Контроль оплати" для ФОП — используем AfterpaymentOnGoodsCost вместо BackwardDeliveryData.
