@@ -123,7 +123,7 @@ interface NpDocumentResult {
 
 export async function createDocument(input: NpDocumentInput): Promise<NpDocumentResult> {
   const props: Record<string, unknown> = {
-    PayerType: "Recipient",
+    PayerType: "Sender",
     PaymentMethod: "Cash",
     CargoType: "Cargo",
     ServiceType: input.serviceType ?? "WarehouseWarehouse",
@@ -153,7 +153,7 @@ export async function createDocument(input: NpDocumentInput): Promise<NpDocument
   ) {
     props.BackwardDeliveryData = [
       {
-        PayerType: "Sender",
+        PayerType: "Recipient",
         CargoType: "Money",
         RedeliveryString: input.backwardDeliveryRedeliveryString,
       },
