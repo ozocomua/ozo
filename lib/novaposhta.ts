@@ -112,18 +112,28 @@ export async function createRecipient(name: string, phone: string): Promise<NpRe
 }
 
 export async function updateCounterpartyName(ref: string, name: string) {
-  const parts = name.trim().split(/\s+/)
-  const lastName = parts[0] ?? name
-  const firstName = parts[1] ?? ""
-  const middleName = parts.slice(2).join(" ") ?? ""
-
-  await npRequest("Counterparty", "update", {
-    Ref: ref,
-    FirstName: firstName,
-    MiddleName: middleName,
-    LastName: lastName,
-    CounterpartyType: "PrivatePerson",
-  })
+  // Try with Organization type first (most common for sender counterparties)
+  try {
+    await npRequest("Counterparty", "update", {
+      Ref: ref,
+      FirstName: name,
+      MiddleName: "",
+      LastName: "",
+      CounterpartyType: "Organization",
+      CounterpartyProperty: "Sender",
+    })
+    console.log(`[NP] Counterparty ${ref} renamed to "${name}" (Organization)`)
+  } catch {
+    // Fallback: try as PrivatePerson
+    await npRequest("Counterparty", "update", {
+      Ref: ref,
+      FirstName: name,
+      MiddleName: "",
+      LastName: "",
+      CounterpartyType: "PrivatePerson",
+    })
+    console.log(`[NP] Counterparty ${ref} renamed to "${name}" (PrivatePerson)`)
+  }
 }
 
 export interface NpDocumentInput {

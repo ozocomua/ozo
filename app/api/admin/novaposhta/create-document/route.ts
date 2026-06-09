@@ -71,11 +71,9 @@ export async function POST(req: Request) {
     const orderNumber = order?.orderNumber ?? String(orderId)
 
     // Ensure sender counterparty shows as "OZO" in "Створено через"
-    if (senderRef) {
-      updateCounterpartyName(senderRef, "OZO").catch((err) =>
-        console.warn("[create-document] Sender name update skipped:", err instanceof Error ? err.message : err)
-      )
-    }
+    updateCounterpartyName(senderRef, "OZO").catch((err) =>
+      console.error("[create-document] Sender rename FAILED:", err instanceof Error ? err.message : err)
+    )
 
     const { recipientRef, contactRef: recipientContactRef } = await createRecipient(
       recipientName,
