@@ -79,7 +79,7 @@ export default async function HomePage() {
             }`}
             style={
               categories.length <= 3
-                ? { gridTemplateColumns: `repeat(${categories.length}, minmax(180px, 280px))` }
+                ? { gridTemplateColumns: `repeat(${categories.length}, minmax(280px, 420px))` }
                 : undefined
             }
           >
@@ -87,7 +87,9 @@ export default async function HomePage() {
               <Link
                 key={cat.id}
                 href={`/catalog/${cat.slug}`}
-                className="relative group aspect-[3/4] w-full rounded-sm overflow-hidden bg-zinc-900"
+                className={`relative group w-full rounded-sm overflow-hidden bg-zinc-900 ${
+                  categories.length <= 3 ? "aspect-video" : "aspect-[3/4]"
+                }`}
               >
                 <Image
                   src={normalizeImageUrl(cat.imageUrl)}
