@@ -48,7 +48,7 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
   const [seats, setSeats] = useState(1)
   const [description, setDescription] = useState("Товари")
   const [declaredValue, setDeclaredValue] = useState(0)
-  const [backwardDelivery, setBackwardDelivery] = useState(true)
+  const [backwardDelivery, setBackwardDelivery] = useState(false)
   const [redeliveryString, setRedeliveryString] = useState("")
 
   const [submitting, setSubmitting] = useState(false)
@@ -63,7 +63,6 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
         setOrder(found)
         if (found) {
           setDeclaredValue(found.total)
-          setRedeliveryString(String(found.total))
           if (found.cityName) setCityQuery(found.cityName)
         }
       })
