@@ -71,7 +71,18 @@ export default async function HomePage() {
             ))}
           </div>
 
-          <div className="hidden md:grid grid-cols-4 lg:grid-cols-5 gap-4 mt-4">
+          <div
+            className={`hidden md:grid gap-4 mt-4 ${
+              categories.length <= 3
+                ? "place-content-center"
+                : "grid-cols-4 lg:grid-cols-5"
+            }`}
+            style={
+              categories.length <= 3
+                ? { gridTemplateColumns: `repeat(${categories.length}, minmax(180px, 280px))` }
+                : undefined
+            }
+          >
             {categories.map((cat, i) => (
               <Link
                 key={cat.id}
