@@ -48,18 +48,18 @@ export default function DeliveryBanner() {
         </div>
 
         <div className="w-full mt-4 md:mt-5 pt-3 border-t border-white/15 text-center">
-          <div className="flex items-center justify-center overflow-x-auto whitespace-nowrap sm:whitespace-normal text-[11px] sm:text-xs md:text-sm tracking-normal md:tracking-[0.15em] gap-1.5 sm:gap-3 md:gap-4 px-3">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3 md:gap-4 px-3">
 
             <a
               href="tel:+380778687777"
-              className="font-medium hover:opacity-80 transition-opacity inline-block"
+              className="text-sm sm:text-base md:text-lg font-bold hover:opacity-80 transition-opacity inline-block"
             >
               +38 (077) 868 77-77
             </a>
 
-            <span className="opacity-30">|</span>
+            <span className="hidden sm:inline opacity-30">|</span>
 
-            <span className="opacity-70 font-light">
+            <span className="text-xs sm:text-sm md:text-base opacity-70 font-light">
               Графік роботи: Пн-Нд 09:00 - 21:00
             </span>
 
