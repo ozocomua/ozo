@@ -83,9 +83,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           const pid = Number(item.productId ?? item.id)
           const freshProduct = priceMap.get(pid)
           if (!freshProduct) return item
+          // Variant items keep their chosen price; simple items get refreshed
+          const updatedPrice = item.variantSize ? item.price : freshProduct.price
           return {
             ...item,
-            price: freshProduct.price,
+            price: updatedPrice,
             maxStock: freshProduct.stock,
           }
         })
