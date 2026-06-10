@@ -10,7 +10,6 @@ export default function CallbackWidget() {
   const [formData, setFormData] = useState({
     name: '',
     phone: '+380',
-    email: '',
     comment: ''
   })
 
@@ -54,7 +53,7 @@ export default function CallbackWidget() {
       }
 
       setStatus('success');
-      setFormData({ name: '', phone: '+380', email: '', comment: '' });
+      setFormData({ name: '', phone: '+380', comment: '' });
       toast.success("Заявку прийнято, менеджер зателефонує!");
 
       setTimeout(() => {
@@ -119,18 +118,6 @@ export default function CallbackWidget() {
                       className="w-full bg-[#F9F9F7] rounded-2xl p-4 text-base font-mono text-black outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
                       value={formData.phone}
                       onChange={e => setFormData({...formData, phone: formatPhoneNumber(e.target.value)})}
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-[9px] uppercase font-bold opacity-40 ml-4 text-black">Email (опціонально)</label>
-                    <input
-                      type="email"
-                      autoComplete="email"
-                      className="w-full bg-[#F9F9F7] rounded-2xl p-4 text-base text-black outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
-                      placeholder="Для відповіді поштою"
-                      value={formData.email}
-                      onChange={e => setFormData({...formData, email: e.target.value})}
                     />
                   </div>
 
