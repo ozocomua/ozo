@@ -6,10 +6,13 @@ import { ArrowLeft } from "lucide-react"
 import Header from "@/components/header"
 
 const MENU_ITEMS = [
+  { name: "Про нас", href: "/about" },
   { name: "Оплата і доставка", href: "/delivery" },
   { name: "Обмін та повернення", href: "/returns" },
   { name: "Контактна інформація", href: "/contacts" },
   { name: "Відгуки про магазин", href: "/reviews" },
+  { name: "Поширені запитання", href: "/faq" },
+  { name: "Політика конфіденційності", href: "/privacy" },
 ]
 
 type HeaderCategory = { slug: string; name: string }

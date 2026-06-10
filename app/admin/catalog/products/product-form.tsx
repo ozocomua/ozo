@@ -339,10 +339,10 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="font-serif text-2xl font-medium tracking-tight">
-            {mode === "create" ? "Новый товар" : "Редактирование товара"}
+            {mode === "create" ? "Новий товар" : "Редагування товару"}
           </h1>
           <p className="text-muted-foreground mt-1 text-sm">
-            Заполни основное, категории, варианты и фото.
+            Заповни основне, категорії, варіанти та фото.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -352,7 +352,7 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
           {mode === "edit" ? (
             <>
               <Button variant="outline" onClick={() => void duplicate()} disabled={saving || loading}>
-                Дублировать
+                Дублювати
               </Button>
               <Button variant="destructive" onClick={() => void del()} disabled={saving || loading}>
                 Удалить
@@ -360,7 +360,7 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
             </>
           ) : null}
           <Button onClick={() => void onSave()} disabled={saving || loading || !name.trim() || !slug.trim()}>
-            {saving ? "Сохранение…" : "Сохранить"}
+            {saving ? "Збереження…" : "Зберегти"}
           </Button>
         </div>
       </div>
@@ -370,8 +370,8 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
       <div className="rounded-2xl border bg-white p-5 space-y-6">
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Название</div>
-            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Например: Shampoo Star" />
+            <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Назва</div>
+            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Наприклад: Shampoo Star" />
           </div>
           <div className="space-y-2">
             <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Кастомный URL (Slug)</div>
@@ -381,7 +381,7 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
                 setSlugTouched(true)
                 setSlug(e.target.value)
               }}
-              placeholder="например: soft99-glaco-30ml (если оставить пустым, сработает автогенерация)"
+              placeholder="наприклад: soft99-glaco-30ml (якщо залишити порожнім, спрацює автогенерація)"
             />
           </div>
         </div>
@@ -411,14 +411,14 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
                 onChange={() => setIsPublished((v) => !v)}
                 className="h-4 w-4"
               />
-              <span className="text-sm">{isPublished ? "Опубликован" : "Черновик"}</span>
+              <span className="text-sm">{isPublished ? "Опубліковано" : "Чернетка"}</span>
             </label>
           </div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-1">
           <div className="space-y-2">
-            <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Популярность</div>
+            <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Популярність</div>
             <label className="flex items-center gap-3">
               <input
                 type="checkbox"
@@ -426,7 +426,7 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
                 onChange={() => setIsPopular((v) => !v)}
                 className="h-4 w-4"
               />
-              <span className="text-sm">Популярный товар (выводить первым на главной)</span>
+              <span className="text-sm">Популярний товар (виводити першим на головній)</span>
             </label>
           </div>
         </div>
@@ -435,10 +435,10 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
           <div className="flex items-center justify-between gap-4">
             <div>
               <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                Рекомендуемые товары (Берут вместе)
+                Рекомендовані товари (Беруть разом)
               </div>
               <div className="text-sm text-muted-foreground mt-1">
-                Выбери товары, которые будут показаны на карточке как сопутствующие.
+                Обери товари, які будуть показані на картці як супутні.
               </div>
             </div>
             <Badge variant="outline">{relatedIds.length}</Badge>
@@ -446,7 +446,7 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
           <Input
             value={relatedQ}
             onChange={(e) => setRelatedQ(e.target.value)}
-            placeholder="Поиск по названию товара"
+            placeholder="Пошук за назвою товару"
           />
           <div className="max-h-[200px] overflow-auto rounded-xl border bg-[#F9F9F7] p-3 space-y-2">
             {allProducts
@@ -480,17 +480,17 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
 
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Короткое описание</div>
+            <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Короткий опис</div>
             <Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={4} />
           </div>
           <div className="space-y-2">
-            <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Бейдж (опционально)</div>
+            <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Бейдж (опціонально)</div>
             <Input value={badge} onChange={(e) => setBadge(e.target.value)} placeholder="Хіт продажів" />
           </div>
         </div>
 
         <div className="space-y-2">
-          <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Полное описание</div>
+          <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Повний опис</div>
           <Textarea value={fullDescription} onChange={(e) => setFullDescription(e.target.value)} rows={8} />
         </div>
       </div>
@@ -498,14 +498,14 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
       <div className="rounded-2xl border bg-white p-5 space-y-4">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Категории</div>
+            <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Категорії</div>
             <div className="text-sm text-muted-foreground mt-1">
-              Выбери одну или несколько категорий.
+              Обери одну або кілька категорій.
             </div>
           </div>
           <Badge variant="outline">{categoryIds.length}</Badge>
         </div>
-        <Input value={categoryQ} onChange={(e) => setCategoryQ(e.target.value)} placeholder="Поиск по категориям" />
+        <Input value={categoryQ} onChange={(e) => setCategoryQ(e.target.value)} placeholder="Пошук за категоріями" />
         <div className="max-h-[260px] overflow-auto rounded-xl border bg-[#F9F9F7] p-3 space-y-2">
           {filteredCategories.map((c) => (
             <label key={c.id} className="flex items-center gap-3 text-sm">
@@ -526,13 +526,13 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
       <div className="rounded-2xl border bg-white p-5 space-y-4">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Варианты</div>
+            <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Варіанти</div>
             <div className="text-sm text-muted-foreground mt-1">
-              Объем/тара/цена/склад. SKU должен быть уникальным.
+              Об'єм/тара/ціна/склад. SKU має бути унікальним.
             </div>
           </div>
           <Button variant="outline" onClick={addVariant}>
-            + Вариант
+            + Варіант
           </Button>
         </div>
 
@@ -540,7 +540,7 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
           {variants.map((v, idx) => (
             <div key={idx} className="rounded-xl border bg-[#F9F9F7] p-4 space-y-3">
               <div className="flex items-center justify-between gap-3">
-                <div className="text-sm font-medium">Вариант {idx + 1}</div>
+                <div className="text-sm font-medium">Варіант {idx + 1}</div>
                 {variants.length > 1 ? (
                   <Button variant="destructive" size="sm" onClick={() => removeVariant(idx)}>
                     Удалить
@@ -559,7 +559,7 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
                   />
                 </div>
                 <div className="space-y-1">
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Объем/вес</div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Об'єм/вага</div>
                   <Input
                     value={v.volume}
                     onChange={(e) =>
@@ -583,7 +583,7 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
               </div>
               <div className="grid gap-3 md:grid-cols-3">
                 <div className="space-y-1">
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Цена (розница)</div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Ціна (роздріб)</div>
                   <Input
                     value={v.priceRetail}
                     onChange={(e) =>
@@ -597,7 +597,7 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
                   />
                 </div>
                 <div className="space-y-1">
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Цена (опт)</div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Ціна (опт)</div>
                   <Input
                     value={v.priceWholesale}
                     onChange={(e) =>
@@ -635,7 +635,7 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
           <div>
             <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Фото</div>
             <div className="text-sm text-muted-foreground mt-1">
-              Перетащи для изменения порядка. Первое фото — главное.
+              Перетягни для зміни порядку. Перше фото — головне.
             </div>
           </div>
           <label className="cursor-pointer">
@@ -651,7 +651,7 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
               }}
             />
             <span className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 text-sm font-medium">
-              Загрузить
+              Завантажити
             </span>
           </label>
         </div>
@@ -665,7 +665,7 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
             if (files && files.length) void onFiles(files)
           }}
         >
-          Перетащи файлы сюда
+          Перетягни файли сюди
         </div>
 
         {images.length ? (
@@ -687,7 +687,7 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
                   <img src={img.url} alt="" className="w-full h-28 object-cover" />
                   {idx === 0 ? (
                     <div className="absolute top-2 left-2">
-                      <Badge>Главное</Badge>
+                      <Badge>Головне</Badge>
                     </div>
                   ) : null}
                 </div>
@@ -729,7 +729,7 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
             ))}
           </div>
         ) : (
-          <div className="text-sm text-muted-foreground">Нет фото.</div>
+          <div className="text-sm text-muted-foreground">Немає фото.</div>
         )}
       </div>
     </div>

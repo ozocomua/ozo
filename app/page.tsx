@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import Link from "next/link"
@@ -9,6 +10,14 @@ import { normalizeImageUrl } from "@/lib/image-path"
 import { getTopCategories, getAllProducts, getAllBrands, countAllProducts, getPublishedPosts } from "@/lib/storefront-db"
 
 export const dynamic = "force-dynamic"
+
+export function generateMetadata(): Metadata {
+  return {
+    title: "OZO — все для птахівництва | Якісне обладнання",
+    description: "Обладнання для птахівництва: клітки, годівниці, напувалки, інкубатори. Вигідні ціни, доставка Новою Поштою по всій Україні. Працюємо щодня!",
+    alternates: { canonical: process.env.NEXT_PUBLIC_SITE_URL?.trim() || "" },
+  }
+}
 
 export default async function HomePage() {
   const categories = await getTopCategories()

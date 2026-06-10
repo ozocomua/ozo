@@ -6,6 +6,7 @@ import Link from "next/link"
 import { useState, useEffect } from "react"
 import CodWarningModal from "@/components/cod-warning-modal"
 import CallbackWidget from "@/components/ui/callbackwidget"
+import { toast } from "sonner"
 
 const TOP_CITIES = [
   { name: "Київ", ref: "8d5a980d-391c-11dd-90d9-001a92567626" },
@@ -141,7 +142,7 @@ export default function CheckoutPage() {
 
   const handleSubmit = async () => {
     if (!formData.firstName.trim() || !formData.lastName.trim()) {
-      alert("Вкажіть ім'я та прізвище")
+      toast.error("Вкажіть ім'я та прізвище")
       return
     }
     setIsSubmitting(true)
@@ -215,7 +216,7 @@ export default function CheckoutPage() {
       }
     } catch (err: any) {
       console.error(err)
-      alert(`Помилка: ${err.message}`)
+      toast.error(`Помилка: ${err.message}`)
     } finally {
       setIsSubmitting(false)
     }

@@ -163,7 +163,7 @@ export function CategoryForm({
             <FormItem>
               <FormLabel>SEO-URL (ЧПУ)</FormLabel>
               <FormControl>
-                <Input placeholder="Сгенерируется автоматически, если оставить пустым" {...field} />
+                <Input placeholder="Згенерується автоматично, якщо залишити порожнім" {...field} />
               </FormControl>
               <FormDescription>Разрешены только латиница, цифры и дефис</FormDescription>
               <FormMessage />
@@ -202,7 +202,7 @@ export function CategoryForm({
 
         <div className="border-t pt-6">
           <h3 className="text-sm font-semibold mb-4">SEO</h3>
-          <p className="text-xs text-muted-foreground mb-4">Оставьте пустыми — заполнится автоматически из названия и описания</p>
+          <p className="text-xs text-muted-foreground mb-4">Залиште порожніми — заповниться автоматично з назви та опису</p>
 
           <FormField
             control={form.control}

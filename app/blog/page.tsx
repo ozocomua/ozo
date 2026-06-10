@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import Link from "next/link"
@@ -7,6 +8,13 @@ import { normalizeImageUrl } from "@/lib/image-path"
 import BlogPostsClient from "@/components/blog-posts-client"
 
 export const dynamic = "force-dynamic"
+
+export function generateMetadata(): Metadata {
+  return {
+    title: "Блог | OZO — поради для птахівників",
+    description: "Корисні статті та поради для птахівників: догляд за птицею, вибір обладнання, годування, розведення курчат.",
+  }
+}
 
 export default async function BlogPage() {
   const categories = await getTopCategories()

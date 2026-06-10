@@ -91,7 +91,7 @@ export default function Footer() {
         <div className="mt-8 pt-4 border-t border-border flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-start md:items-center">
             <p className="text-[11px] sm:text-xs uppercase tracking-widest text-muted-foreground font-bold">
-              © 2025 OZO.
+              © 2026 OZO.
             </p>
             <button 
               onClick={openCallback}

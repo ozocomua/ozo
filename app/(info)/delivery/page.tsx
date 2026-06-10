@@ -42,6 +42,40 @@ export default function DeliveryPage() {
           </div>
         </section>
       </div>
+
+        <div className="mt-8 pt-6 border-t">
+          <h2 className="text-xl font-bold mb-4">Терміни та графік</h2>
+          <div className="space-y-3 text-muted-foreground">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl shrink-0">📦</span>
+              <div>
+                <p className="font-medium text-foreground">Відправка замовлень</p>
+                <p>Замовлення, оформлені до 15:00, відправляються в той самий день. Після 15:00 — наступного дня.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-2xl shrink-0">🚚</span>
+              <div>
+                <p className="font-medium text-foreground">Терміни доставки</p>
+                <p>Нова Пошта: 1–3 дні по Україні. Укрпошта: 3–7 днів.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-2xl shrink-0">🕐</span>
+              <div>
+                <p className="font-medium text-foreground">Графік роботи</p>
+                <p>Пн–Нд, 09:00–21:00. Замовлення приймаємо цілодобово через сайт.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-2xl shrink-0">💰</span>
+              <div>
+                <p className="font-medium text-foreground">Вартість доставки</p>
+                <p>За тарифами перевізника. Орієнтовно: від 70 грн (Нова Пошта, відділення). Точну вартість розраховує перевізник при оформленні.</p>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
   )
 }
