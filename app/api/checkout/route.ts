@@ -151,25 +151,31 @@ export async function POST(req: Request) {
 
       let serverTotal = 0
       const itemsParts: string[] = []
-      const variantSizes = new Map<number, string>()
-      // Fetch variant sizes for variant items
+      const variantInfoMap = new Map<number, { size: string; price: number }>()
+      // Fetch variant sizes AND prices for variant items
       const variantIdsNeeded = orderItemEntries
         .filter((e) => e.variantId !== null)
         .map((e) => e.variantId!)
       if (variantIdsNeeded.length > 0) {
         const dbVariants = await tx.productVariant.findMany({
           where: { id: { in: variantIdsNeeded } },
-          select: { id: true, size: true, volume: true },
+          select: { id: true, size: true, volume: true, priceRetail: true },
         })
         for (const v of dbVariants) {
-          variantSizes.set(v.id, v.size || v.volume || "")
+          variantInfoMap.set(v.id, {
+            size: v.size || v.volume || "",
+            price: v.priceRetail,
+          })
         }
       }
       for (const entry of orderItemEntries) {
         const p = dbById.get(entry.productId)!
-        const lineTotal = p.price * entry.quantity
+        // STRICT rule: if variant is selected, use variant price, NOT product.price
+        const variantInfo = entry.variantId ? variantInfoMap.get(entry.variantId) : null
+        const effectivePrice = variantInfo ? variantInfo.price : p.price
+        const lineTotal = effectivePrice * entry.quantity
         serverTotal += lineTotal
-        const sizeStr = entry.variantId ? (variantSizes.get(entry.variantId) || "") : ""
+        const sizeStr = variantInfo ? variantInfo.size : ""
         const nameWithSize = sizeStr ? `${p.name} (${sizeStr})` : p.name
         itemsParts.push(`${nameWithSize} x${entry.quantity} - ${Math.round(lineTotal)} ₴`)
       }
