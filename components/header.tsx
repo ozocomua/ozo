@@ -204,11 +204,11 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
               Інформація
             </p>
             <nav className="flex flex-col gap-1">
-              <Link href="/blog" className="py-2.5 text-base font-medium text-foreground active:text-[#00B5D1] transition-colors" onClick={() => setMenuOpen(false)}>Блог</Link>
-              <Link href="/delivery" className="py-2.5 text-base font-medium text-foreground active:text-[#00B5D1] transition-colors" onClick={() => setMenuOpen(false)}>Оплата та доставка</Link>
-              <Link href="/returns" className="py-2.5 text-base font-medium text-foreground active:text-[#00B5D1] transition-colors" onClick={() => setMenuOpen(false)}>Обмін та повернення</Link>
-              <Link href="/reviews" className="py-2.5 text-base font-medium text-foreground active:text-[#00B5D1] transition-colors" onClick={() => setMenuOpen(false)}>Відгуки</Link>
               <Link href="/contacts" className="py-2.5 text-base font-medium text-foreground active:text-[#00B5D1] transition-colors" onClick={() => setMenuOpen(false)}>Контакти</Link>
+              <Link href="/reviews" className="py-2.5 text-base font-medium text-foreground active:text-[#00B5D1] transition-colors" onClick={() => setMenuOpen(false)}>Відгуки</Link>
+              <Link href="/returns" className="py-2.5 text-base font-medium text-foreground active:text-[#00B5D1] transition-colors" onClick={() => setMenuOpen(false)}>Обмін та повернення</Link>
+              <Link href="/delivery" className="py-2.5 text-base font-medium text-foreground active:text-[#00B5D1] transition-colors" onClick={() => setMenuOpen(false)}>Оплата та доставка</Link>
+              <Link href="/blog" className="py-2.5 text-base font-medium text-foreground active:text-[#00B5D1] transition-colors" onClick={() => setMenuOpen(false)}>Блог</Link>
             </nav>
           </div>
           <div className="mt-auto px-4 pb-8 flex gap-6 flex-wrap">
