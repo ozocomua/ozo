@@ -103,9 +103,10 @@ export async function sendTtnNotification(order: {
         const lines = entries.map((e) => {
           const pid = Number(e.productId)
           const qty = Number(e.quantity) || 1
-          const name = nameById.get(pid) || `ID ${pid}`
+          const rawName = nameById.get(pid) || `ID ${pid}`
+          const name = escapeMd(rawName)
           const sizeStr = e.variantId ? (sizeById.get(e.variantId) || "") : ""
-          const fullName = sizeStr ? `${name} \\(${sizeStr}\\)` : name
+          const fullName = sizeStr ? `${name} \\(${escapeMd(sizeStr)}\\)` : name
           return `\\- ${fullName} \\— x${qty}`
         })
         productsList = lines.join("\n")
@@ -118,7 +119,7 @@ export async function sendTtnNotification(order: {
   if (productsList === "—" && typeof order.items === "string" && order.items.trim()) {
     productsList = order.items
       .split(",")
-      .map((p) => `\\- ${p.trim()}`)
+      .map((p) => `\\- ${escapeMd(p.trim())}`)
       .join("\n")
   }
 
