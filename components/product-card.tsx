@@ -102,7 +102,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             </span>
           ) : isVariantProduct ? (
             <span className="text-xs sm:text-sm bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white font-semibold px-3 py-2 sm:px-4 sm:py-2.5 rounded-md min-h-[40px] sm:min-h-[44px] flex items-center justify-center">
-              Детальніше
+              Купити
             </span>
           ) : (
             <button

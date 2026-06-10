@@ -7,14 +7,19 @@ export default function AddToCartButton({ product }: { product: any }) {
   const { addToCart } = useCart()
 
   const outOfStock = product.stock === 0
+  // Price: variant products get selected.priceRetail set by ProductVariantPicker;
+  // simple products get product.price from the storefront.
+  const price = typeof product.price === "number" && product.price > 0
+    ? product.price
+    : 0
 
-  if (outOfStock) {
+  if (outOfStock || price <= 0) {
     return (
       <button
         disabled
         className="flex items-center justify-center gap-2 bg-muted text-muted-foreground text-sm md:text-base font-semibold py-4 rounded-xl mb-3 w-full cursor-not-allowed"
       >
-        Немає в наявності
+        {price <= 0 && !outOfStock ? "Ціна не вказана" : "Немає в наявності"}
       </button>
     )
   }
@@ -24,7 +29,7 @@ export default function AddToCartButton({ product }: { product: any }) {
       onClick={() => addToCart({
         id: product.id,
         name: product.variantSize ? `${product.name} (${product.variantSize})` : product.name,
-        price: product.price,
+        price,
         image: product.image,
         slug: product.slug,
         productId: product.productId || product.id,
