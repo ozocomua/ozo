@@ -199,6 +199,18 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
               </Link>
             ))}
           </nav>
+          <div className="px-4 pt-6 border-t border-border">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-3">
+              Інформація
+            </p>
+            <nav className="flex flex-col gap-1">
+              <Link href="/blog" className="py-2.5 text-base font-medium text-foreground active:text-[#00B5D1] transition-colors" onClick={() => setMenuOpen(false)}>Блог</Link>
+              <Link href="/delivery" className="py-2.5 text-base font-medium text-foreground active:text-[#00B5D1] transition-colors" onClick={() => setMenuOpen(false)}>Оплата та доставка</Link>
+              <Link href="/returns" className="py-2.5 text-base font-medium text-foreground active:text-[#00B5D1] transition-colors" onClick={() => setMenuOpen(false)}>Обмін та повернення</Link>
+              <Link href="/reviews" className="py-2.5 text-base font-medium text-foreground active:text-[#00B5D1] transition-colors" onClick={() => setMenuOpen(false)}>Відгуки</Link>
+              <Link href="/contacts" className="py-2.5 text-base font-medium text-foreground active:text-[#00B5D1] transition-colors" onClick={() => setMenuOpen(false)}>Контакти</Link>
+            </nav>
+          </div>
           <div className="mt-auto px-4 pb-8 flex gap-6 flex-wrap">
             <a href="https://t.me/ozo_com_ua" target="_blank" rel="noopener noreferrer nofollow" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Telegram</a>
             <a href="https://www.tiktok.com/@ozo.com.ua?_r=1&_t=ZM-91ouAZFUUdk" target="_blank" rel="noopener noreferrer nofollow" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">TikTok</a>

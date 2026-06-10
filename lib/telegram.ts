@@ -31,8 +31,8 @@ function parseItems(raw: string | null): string[] {
 }
 
 function paymentLabel(type: string): string {
-  if (type === "card") return "Картой онлайн"
-  if (type === "cod") return "Наложенный платёж"
+  if (type === "card") return "Оплата карткою"
+  if (type === "cod") return "Накладений платіж"
   return type
 }
 
@@ -58,8 +58,8 @@ export async function sendTtnNotification(order: {
     return
   }
 
-  const clientName = order.user.name || "Не указано"
-  const phone = order.user.phone || "Не указано"
+  const clientName = order.user.name || "Не вказано"
+  const phone = order.user.phone || "Не вказано"
 
   const paymentLabelMap: Record<string, string> = { card: "Оплачено карткою", cod: "Накладений платіж" }
   const paymentLabel = paymentLabelMap[order.paymentType] || order.paymentType
@@ -191,12 +191,12 @@ export async function sendOrderNotification(order: {
     return
   }
 
-  const clientName = order.user.name || "Не указано"
-  const phone = order.user.phone || "Не указано"
+  const clientName = order.user.name || "Не вказано"
+  const phone = order.user.phone || "Не вказано"
   const city = order.cityName || ""
   const warehouse = order.deliveryPoint || ""
   const deliveryParts = [city, warehouse].filter(Boolean)
-  const delivery = deliveryParts.length ? deliveryParts.join(", ") : "Не указана"
+  const delivery = deliveryParts.length ? deliveryParts.join(", ") : "Не вказана"
 
   const itemLines = parseItems(order.items)
   const productsList = itemLines.length
@@ -204,23 +204,23 @@ export async function sendOrderNotification(order: {
     : "—"
 
   const commentText = order.comment?.trim()
-    ? `📝 <b>Комментарий:</b> "${order.comment.trim()}"`
+    ? `📝 <b>Коментар:</b> "${order.comment.trim()}"`
     : ""
 
   const paymentText = paymentLabel(order.paymentType)
   const cleanPhone = (order.user.phone || "").replace(/\D/g, "")
 
   const text = [
-    `🔥 <b>Новый заказ №${order.orderNumber}</b>`,
+    `🔥 <b>Нове замовлення №${order.orderNumber}</b>`,
     ` `,
-    `👤 <b>Клиент:</b> ${clientName}`,
+    `👤 <b>Клієнт:</b> ${clientName}`,
     `📱 <b>Телефон:</b> +${cleanPhone}`,
-    `📵 <b>Звонить?:</b> ${order.noCall ? "❌ Нет" : "✅ Да"}`,
+    `📵 <b>Дзвонити?:</b> ${order.noCall ? "❌ Ні" : "✅ Так"}`,
     `📍 <b>Доставка:</b> ${delivery}`,
     `💳 <b>Оплата:</b> ${paymentText}`,
-    `💰 <b>Итого к оплате:</b> ${order.total} ₴`,
+    `💰 <b>Сума до оплати:</b> ${order.total} ₴`,
     ``,
-    `🛒 <b>Товары:</b>`,
+    `🛒 <b>Товари:</b>`,
     productsList,
     commentText,
   ].filter(Boolean).join("\n")
@@ -240,14 +240,14 @@ export async function sendOrderNotification(order: {
 
   if (isLocalUrl) {
     // Telegram не принимает localhost в inline-кнопках — добавляем ссылку текстом
-    body.text = text + `\n\n🔗 <a href="${ttnUrl}">Создать ТТН в Новой Почте</a>`
+    body.text = text + `\n\n🔗 <a href="${ttnUrl}">Створити ТТН в Новій Пошті</a>`
     console.log("[telegram] local URL detected, link added as text instead of button")
   } else {
     body.reply_markup = {
       inline_keyboard: [
         [
           {
-            text: "🚚 Создать ТТН в Новой Почте",
+            text: "🚚 Створити ТТН в Новій Пошті",
             url: ttnUrl,
           },
         ],
