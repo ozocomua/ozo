@@ -167,7 +167,7 @@ interface NpDocumentResult {
 
 export async function createDocument(input: NpDocumentInput): Promise<NpDocumentResult> {
   const props: Record<string, unknown> = {
-    PayerType: "Sender",
+    PayerType: "Recipient",
     PaymentMethod: "Cash",
     CargoType: "Cargo",
     ServiceType: input.serviceType ?? "WarehouseWarehouse",
