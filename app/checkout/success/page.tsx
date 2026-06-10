@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation"
 import { Suspense } from "react"
 import { ExternalLink } from "lucide-react"
+import CallbackWidget from "@/components/ui/callbackwidget"
 import Link from "next/link"
 
 function SuccessContent() {
@@ -125,6 +126,7 @@ export default function SuccessPage() {
   return (
     <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#F9F9F7] font-serif opacity-20 animate-pulse uppercase tracking-[0.3em]">OZO...</div>}>
       <SuccessContent />
+      <CallbackWidget />
     </Suspense>
   )
 }

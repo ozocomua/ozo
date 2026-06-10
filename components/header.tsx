@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Menu, X, ShoppingCart, Search } from "lucide-react"
 import { useCart } from "@/lib/cart-context"
 import SearchDropdown from "@/components/search-dropdown"
+import CallbackWidget from "@/components/ui/callbackwidget"
 
 type HeaderCategory = { slug: string; name: string }
 
@@ -220,6 +221,7 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
           </div>
         </div>
       )}
+      <CallbackWidget />
     </>
   )
 }

@@ -5,6 +5,7 @@ import { ArrowLeft, MapPin, Box, Home, Check, CreditCard, Wallet, Loader2, Trash
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import CodWarningModal from "@/components/cod-warning-modal"
+import CallbackWidget from "@/components/ui/callbackwidget"
 
 const TOP_CITIES = [
   { name: "Київ", ref: "8d5a980d-391c-11dd-90d9-001a92567626" },
@@ -504,6 +505,7 @@ export default function CheckoutPage() {
         }}
         onCancel={() => setShowCodWarning(false)}
       />
+      <CallbackWidget />
     </div>
   )
 }

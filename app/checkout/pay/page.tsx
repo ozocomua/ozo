@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Suspense } from "react"
+import CallbackWidget from "@/components/ui/callbackwidget"
 import { CreditCard, ShieldCheck, MapPin, Package, Info, User, Phone, ArrowLeft } from "lucide-react"
 
 function PayContent() {
@@ -123,6 +124,7 @@ export default function PayPage() {
   return (
     <Suspense fallback={null}>
       <PayContent />
+      <CallbackWidget />
     </Suspense>
   )
 }
