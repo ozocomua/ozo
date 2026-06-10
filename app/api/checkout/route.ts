@@ -110,6 +110,35 @@ export async function POST(req: Request) {
       })
       const dbById = new Map(dbProducts.map((p) => [p.id, p]))
 
+      // Resolve variant IDs that slipped through as productId
+      // (e.g. old cart items without proper productId)
+      const unresolved = orderItemEntries.filter((e) => !dbById.has(e.productId))
+      if (unresolved.length > 0) {
+        const variantIds = unresolved.map((e) => e.productId)
+        const dbVariants = await tx.productVariant.findMany({
+          where: { id: { in: variantIds } },
+          select: { id: true, productId: true, priceRetail: true },
+        })
+        const variantMap = new Map(dbVariants.map((v) => [v.id, v]))
+        for (const entry of unresolved) {
+          const v = variantMap.get(entry.productId)
+          if (v) {
+            // Replace variant ID with parent product ID
+            const parentProduct = await tx.product.findUnique({
+              where: { id: v.productId },
+              select: { id: true, name: true, price: true, stock: true },
+            })
+            if (parentProduct) {
+               dbById.set(parentProduct.id, parentProduct)
+               // Save the original variant ID, then replace productId with parent
+               const originalVariantId = entry.productId
+               entry.productId = parentProduct.id
+               if (!entry.variantId) entry.variantId = originalVariantId
+             }
+          }
+        }
+      }
+
       for (const entry of orderItemEntries) {
         const p = dbById.get(entry.productId)
         if (!p) {
@@ -122,11 +151,27 @@ export async function POST(req: Request) {
 
       let serverTotal = 0
       const itemsParts: string[] = []
+      const variantSizes = new Map<number, string>()
+      // Fetch variant sizes for variant items
+      const variantIdsNeeded = orderItemEntries
+        .filter((e) => e.variantId !== null)
+        .map((e) => e.variantId!)
+      if (variantIdsNeeded.length > 0) {
+        const dbVariants = await tx.productVariant.findMany({
+          where: { id: { in: variantIdsNeeded } },
+          select: { id: true, size: true, volume: true },
+        })
+        for (const v of dbVariants) {
+          variantSizes.set(v.id, v.size || v.volume || "")
+        }
+      }
       for (const entry of orderItemEntries) {
         const p = dbById.get(entry.productId)!
         const lineTotal = p.price * entry.quantity
         serverTotal += lineTotal
-        itemsParts.push(`${p.name} x${entry.quantity} - ${Math.round(lineTotal)} ₴`)
+        const sizeStr = entry.variantId ? (variantSizes.get(entry.variantId) || "") : ""
+        const nameWithSize = sizeStr ? `${p.name} (${sizeStr})` : p.name
+        itemsParts.push(`${nameWithSize} x${entry.quantity} - ${Math.round(lineTotal)} ₴`)
       }
 
       for (const entry of orderItemEntries) {
