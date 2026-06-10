@@ -129,7 +129,7 @@ export async function POST(req: Request) {
           : Number(priceWholesaleRaw)
       const stock = Number((v as { stock?: unknown }).stock)
 
-      if (!sku || !volume || !packageType || !Number.isFinite(priceRetail)) return null
+      if (!sku || !Number.isFinite(priceRetail)) return null
 
       return {
         sku: sku.slice(0, 191),

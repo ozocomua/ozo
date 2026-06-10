@@ -58,8 +58,8 @@ const RichTextEditor = dynamic(() => import("@/components/rich-text-editor"), {
 })
 
 const productSchema = z.object({
-  name: z.string().min(2, "Название обязательно"),
-  sku: z.string().min(2, "SKU обязателен"),
+  name: z.string().min(2, "Назва обов'язкова"),
+  sku: z.string().min(2, "SKU обов'язковий"),
   description: z.string().optional(),
   slug: z.string().optional(),
   metaTitle: z.string().optional(),
@@ -68,12 +68,7 @@ const productSchema = z.object({
   brandId: z.string().optional(),
   categoryId: z.string().optional(),
   price: z.coerce.number().min(0),
-  hasWholesale: z.boolean().default(false),
-  wholesalePrice: z.coerce.number().optional(),
   stock: z.coerce.number().int().min(0).default(0),
-  volume: z.string().optional(),
-  containerType: z.string().optional(),
-  dimensions: z.string().optional(),
   status: z.string().default("DRAFT"),
 });
 
@@ -116,12 +111,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
       brandId: initialData?.brandId ? String(initialData.brandId) : "none",
       categoryId: initialData?.categories?.[0]?.categoryId ? String(initialData.categories[0].categoryId) : "",
       price: initialData?.price || 0,
-      hasWholesale: initialData?.hasWholesale || false,
-      wholesalePrice: initialData?.wholesalePrice || 0,
       stock: initialData?.stock || 0,
-      volume: initialData?.volume || "",
-      containerType: initialData?.containerType || "",
-      dimensions: initialData?.dimensions || "",
       status: initialData?.status || "DRAFT",
     },
   });
@@ -139,24 +129,17 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
         brandId: initialData.brandId ? String(initialData.brandId) : "none",
         categoryId: initialData.categories?.[0]?.categoryId ? String(initialData.categories[0].categoryId) : "",
         price: initialData.price || 0,
-        hasWholesale: initialData.hasWholesale || false,
-        wholesalePrice: initialData.wholesalePrice || 0,
         stock: initialData.stock || 0,
-        volume: initialData.volume || "",
-        containerType: initialData.containerType || "",
-        dimensions: initialData.dimensions || "",
         status: initialData.status || "DRAFT",
       })
     }
   }, [initialData, form])
 
-  const hasWholesale = form.watch("hasWholesale");
-
   const onInvalid = () => {
     const errors = form.formState.errors
     const first = Object.values(errors).find(Boolean)
     if (first?.message) toast.error(String(first.message))
-    else toast.error("Пожалуйста, проверьте все обязательные поля")
+    else toast.error("Будь ласка, перевірте всі обов'язкові поля")
   }
 
   const onSubmit = (values: z.infer<typeof productSchema>, action: "DRAFT" | "PUBLISHED") => {
@@ -172,12 +155,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
         brandId: values.brandId === "none" ? undefined : Number(values.brandId),
         status: action,
         price: values.price,
-        hasWholesale: values.hasWholesale,
-        wholesalePrice: values.hasWholesale ? values.wholesalePrice : undefined,
         stock: values.stock,
-        volume: values.volume,
-        containerType: values.containerType,
-        dimensions: values.dimensions,
         variants: variants.length > 0 ? variants : undefined,
         productType,
         isPopular: !!isPopular,
@@ -197,10 +175,10 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
         ? await updateProduct(initialData.id, dataToSubmit)
         : await createProduct(dataToSubmit);
       if (res.success) {
-        toast.success(action === "PUBLISHED" ? "Опубликовано" : "Сохранено как черновик");
+        toast.success(action === "PUBLISHED" ? "Опубліковано" : "Збережено як чернетку");
         router.push("..");
       } else {
-        toast.error(res.error || "Ошибка сохранения");
+        toast.error(res.error || "Помилка збереження");
       }
     });
   };
@@ -216,14 +194,14 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
 
   const handleDelete = async () => {
     if (deleteConfirmation !== "DELETE" && deleteConfirmation !== form.getValues("sku")) {
-      toast.error("Неверный код подтверждения");
+      toast.error("Невірний код підтвердження");
       return;
     }
     
     if (initialData?.id) {
       const res = await deleteProduct(initialData.id, deleteConfirmation);
       if (res.success) {
-        toast.success("Товар удален");
+        toast.success("Товар видалено");
         router.push("..");
       } else {
         toast.error(res.error);
@@ -235,7 +213,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
     if (initialData?.id) {
       const res = await duplicateProduct(initialData.id);
       if (res.success) {
-        toast.success("Товар дублирован");
+        toast.success("Товар дубльовано");
         router.push(`../${res.data.id}`);
       } else {
         toast.error(res.error);
@@ -244,18 +222,18 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
   };
 
   const handleCreateBrand = async () => {
-    const name = window.prompt("Введите название нового бренда:");
+    const name = window.prompt("Введіть назву нового бренду:");
     if (!name || name.trim() === "") return;
     
     // Import dynamically or assume createBrand is imported
     const { createBrand } = await import("@/app/actions/catalog");
     const res = await createBrand(name.trim());
     if (res.success) {
-      toast.success("Бренд добавлен");
+      toast.success("Бренд додано");
       setBrandsList([...brandsList, res.data]);
       form.setValue("brandId", String(res.data.id));
     } else {
-      toast.error(res.error);
+      toast.error(res.error || "Помилка створення");
     }
   };
 
@@ -271,10 +249,10 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
               </Button>
             </Link>
             <div>
-              <h1 className="text-xl font-bold">{initialData ? initialData.name : "Добавление товара"}</h1>
+              <h1 className="text-xl font-bold">{initialData ? initialData.name : "Новий товар"}</h1>
               <div className="flex gap-2 text-sm mt-1">
                 <span className={`px-2 py-0.5 rounded text-xs ${form.getValues("status") === 'PUBLISHED' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                  {form.getValues("status") === 'PUBLISHED' ? 'Опубликован' : 'Черновик'}
+                  {form.getValues("status") === 'PUBLISHED' ? 'Опубліковано' : 'Чернетка'}
                 </span>
               </div>
             </div>
@@ -287,14 +265,15 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
               onClick={form.handleSubmit((v) => onSubmit(v, "DRAFT"), onInvalid)}
               disabled={isPending}
             >
-              В черновик
+              У чернетку
             </Button>
             <Button 
-              type="button" 
+              type="button"
+              className="bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white hover:from-[#0c5db8] hover:to-[#00c5e3]"
               onClick={form.handleSubmit((v) => onSubmit(v, "PUBLISHED"), onInvalid)}
               disabled={isPending}
             >
-              <Save className="w-4 h-4 mr-2" /> Опубликовать
+              <Save className="w-4 h-4 mr-2" /> Опублікувати
             </Button>
             
             {initialData && (
@@ -306,10 +285,10 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={handleDuplicate}>
-                    <Copy className="w-4 h-4 mr-2" /> Дублировать
+                    <Copy className="w-4 h-4 mr-2" /> Дублювати
                   </DropdownMenuItem>
                   <DropdownMenuItem className="text-red-600" onClick={() => setShowDeleteModal(true)}>
-                    <Trash className="w-4 h-4 mr-2" /> Удалить
+                    <Trash className="w-4 h-4 mr-2" /> Видалити
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -321,13 +300,13 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Basic Info */}
-            <div className="border rounded-lg p-6 bg-card space-y-4">
-              <h2 className="text-lg font-semibold border-b pb-2">Основная информация</h2>
+            <div className="border border-border rounded-xl shadow-sm bg-white p-5 space-y-4 focus:border-[#00B5D1] focus:ring-1 focus:ring-[#00B5D1]">
+              <h2 className="text-lg font-semibold border-b pb-2">Основна інформація</h2>
               
               <FormField control={form.control} name="name" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Название товара *</FormLabel>
-                  <FormControl><Input placeholder="Например: Очиститель кузова..." {...field} /></FormControl>
+                  <FormLabel>Назва товару *</FormLabel>
+                  <FormControl><Input placeholder="Наприклад: Очищувач кузова..." {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )} />
@@ -338,7 +317,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
                     <FormLabel>Артикул (SKU) *</FormLabel>
                     <div className="flex gap-2">
                       <FormControl><Input {...field} /></FormControl>
-                      <Button type="button" variant="secondary" onClick={handleGenerateSKU}>Генерировать</Button>
+                      <Button type="button" variant="secondary" onClick={handleGenerateSKU}>Згенерувати</Button>
                     </div>
                     <FormMessage />
                   </FormItem>
@@ -349,13 +328,13 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
                     <FormLabel>Бренд</FormLabel>
                     <div className="flex gap-2">
                       <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
-                        <FormControl><SelectTrigger className="flex-1"><SelectValue placeholder="Выберите бренд" /></SelectTrigger></FormControl>
+                        <FormControl><SelectTrigger className="flex-1"><SelectValue placeholder="Оберіть бренд" /></SelectTrigger></FormControl>
                         <SelectContent>
-                          <SelectItem value="none">-- Без бренда --</SelectItem>
+                          <SelectItem value="none">-- Без бренду --</SelectItem>
                           {brandsList.map((b: any) => <SelectItem key={b.id} value={String(b.id)}>{b.name}</SelectItem>)}
                         </SelectContent>
                       </Select>
-                      <Button type="button" variant="outline" size="icon" onClick={handleCreateBrand} title="Добавить бренд">
+                      <Button type="button" variant="outline" size="icon" onClick={handleCreateBrand} title="Додати бренд">
                         <span className="text-lg leading-none">+</span>
                       </Button>
                     </div>
@@ -366,7 +345,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
 
               <FormField control={form.control} name="description" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Описание</FormLabel>
+                  <FormLabel>Опис</FormLabel>
                   <DescriptionIdInput />
                   <RichTextEditor value={field.value || ""} onChange={field.onChange} />
                   <FormMessage />
@@ -375,14 +354,14 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
             </div>
 
             {/* SEO */}
-            <div className="border rounded-lg p-6 bg-card space-y-4">
+            <div className="border border-border rounded-xl shadow-sm bg-white p-5 space-y-4 focus:border-[#00B5D1] focus:ring-1 focus:ring-[#00B5D1]">
               <h2 className="text-lg font-semibold border-b pb-2">SEO</h2>
-              <p className="text-xs text-muted-foreground">Заполните или оставьте пустыми — заполнится автоматически из названия и описания</p>
+              <p className="text-xs text-muted-foreground">Заповніть або залиште порожніми — заповниться автоматично з назви та опису</p>
 
               <FormField control={form.control} name="slug" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Кастомный URL (Slug)</FormLabel>
-                  <FormControl><Input placeholder="например: soft99-glaco-30ml (если оставить пустым, сработает автогенерация)" {...field} /></FormControl>
+                  <FormLabel>URL (Slug)</FormLabel>
+                  <FormControl><Input placeholder="наприклад: soft99-glaco-30ml (якщо залишити порожнім, спрацює автогенерація)" {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )} />
@@ -390,7 +369,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
               <FormField control={form.control} name="metaTitle" render={({ field }) => (
                 <FormItem>
                   <FormLabel>Meta Title</FormLabel>
-                  <FormControl><Input placeholder="Автоматически: [Название] | OZO" {...field} /></FormControl>
+                  <FormControl><Input placeholder="Автоматично: [Назва] | OZO" {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )} />
@@ -399,7 +378,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
                 <FormItem>
                   <FormLabel>Meta Description</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Автоматически: первые 150 символов описания" className="resize-none" {...field} />
+                    <Textarea placeholder="Автоматично: перші 150 символів опису" className="resize-none" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -407,16 +386,16 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
 
               <FormField control={form.control} name="seoAlt" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>SEO Alt (для изображений)</FormLabel>
-                  <FormControl><Input placeholder="Автоматически: название товара" {...field} /></FormControl>
+                  <FormLabel>SEO Alt (для зображень)</FormLabel>
+                  <FormControl><Input placeholder="Автоматично: назва товару" {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )} />
             </div>
 
             {/* Media Gallery */}
-            <div className="border rounded-lg p-6 bg-card space-y-4">
-              <h2 className="text-lg font-semibold border-b pb-2">Галерея медиа</h2>
+            <div className="border border-border rounded-xl shadow-sm bg-white p-5 space-y-4 focus:border-[#00B5D1] focus:ring-1 focus:ring-[#00B5D1]">
+              <h2 className="text-lg font-semibold border-b pb-2">Галерея фото</h2>
               <NativeMediaUploader value={media} onChange={setMedia} />
             </div>
           </div>
@@ -424,13 +403,13 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Category */}
-            <div className="border rounded-lg p-6 bg-card space-y-4">
-              <h2 className="text-lg font-semibold border-b pb-2">Категория и тип</h2>
+            <div className="border border-border rounded-xl shadow-sm bg-white p-5 space-y-4 focus:border-[#00B5D1] focus:ring-1 focus:ring-[#00B5D1]">
+              <h2 className="text-lg font-semibold border-b pb-2">Категорія</h2>
               <FormField control={form.control} name="categoryId" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Основная категория *</FormLabel>
+                  <FormLabel>Основна категорія *</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
-                    <FormControl><SelectTrigger><SelectValue placeholder="Выберите категорию" /></SelectTrigger></FormControl>
+                    <FormControl><SelectTrigger><SelectValue placeholder="Оберіть категорію" /></SelectTrigger></FormControl>
                     <SelectContent>
                       {categories.map(c => <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>)}
                     </SelectContent>
@@ -455,19 +434,19 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
             </div>
 
             {/* Price and Stock */}
-            <div className="border rounded-lg p-6 bg-card space-y-4">
-              <h2 className="text-lg font-semibold border-b pb-2">Цена и склад</h2>
+            <div className="border border-border rounded-xl shadow-sm bg-white p-5 space-y-4 focus:border-[#00B5D1] focus:ring-1 focus:ring-[#00B5D1]">
+              <h2 className="text-lg font-semibold border-b pb-2">Ціна та залишок</h2>
               <div className="grid grid-cols-2 gap-4">
                 <FormField control={form.control} name="price" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Розничная цена (₴)</FormLabel>
+                    <FormLabel>Ціна (₴)</FormLabel>
                     <FormControl><Input type="number" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
                 <FormField control={form.control} name="stock" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Остаток (шт)</FormLabel>
+                    <FormLabel>Залишок (шт)</FormLabel>
                     <FormControl><Input type="number" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
@@ -486,35 +465,16 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
                   placeholder="Необов'язково"
                 />
                 <p className="text-xs text-muted-foreground mt-1">
-                  Перекреслена ціна для скидки. Якщо менше рознічної — ігнорується.
+                  Перекреслена ціна для знижки. Якщо менше роздрібної — ігнорується.
                 </p>
               </div>
 
-              <FormField control={form.control} name="hasWholesale" render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 mt-4">
-                  <div className="space-y-0.5">
-                    <FormLabel>Есть опт</FormLabel>
-                    <FormDescription>Включить оптовую цену</FormDescription>
-                  </div>
-                  <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
-                </FormItem>
-              )} />
-
-              {hasWholesale && (
-                <FormField control={form.control} name="wholesalePrice" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Оптовая цена (₴)</FormLabel>
-                    <FormControl><Input type="number" {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-              )}
             </div>
 
-            {/* Варианты товара */}
-            <div className="border rounded-lg p-6 bg-card space-y-4">
+            {/* Варіанти товару */}
+            <div className="border border-border rounded-xl shadow-sm bg-white p-5 space-y-4 focus:border-[#00B5D1] focus:ring-1 focus:ring-[#00B5D1]">
               <div className="flex items-center justify-between border-b pb-2">
-                <h2 className="text-lg font-semibold">Варианты товару (Розмір + Ціна)</h2>
+                <h2 className="text-lg font-semibold">Варіанти (Розмір + Ціна)</h2>
                 <Button
                   type="button"
                   variant="outline"
@@ -533,8 +493,8 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
               ) : (
                 <div className="space-y-3">
                   {variants.map((v, idx) => (
-                    <div key={idx} className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                      <div className="flex-1">
+                    <div key={idx} className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-4 bg-muted/30 rounded-xl relative">
+                      <div className="flex-1 w-full">
                         <FormLabel className="text-xs">Розмір</FormLabel>
                         <Input
                           placeholder="напр. 50×20 см"
@@ -548,7 +508,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
                           }}
                         />
                       </div>
-                      <div className="w-32">
+                      <div className="w-full sm:w-32">
                         <FormLabel className="text-xs">Ціна (₴)</FormLabel>
                         <Input
                           type="number"
@@ -567,7 +527,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="mt-5 text-red-500 hover:text-red-700 hover:bg-red-50"
+                        className="absolute top-2 right-2 sm:static sm:mt-5 text-red-500 hover:text-red-700 hover:bg-red-50"
                         onClick={() => setVariants((prev) => prev.filter((_, i) => i !== idx))}
                       >
                         <Trash className="w-4 h-4" />
@@ -577,57 +537,11 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
                 </div>
               )}
 
-              <FormField control={form.control} name="volume" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Объём / Вес</FormLabel>
-                  <Tabs value={field.value} onValueChange={field.onChange} className="w-full">
-                    <TabsList className="flex flex-wrap h-auto">
-                      <TabsTrigger value="100 мл">100 мл</TabsTrigger>
-                      <TabsTrigger value="250 мл">250 мл</TabsTrigger>
-                      <TabsTrigger value="500 мл">500 мл</TabsTrigger>
-                      <TabsTrigger value="1 л">1 л</TabsTrigger>
-                      <TabsTrigger value="5 л">5 л</TabsTrigger>
-                    </TabsList>
-                  </Tabs>
-                  <div className="mt-2">
-                    <FormControl><Input placeholder="Или введите свой вариант..." {...field} /></FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )} />
-
-              <FormField control={form.control} name="containerType" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Тип тары</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
-                    <FormControl><SelectTrigger><SelectValue placeholder="Выберите тару" /></SelectTrigger></FormControl>
-                    <SelectContent>
-                      <SelectItem value="триггер">Триггер (спрей)</SelectItem>
-                      <SelectItem value="флакон">Флакон</SelectItem>
-                      <SelectItem value="канистра">Канистра</SelectItem>
-                      <SelectItem value="бочка">Бочка</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )} />
-
-              <FormField control={form.control} name="dimensions" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Размеры (Д × Ш × В)</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Например: 30 × 20 × 15 см" {...field} />
-                  </FormControl>
-                  <FormDescription>Габариты товара в упаковке</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )} />
             </div>
 
             {/* Popular & Related */}
-            <div className="border rounded-lg p-6 bg-card space-y-4">
-              <div className="bg-red-500 text-white p-2 rounded text-xs font-bold">ТЕСТ ФОРМЫ С ПОПУЛЯРНЫМИ ТОВАРАМИ</div>
-              <h2 className="text-lg font-semibold border-b pb-2">Популярность и рекомендации</h2>
+            <div className="border border-border rounded-xl shadow-sm bg-white p-5 space-y-4 focus:border-[#00B5D1] focus:ring-1 focus:ring-[#00B5D1]">
+              <h2 className="text-lg font-semibold border-b pb-2">Популярні товари та рекомендації</h2>
 
               <label className="flex items-center gap-3 cursor-pointer">
                 <input
@@ -636,7 +550,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
                   onChange={() => setIsPopular((v) => !v)}
                   className="h-4 w-4"
                 />
-                <span className="text-sm">Популярный товар (выводить первым на главной)</span>
+                <span className="text-sm">Популярний товар (виводити першим на головній)</span>
               </label>
 
               <label className="flex items-center gap-3 cursor-pointer">
@@ -651,15 +565,15 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
 
               <div className="border-t pt-4 space-y-3">
                 <div>
-                  <div className="text-sm font-medium mb-1">Рекомендуемые товары (Берут вместе)</div>
+                  <div className="text-sm font-medium mb-1">Рекомендовані товари</div>
                   <div className="text-xs text-muted-foreground mb-3">
-                    Выбери сопутствующие товары
+                    Виберіть супутні товари
                   </div>
                 </div>
                 <Input
                   value={relatedQ}
                   onChange={(e) => setRelatedQ(e.target.value)}
-                  placeholder="Поиск по названию..."
+                  placeholder="Пошук за назвою..."
                 />
                 <div className="max-h-[180px] overflow-auto border rounded-md p-2 space-y-1">
                   {allProducts
@@ -686,10 +600,10 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
                       </label>
                     ))}
                   {!allProducts.length && (
-                    <div className="text-xs text-muted-foreground p-2">Нет данных о товарах.</div>
+                    <div className="text-xs text-muted-foreground p-2">Немає даних про товари.</div>
                   )}
                 </div>
-                <div className="text-xs text-muted-foreground">Выбрано: {relatedIds.length}</div>
+                <div className="text-xs text-muted-foreground">Вибрано: {relatedIds.length}</div>
               </div>
 
               <div className="border-t pt-4 space-y-3">
@@ -702,7 +616,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
                 <Input
                   value={relatedQ}
                   onChange={(e) => setRelatedQ(e.target.value)}
-                  placeholder="Поиск по названию..."
+                  placeholder="Пошук за назвою..."
                 />
                 <div className="max-h-[180px] overflow-auto border rounded-md p-2 space-y-1">
                   {allProducts
@@ -729,7 +643,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
                       </label>
                     ))}
                   {!allProducts.length && (
-                    <div className="text-xs text-muted-foreground p-2">Нет данных о товарах.</div>
+                    <div className="text-xs text-muted-foreground p-2">Немає даних про товари.</div>
                   )}
                 </div>
                 <div className="text-xs text-muted-foreground">Вибрано: {relatedProductIds.length}</div>
@@ -737,7 +651,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
                 {(initialData?.id || relatedProductIds.length > 0) && (
                   <div className="space-y-2">
                     <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                      Короткий текст кнопки
+                      Текст на кнопці
                     </div>
                     {initialData?.id && (
                       <div className="flex items-center gap-2">
@@ -784,7 +698,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
 
               <div className="border-t pt-4">
                 <label className="text-sm font-medium mb-2 block">
-                  Готовый товар-комплект со скидкой
+                  Набір зі знижкою
                 </label>
                 <select
                   value={bundleProductId ?? ""}
@@ -801,7 +715,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
                     ))}
                 </select>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Отдельный товар-набор из каталога со своей ценой. Если не выбран — блок «Разом дешевше» не показывается.
+                  Окремий товар-набір із каталогу зі своєю ціною. Якщо не вибрано — блок «Разом дешевше» не показується.
                 </p>
               </div>
             </div>
@@ -814,9 +728,9 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
       <AlertDialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Удалить товар навсегда?</AlertDialogTitle>
+            <AlertDialogTitle>Видалити товар назавжди?</AlertDialogTitle>
             <AlertDialogDescription>
-              Это действие необратимо. Чтобы подтвердить удаление, введите <b>DELETE</b> или артикул товара (<b>{form.getValues("sku")}</b>).
+              Це дія незворотна. Щоб підтвердити видалення, введіть <b>DELETE</b> або артикул товару (<b>{form.getValues("sku")}</b>).
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="py-4">
@@ -827,13 +741,13 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
             />
           </div>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setDeleteConfirmation("")}>Отмена</AlertDialogCancel>
+            <AlertDialogCancel onClick={() => setDeleteConfirmation("")}>Скасувати</AlertDialogCancel>
             <AlertDialogAction 
               onClick={handleDelete}
               disabled={deleteConfirmation !== "DELETE" && deleteConfirmation !== form.getValues("sku")}
               className="bg-red-600 hover:bg-red-700"
             >
-              Подтвердить удаление
+              Підтвердити видалення
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

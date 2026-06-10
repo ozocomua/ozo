@@ -145,12 +145,8 @@ export async function createProduct(data: {
   brandId?: number;
   status: "DRAFT" | "PUBLISHED";
   price: number;
-  wholesalePrice?: number;
-  hasWholesale?: boolean;
   stock: number;
   volume?: string;
-  containerType?: string;
-  dimensions?: string;
   productType?: string;
   variants?: { size: string; price: number }[];
   oldPrice?: number | null;
@@ -191,12 +187,8 @@ export async function createProduct(data: {
         isPublished,
         badge: data.isNew ? "Новинка" : null,
         price: data.price,
-        wholesalePrice: data.wholesalePrice ?? null,
-        hasWholesale: data.hasWholesale ?? false,
         stock: data.stock ?? 0,
         volume: data.volume,
-        containerType: data.containerType,
-        dimensions: data.dimensions,
         productType: data.productType ?? "SINGLE",
         oldPrice: data.oldPrice ?? null,
         isPopular: data.isPopular === true,
@@ -235,7 +227,7 @@ export async function createProduct(data: {
             : [{
                 sku: data.sku,
                 volume: data.volume || "",
-                packageType: data.containerType || "",
+                packageType: "",
                 size: null,
                 priceRetail: data.price,
                 stock: data.stock ?? 0,
@@ -278,12 +270,8 @@ export async function duplicateProduct(productId: number) {
         isPublished: false,
         badge: null,
         price: src.price,
-        wholesalePrice: src.wholesalePrice,
-        hasWholesale: src.hasWholesale,
         stock: src.stock,
         volume: src.volume,
-        containerType: src.containerType,
-        dimensions: src.dimensions,
         productType: src.productType,
         oldPrice: src.oldPrice,
         isPopular: src.isPopular,
@@ -448,12 +436,8 @@ export async function updateProduct(
     isPublished?: boolean;
     brandId?: number;
     price?: number;
-    wholesalePrice?: number;
-    hasWholesale?: boolean;
     stock?: number;
     volume?: string;
-    containerType?: string;
-    dimensions?: string;
     productType?: string;
     variants?: { size: string; price: number }[];
     oldPrice?: number | null;
@@ -504,12 +488,8 @@ export async function updateProduct(
     if (data.isPublished !== undefined) updateData.isPublished = data.isPublished;
     if (data.brandId !== undefined) updateData.brandId = data.brandId;
     if (data.price !== undefined) updateData.price = data.price;
-    if (data.wholesalePrice !== undefined) updateData.wholesalePrice = data.wholesalePrice;
-    if (data.hasWholesale !== undefined) updateData.hasWholesale = data.hasWholesale;
     if (data.stock !== undefined) updateData.stock = data.stock;
     if (data.volume !== undefined) updateData.volume = data.volume;
-    if (data.containerType !== undefined) updateData.containerType = data.containerType;
-    if (data.dimensions !== undefined) updateData.dimensions = data.dimensions;
     if (data.productType !== undefined) updateData.productType = data.productType;
     if (data.oldPrice !== undefined) updateData.oldPrice = data.oldPrice;
     if (data.isPopular !== undefined) updateData.isPopular = data.isPopular === true;

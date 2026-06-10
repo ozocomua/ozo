@@ -139,7 +139,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
                 ? null
                 : Number(priceWholesaleRaw)
             const stock = Number((v as { stock?: unknown }).stock)
-            if (!sku || !volume || !packageType || !Number.isFinite(priceRetail)) return null
+            if (!sku || !Number.isFinite(priceRetail)) return null
             return {
               id,
               sku: sku.slice(0, 191),
