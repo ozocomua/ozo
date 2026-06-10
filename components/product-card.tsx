@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import Image from "next/image"
 import type { StorefrontProduct } from "@/lib/storefront-db"
 import { useCart } from "@/lib/cart-context"
@@ -13,6 +14,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart()
+  const router = useRouter()
 
   const outOfStock = product.stock === 0
   const variantPrices = (product.variants || []).map((v: any) => v.priceRetail).filter((p: number) => p > 0)
@@ -24,7 +26,17 @@ export default function ProductCard({ product }: ProductCardProps) {
     e.stopPropagation()
     if (outOfStock) return
 
-    const v = product.variants?.[0]
+    // For variable products, go to product page to pick size
+    if (hasVariants) {
+      router.push(`/product/${product.slug}`)
+      return
+    }
+
+    // Simple product — add cheapest variant directly
+    const cheapest = product.variants?.reduce((best: any, cur: any) =>
+      cur.priceRetail > 0 && cur.priceRetail < best.priceRetail ? cur : best,
+      product.variants[0])
+    const v = cheapest || product.variants?.[0]
     addToCart({
       id: v ? v.id : product.id,
       name: v ? `${product.name} (${v.size || v.volume})` : product.name,
@@ -101,7 +113,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               onClick={handleBuyClick}
               className="text-xs sm:text-sm bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white font-semibold px-3 py-2 sm:px-4 sm:py-2.5 rounded-md hover:from-[#0c5db8] hover:to-[#00c5e3] active:scale-95 transition-all min-h-[40px] sm:min-h-[44px]"
             >
-              Купити
+              {hasVariants ? "Обрати" : "Купити"}
             </button>
           )}
         </div>

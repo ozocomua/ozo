@@ -27,7 +27,7 @@ export default function CheckoutPage() {
   const [selectedCity, setSelectedCity] = useState({ ref: '', name: '' })
   const [deliveryType, setDeliveryType] = useState<'warehouse' | 'postomat' | 'courier'>('warehouse')
   
-  const [paymentType, setPaymentType] = useState<'card' | 'cod'>('card')
+  const [paymentType, setPaymentType] = useState<'card' | 'cod'>('cod')
   const [showCodWarning, setShowCodWarning] = useState(false)
   const [codConfig, setCodConfig] = useState({ enabled: false, title: "", message: "", okLabel: "", cancelLabel: "" })
 

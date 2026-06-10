@@ -28,6 +28,8 @@ export default function ProductVariantPicker({
     ? (selected.size || selected.volume)
     : ""
 
+  const currentPrice = selected ? selected.priceRetail : product.price
+
   const productWithVariant = selected
     ? {
         ...product,
@@ -35,6 +37,7 @@ export default function ProductVariantPicker({
         productId: product.id,
         price: selected.priceRetail,
         variantSize: selected.size || selected.volume,
+        stock: selected.stock,
       }
     : product
 
@@ -63,10 +66,11 @@ export default function ProductVariantPicker({
   }, [open])
 
   if (!variants.length) {
+    const price = product.price
     return (
       <div className="space-y-4">
         <div>
-          <span className="text-3xl font-bold text-foreground">{product.price} ₴</span>
+          <span className="text-2xl sm:text-3xl font-bold text-foreground">{price} ₴</span>
         </div>
         <AddToCartButton product={product} />
       </div>
@@ -98,7 +102,7 @@ export default function ProductVariantPicker({
       {/* ── Price ── */}
       <div>
         <span className="text-2xl sm:text-3xl font-bold text-foreground">
-          {selected ? selected.priceRetail : product.price} ₴
+          {currentPrice} ₴
         </span>
       </div>
 
