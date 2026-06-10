@@ -42,11 +42,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const savedCart = localStorage.getItem('ozo-cart')
     if (savedCart) {
-      const parsed = JSON.parse(savedCart)
-      setCart(parsed)
-      if (parsed.length > 0) {
-        refreshPricesImpl(parsed)
-      } else {
+      try {
+        const parsed = JSON.parse(savedCart)
+        setCart(parsed)
+        if (parsed.length > 0) {
+          refreshPricesImpl(parsed)
+        } else {
+          setPricesRefreshed(true)
+        }
+      } catch {
+        console.warn('Failed to parse cart from localStorage, resetting.')
+        localStorage.removeItem('ozo-cart')
         setPricesRefreshed(true)
       }
     } else {

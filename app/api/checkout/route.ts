@@ -98,6 +98,10 @@ export async function POST(req: Request) {
       orderItemEntries.push({ productId: pid, variantId, quantity: qty })
     }
 
+    if (orderItemEntries.length === 0) {
+      return NextResponse.json({ error: "Кошик порожній" }, { status: 400 })
+    }
+
     // 2. ВСЕ В ОДНІЙ ТРАНЗАКЦІЇ: валідація → збір цін з БД → списання stock → створення замовлення
     const txResult = await prisma.$transaction(async (tx) => {
       const dbProducts = await tx.product.findMany({

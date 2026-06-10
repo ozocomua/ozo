@@ -484,7 +484,7 @@ export default function CheckoutPage() {
                   !formData.firstName.trim() ||
                   !formData.lastName.trim()
                 }
-                className="w-full bg-white text-black py-6 rounded-2xl font-black uppercase text-[11px] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-20"
+                className="w-full bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white py-6 rounded-2xl font-black uppercase text-[11px] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 hover:from-[#0c5db8] hover:to-[#00c5e3] disabled:opacity-40"
               >
                 {isSubmitting ? <Loader2 className="animate-spin" size={16} /> : "Замовити зараз"}
               </button>

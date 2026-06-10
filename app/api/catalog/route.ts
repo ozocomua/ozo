@@ -19,7 +19,7 @@ export async function GET(req: Request) {
 
   try {
     const products = await prisma.product.findMany({
-      where: { id: { in: ids }, isPublished: true },
+      where: { id: { in: ids.slice(0, 100) }, isPublished: true },
       select: { id: true, price: true, stock: true },
     })
     return NextResponse.json({ products })

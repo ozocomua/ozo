@@ -11,6 +11,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "No file uploaded" }, { status: 400 });
     }
 
+    if (!(file instanceof File)) {
+      return NextResponse.json({ error: "Invalid file" }, { status: 400 });
+    }
+
+    // File size limit: 10 MB
+    const MAX_SIZE = 10 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      return NextResponse.json({ error: "File too large. Maximum size is 10MB" }, { status: 400 });
+    }
+
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 

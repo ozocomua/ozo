@@ -246,7 +246,7 @@ export default async function ProductPage({ params }: Props) {
               <WriteReviewInline productId={product.id} />
             </div>
 
-            <ProductVariantPicker product={product} variants={product.variants.filter((v: any) => v.size != null && v.size !== "")} />
+            <ProductVariantPicker product={product} variants={product.variants.filter((v: any) => (v.size != null && v.size !== "") || v.volume)} />
 
             {product.relatedVersions.length > 0 && (
               <div className="border border-border rounded-xl p-4 space-y-3">

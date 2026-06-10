@@ -26,17 +26,21 @@ export async function GET(req: Request) {
 
     if (status) {
       if (status === "NEW") {
-        where.OR = [{ status: "NEW" }, { status: "Нове" }, { status: "Новий" }, { status: "Новый" }]
+        where.status = { in: ["NEW", "Нове", "Новий", "Новый"] }
       } else {
         where.status = status
       }
     }
 
     if (q) {
-      where.OR = [
-        ...(where.OR ?? []),
-        { orderNumber: { contains: q } },
-        { user: { phone: { contains: q } } },
+      where.AND = [
+        ...(where.AND ?? []),
+        {
+          OR: [
+            { orderNumber: { contains: q } },
+            { user: { phone: { contains: q } } },
+          ],
+        },
       ]
     }
 

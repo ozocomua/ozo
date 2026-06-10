@@ -189,7 +189,7 @@ export async function sendOrderNotification(order: {
     : ""
 
   const paymentText = paymentLabel(order.paymentType)
-  const cleanPhone = order.user.phone.replace(/\D/g, "")
+  const cleanPhone = (order.user.phone || "").replace(/\D/g, "")
 
   const text = [
     `🔥 <b>Новый заказ №${order.orderNumber}</b>`,

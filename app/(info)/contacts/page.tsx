@@ -51,7 +51,7 @@ export default function ContactsPage() {
               className="group flex items-center justify-between p-6 bg-card border border-border rounded-2xl hover:border-primary transition-all"
             >
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-sky-500/10 text-sky-500 rounded-xl group-hover:bg-sky-500 group-hover:text-white transition-colors">
+                <div className="p-3 bg-[#0088cc]/10 text-[#0088cc] rounded-xl group-hover:bg-[#0088cc] group-hover:text-white transition-colors">
                   <Send size={20} />
                 </div>
                 <span className="font-bold">Telegram</span>

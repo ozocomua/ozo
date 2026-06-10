@@ -43,7 +43,7 @@ export async function POST(req: Request) {
         `📅 Дата: ${date}`,
       ].join("\n")
 
-      fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

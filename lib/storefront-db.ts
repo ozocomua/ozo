@@ -71,6 +71,7 @@ export type StorefrontProduct = {
   image: string
   price: number
   oldPrice: number | null
+  size: string | null
   volume: string
   stock: number
   variants: StorefrontVariant[]

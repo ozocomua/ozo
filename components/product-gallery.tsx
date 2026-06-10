@@ -3,13 +3,7 @@
 import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
 import { X, ChevronLeft, ChevronRight } from "lucide-react"
-
-function resolveImageSrc(src: string): string {
-  if (src.startsWith("/uploads/")) {
-    return `/api/image/${src.replace("/uploads/", "")}`
-  }
-  return src
-}
+import { normalizeImageUrl } from "@/lib/image-path"
 
 export default function ProductGallery({
   images,
@@ -70,7 +64,7 @@ export default function ProductGallery({
           aria-label={`${mainAlt} — відкрити на повний екран`}
         >
           <Image
-            src={resolveImageSrc(images[active] || "/placeholder.jpg")}
+            src={normalizeImageUrl(images[active] || "/placeholder.jpg")}
             alt={mainAlt}
             fill
             unoptimized
@@ -110,7 +104,7 @@ export default function ProductGallery({
                 }`}
               >
                 <Image
-                  src={resolveImageSrc(src)}
+                  src={normalizeImageUrl(src)}
                   alt={`${mainAlt} — фото ${i + 1}`}
                   fill
                   className="object-cover"
@@ -165,7 +159,7 @@ export default function ProductGallery({
           {/* Image */}
           <div className="relative z-10 max-w-[95vw] max-h-[90vh] flex items-center justify-center">
             <img
-              src={resolveImageSrc(images[active] || "/placeholder.jpg")}
+              src={normalizeImageUrl(images[active] || "/placeholder.jpg")}
               alt={mainAlt}
               className="max-h-[90vh] max-w-[95vw] object-contain rounded-lg select-none"
               draggable={false}
