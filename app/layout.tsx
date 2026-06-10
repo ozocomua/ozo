@@ -5,7 +5,7 @@ import { CartProvider } from "@/lib/cart-context"
 import { Providers } from "./providers"
 import { Toaster } from "@/components/ui/sonner"
 // 1. Імпортуємо віджет
-import CallbackWidget from "@/components/ui/callbackwidget" 
+import CallbackWidgetWrapper from "@/components/callback-widget-wrapper" 
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -52,7 +52,7 @@ export default function RootLayout({
         <Providers>
           <CartProvider>
             {children}
-            <CallbackWidget />
+            <CallbackWidgetWrapper />
           </CartProvider>
         </Providers>
         <Toaster />
