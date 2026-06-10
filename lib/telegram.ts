@@ -68,7 +68,7 @@ export async function sendTtnNotification(order: {
 
   const raw = order.orderItems
   if (Array.isArray(raw) && raw.length > 0) {
-    const entries = raw as { productId?: number; quantity?: number }[]
+    const entries = raw as { productId?: number; variantId?: number | null; quantity?: number }[]
     const pids = entries
       .map((e) => Number(e.productId))
       .filter((id) => Number.isFinite(id) && id > 0)
@@ -83,11 +83,30 @@ export async function sendTtnNotification(order: {
         )
         const nameById = new Map(prods.map((p) => [p.id, p.name]))
 
+        // Fetch variant sizes for items that have variantId
+        const variantIds = entries
+          .map((e) => e.variantId)
+          .filter((v): v is number => v !== null && v !== undefined && Number.isFinite(v) && v > 0)
+        const sizeById = new Map<number, string>()
+        if (variantIds.length > 0) {
+          const variants = await import("@/lib/prisma").then((m) =>
+            m.default.productVariant.findMany({
+              where: { id: { in: variantIds } },
+              select: { id: true, size: true, volume: true },
+            })
+          )
+          for (const v of variants) {
+            sizeById.set(v.id, v.size || v.volume || "")
+          }
+        }
+
         const lines = entries.map((e) => {
           const pid = Number(e.productId)
           const qty = Number(e.quantity) || 1
           const name = nameById.get(pid) || `ID ${pid}`
-          return `\\- ${name} \\— x${qty}`
+          const sizeStr = e.variantId ? (sizeById.get(e.variantId) || "") : ""
+          const fullName = sizeStr ? `${name} \\(${sizeStr}\\)` : name
+          return `\\- ${fullName} \\— x${qty}`
         })
         productsList = lines.join("\n")
       } catch {
