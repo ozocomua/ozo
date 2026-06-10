@@ -28,7 +28,9 @@ export default function ProductVariantPicker({
     ? (selected.size || selected.volume)
     : ""
 
-  const currentPrice = selected ? selected.priceRetail : product.price
+  const currentPrice = selected 
+    ? selected.priceRetail 
+    : (variants[0]?.priceRetail ?? product.price)
 
   const productWithVariant = selected
     ? {

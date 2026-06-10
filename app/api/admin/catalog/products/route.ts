@@ -194,6 +194,13 @@ export async function POST(req: Request) {
         data: parsedVariants.map((v) => ({ ...v, productId: p.id })),
       })
 
+      // Auto-set product.price to the cheapest variant
+      const minPrice = Math.min(...parsedVariants.map((v) => v.priceRetail))
+      await tx.product.update({
+        where: { id: p.id },
+        data: { price: minPrice },
+      })
+
       if (parsedImages.length) {
         await tx.productImage.createMany({
           data: parsedImages.map((img) => ({ ...img, productId: p.id })),

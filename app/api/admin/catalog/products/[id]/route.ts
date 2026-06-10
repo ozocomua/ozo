@@ -218,6 +218,12 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
             productId,
           })),
         })
+        // Auto-set product.price to the cheapest variant
+        const minPrice = Math.min(...parsedVariants.map((v) => v.priceRetail))
+        await tx.product.update({
+          where: { id: productId },
+          data: { price: minPrice },
+        })
       }
 
       if (Array.isArray(parsedImages)) {
