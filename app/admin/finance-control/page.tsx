@@ -250,7 +250,7 @@ export default function FinanceControlPage() {
           data.push({
             Дата: t.date,
             Тип: "Продаж",
-            Об'єкт: item?.name ?? "",
+            "Обʼєкт": item?.name ?? "",
             "К-сть": si.qty,
             Ціна: si.customPrice,
             Коментар: t.comment,
