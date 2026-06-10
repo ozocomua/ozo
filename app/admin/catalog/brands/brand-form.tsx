@@ -94,16 +94,16 @@ export function BrandForm({ mode, brandId }: { mode: "create" | "edit"; brandId?
       <div className="flex items-center justify-between gap-4">
         <div>
           <h1 className="font-serif text-2xl font-medium tracking-tight">
-            {mode === "create" ? "Новый бренд" : "Редактирование бренда"}
+            {mode === "create" ? "Новий бренд" : "Редагування бренду"}
           </h1>
-          <p className="text-muted-foreground mt-1 text-sm">Название и SEO URL.</p>
+          <p className="text-muted-foreground mt-1 text-sm">Назва та SEO URL.</p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" onClick={() => { window.location.href = ".." }}>
             Назад
           </Button>
           <Button onClick={() => void onSave()} disabled={saving || loading || !name.trim() || !slug.trim()}>
-            {saving ? "Сохранение…" : "Сохранить"}
+            {saving ? "Збереження…" : "Зберегти"}
           </Button>
         </div>
       </div>
@@ -113,9 +113,9 @@ export function BrandForm({ mode, brandId }: { mode: "create" | "edit"; brandId?
       <div className="rounded-2xl border bg-white p-5 space-y-4">
         <div className="space-y-2">
           <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-            Название
+            Назва
           </div>
-          <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Например: Koch Chemie" />
+          <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Наприклад: Koch Chemie" />
         </div>
         <div className="space-y-2">
           <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">

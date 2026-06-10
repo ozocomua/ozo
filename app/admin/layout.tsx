@@ -26,7 +26,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div className="min-h-screen bg-[#F9F9F7] text-foreground">
+    <div className="min-h-screen bg-[#F9F9F7] text-foreground font-sans">
       <AdminHeader />
       <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
     </div>

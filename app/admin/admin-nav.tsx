@@ -7,29 +7,29 @@ import { cn } from "@/lib/utils"
 type NavItem = { key: string; label: string; segment: string }
 
 const sections: NavItem[] = [
-  { key: "orders", label: "Заказы", segment: "" },
+  { key: "orders", label: "Замовлення", segment: "" },
   { key: "callbacks", label: "📞 Заявки на дзвінок", segment: "callbacks" },
   { key: "catalog", label: "Каталог", segment: "catalog" },
   { key: "blog", label: "📝 Блог", segment: "blog" },
   { key: "reviews", label: "Відгуки", segment: "reviews" },
   { key: "calculator", label: "Калькулятор", segment: "profit-calculator" },
-  { key: "finance", label: "Финансы", segment: "finance-control" },
+  { key: "finance", label: "Фінанси", segment: "finance-control" },
   { key: "settings", label: "⚙️ Налаштування", segment: "settings" },
 ]
 
 const orders: NavItem[] = [
-  { key: "new", label: "Новые", segment: "" },
-  { key: "packed", label: "Упакованы", segment: "packed" },
-  { key: "shipped", label: "Отправлены", segment: "shipped" },
-  { key: "refused", label: "Отказы", segment: "refused" },
-  { key: "received", label: "Получены", segment: "received" },
-  { key: "all", label: "Все", segment: "all" },
+  { key: "new", label: "Нові", segment: "" },
+  { key: "packed", label: "Упаковані", segment: "packed" },
+  { key: "shipped", label: "Відправлені", segment: "shipped" },
+  { key: "refused", label: "Відмови", segment: "refused" },
+  { key: "received", label: "Отримані", segment: "received" },
+  { key: "all", label: "Всі", segment: "all" },
 ]
 
 const catalog: NavItem[] = [
-  { key: "products", label: "Товары", segment: "catalog" },
-  { key: "categories", label: "Категории", segment: "catalog/categories" },
-  { key: "brands", label: "Бренды", segment: "catalog/brands" },
+  { key: "products", label: "Товари", segment: "catalog" },
+  { key: "categories", label: "Категорії", segment: "catalog/categories" },
+  { key: "brands", label: "Бренди", segment: "catalog/brands" },
 ]
 
 const reviewsSub: NavItem[] = [

@@ -109,7 +109,7 @@ export default function AdminCatalogProductsPage() {
   }
 
   async function deleteProduct(id: number, name: string) {
-    const answer = window.prompt(`Удалить товар "${name}"? Введите DELETE для подтверждения.`)
+    const answer = window.prompt(`Видалити товар "${name}"? Введіть DELETE для підтвердження.`)
     if (answer !== "DELETE") return
     setBusyById((s) => ({ ...s, [id]: true }))
     setError(null)
@@ -130,9 +130,9 @@ export default function AdminCatalogProductsPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-serif text-2xl font-medium tracking-tight">Товары</h1>
+          <h1 className="font-serif text-2xl font-medium tracking-tight">Товари</h1>
           <p className="text-muted-foreground mt-1 text-sm">
-            Поиск по названию, URL или SKU. Дублирование удобно для вариантов.
+            Пошук за назвою, URL або SKU. Дублювання зручно для варіантів.
           </p>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -144,13 +144,13 @@ export default function AdminCatalogProductsPage() {
 
       <div className="rounded-2xl border bg-white p-4 space-y-3">
         <div className="grid gap-2 md:grid-cols-4">
-          <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Поиск: название / URL / SKU" />
+          <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Пошук: назва / URL / SKU" />
           <select
             value={brandId}
             onChange={(e) => setBrandId(e.target.value)}
             className="h-10 rounded-md border border-input bg-background px-3 text-sm"
           >
-            <option value="">Бренд: все</option>
+            <option value="">Бренд: всі</option>
             {brands.map((b) => (
               <option key={b.id} value={String(b.id)}>
                 {b.name}
@@ -162,7 +162,7 @@ export default function AdminCatalogProductsPage() {
             onChange={(e) => setCategoryId(e.target.value)}
             className="h-10 rounded-md border border-input bg-background px-3 text-sm"
           >
-            <option value="">Категория: все</option>
+            <option value="">Категорія: всі</option>
             {categories.map((c) => (
               <option key={c.id} value={String(c.id)}>
                 {c.name}
@@ -174,9 +174,9 @@ export default function AdminCatalogProductsPage() {
             onChange={(e) => setPublished(e.target.value)}
             className="h-10 rounded-md border border-input bg-background px-3 text-sm"
           >
-            <option value="">Публикация: все</option>
-            <option value="true">Опубликован</option>
-            <option value="false">Черновик</option>
+            <option value="">Публікація: всі</option>
+            <option value="true">Опубліковано</option>
+            <option value="false">Чернетка</option>
           </select>
         </div>
         <div className="flex items-center gap-2">
@@ -217,7 +217,7 @@ export default function AdminCatalogProductsPage() {
                     <div className="text-xs text-muted-foreground mt-1 truncate">/{p.slug}</div>
                   </div>
                   <Badge variant={p.isPublished ? "default" : "outline"}>
-                    {p.isPublished ? "Опубликован" : "Черновик"}
+                    {p.isPublished ? "Опубліковано" : "Чернетка"}
                   </Badge>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -234,7 +234,7 @@ export default function AdminCatalogProductsPage() {
                 ) : null}
                 <div className="flex items-center gap-2">
                   <Button variant="outline" onClick={() => { window.location.href = window.location.pathname + `/products/${p.id}` }}>
-                    Редактировать
+                    Редагувати
                   </Button>
                   <Button
                     variant="outline"
@@ -248,7 +248,7 @@ export default function AdminCatalogProductsPage() {
                     onClick={() => void deleteProduct(p.id, p.name)}
                     disabled={Boolean(busyById[p.id])}
                   >
-                    Удалить
+                    Видалити
                   </Button>
                 </div>
               </div>
@@ -264,8 +264,8 @@ export default function AdminCatalogProductsPage() {
       <div className="hidden md:block rounded-xl border bg-white overflow-hidden">
         <div className="grid grid-cols-[1fr_220px_140px_160px_260px] gap-0 border-b bg-[#F9F9F7] px-4 py-3 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
           <div>Товар</div>
-          <div>Категории</div>
-          <div>Цена</div>
+          <div>Категорії</div>
+          <div>Ціна</div>
           <div>Склад</div>
           <div></div>
         </div>
@@ -283,7 +283,7 @@ export default function AdminCatalogProductsPage() {
                     <div className="flex items-center gap-2">
                       <div className="font-medium truncate">{p.name}</div>
                       <Badge variant={p.isPublished ? "default" : "outline"}>
-                        {p.isPublished ? "Опубликован" : "Черновик"}
+                        {p.isPublished ? "Опубліковано" : "Чернетка"}
                       </Badge>
                     </div>
                     <div className="text-xs text-muted-foreground truncate">/{p.slug}</div>
@@ -296,7 +296,7 @@ export default function AdminCatalogProductsPage() {
                   <div className="text-sm text-muted-foreground">{stock}</div>
                   <div className="flex items-center justify-end gap-2">
                     <Button variant="outline" size="sm" onClick={() => { window.location.href = window.location.pathname + `/products/${p.id}` }}>
-                      Редактировать
+                      Редагувати
                     </Button>
                     <Button
                       variant="outline"
@@ -312,7 +312,7 @@ export default function AdminCatalogProductsPage() {
                       onClick={() => void deleteProduct(p.id, p.name)}
                       disabled={Boolean(busyById[p.id])}
                     >
-                      Удалить
+                      Видалити
                     </Button>
                   </div>
                 </div>

@@ -152,7 +152,7 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <p className="text-muted-foreground text-sm">Загрузка заказа...</p>
+        <p className="text-muted-foreground text-sm">Завантаження замовлення...</p>
       </div>
     )
   }
@@ -160,9 +160,9 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
   if (!order) {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-4">
-        <p className="text-muted-foreground text-sm">Заказ не найден</p>
+        <p className="text-muted-foreground text-sm">Замовлення не знайдено</p>
         <Link href={adminRoot} className="text-blue-600 text-sm underline">
-          Назад к заказам
+          Назад до замовлень
         </Link>
       </div>
     )
@@ -175,21 +175,21 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
           href={adminRoot}
           className="text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
-          ← Назад к заказам
+          ← Назад до замовлень
         </Link>
         <h1 className="text-2xl font-serif font-bold text-foreground mt-2">
-          Создание ТТН — Заказ №{order.orderNumber}
+          Створення ТТН — Замовлення №{order.orderNumber}
         </h1>
       </div>
 
       <div className="bg-white border rounded-2xl p-6 space-y-6">
         <div>
           <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">
-            Данные получателя
+            Дані отримувача
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             <div>
-              <span className="text-muted-foreground">ФИО:</span>{" "}
+              <span className="text-muted-foreground">ПІБ:</span>{" "}
               <span className="font-medium">{order.user.name || "—"}</span>
             </div>
             <div>
@@ -198,19 +198,19 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
             </div>
             {order.cityName && (
               <div>
-                <span className="text-muted-foreground">Город клиента:</span>{" "}
+                <span className="text-muted-foreground">Місто клієнта:</span>{" "}
                 <span className="font-medium">{order.cityName}</span>
               </div>
             )}
             {order.deliveryPoint && (
               <div>
-                <span className="text-muted-foreground">Отделение клиента:</span>{" "}
+                <span className="text-muted-foreground">Відділення клієнта:</span>{" "}
                 <span className="font-medium">{order.deliveryPoint}</span>
               </div>
             )}
             {order.deliveryType === "courier" && order.courierHouse && (
               <div className="sm:col-span-2">
-                <span className="text-muted-foreground">Адрес курьера:</span>{" "}
+                <span className="text-muted-foreground">Адреса кур'єра:</span>{" "}
                 <span className="font-medium">
                   {[
                     order.courierHouse ? `Буд. ${order.courierHouse}` : "",
@@ -226,13 +226,13 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
 
         <div className="border-t pt-6">
           <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">
-            Адрес доставки НП
+            Адреса доставки НП
           </h2>
 
           <div className="space-y-4">
             <div className="relative">
               <label className="text-xs font-bold text-slate-600 uppercase block mb-1">
-                Город
+                Місто
               </label>
               <input
                 type="text"
@@ -245,11 +245,11 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
                   setSelectedWarehouse(null)
                 }}
                 onFocus={() => cities.length > 0 && setCityOpen(true)}
-                placeholder="Введите город..."
+                placeholder="Введіть місто..."
                 className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-blue-500 transition-colors"
               />
               {cityLoading && (
-                <div className="absolute right-3 top-9 text-[10px] text-slate-400">Поиск...</div>
+                <div className="absolute right-3 top-9 text-[10px] text-slate-400">Пошук...</div>
               )}
               {cityOpen && cities.length > 0 && (
                 <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl z-50 max-h-60 overflow-y-auto">
@@ -269,10 +269,10 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
 
             <div>
               <label className="text-xs font-bold text-slate-600 uppercase block mb-1">
-                Отделение
+                Відділення
               </label>
               {warehouseLoading ? (
-                <p className="text-[10px] text-slate-400 py-2">Загрузка отделений...</p>
+                <p className="text-[10px] text-slate-400 py-2">Завантаження відділень...</p>
               ) : (
                 <select
                   value={selectedWarehouse?.ref ?? ""}
@@ -283,7 +283,7 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
                   className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-blue-500 transition-colors"
                 >
                   <option value="">
-                    {selectedCity ? "Выберите отделение" : "Сначала выберите город"}
+                    {selectedCity ? "Оберіть відділення" : "Спочатку оберіть місто"}
                   </option>
                   {warehouses.map((w) => (
                     <option key={w.ref} value={w.ref}>
@@ -298,13 +298,13 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
 
         <div className="border-t pt-6">
           <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">
-            Параметры груза
+            Параметри вантажу
           </h2>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-xs font-bold text-slate-600 uppercase block mb-1">
-                Вес (кг)
+                Вага (кг)
               </label>
               <input
                 type="number"
@@ -317,7 +317,7 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
             </div>
             <div>
               <label className="text-xs font-bold text-slate-600 uppercase block mb-1">
-                Количество мест
+                Кількість місць
               </label>
               <input
                 type="number"
@@ -329,7 +329,7 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
             </div>
             <div>
               <label className="text-xs font-bold text-slate-600 uppercase block mb-1">
-                Описание груза
+                Опис вантажу
               </label>
               <input
                 type="text"
@@ -340,7 +340,7 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
             </div>
             <div>
               <label className="text-xs font-bold text-slate-600 uppercase block mb-1">
-                Заявленная стоимость (₴)
+                Заявлена вартість (₴)
               </label>
               <input
                 type="number"
@@ -398,14 +398,14 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
 
         <div className="flex justify-between items-center pt-4 border-t">
           <div className="text-xs text-muted-foreground">
-            Сумма заказа: <span className="font-bold text-foreground">{order.total} ₴</span>
+            Сума замовлення: <span className="font-bold text-foreground">{order.total} ₴</span>
           </div>
           {errorMsg && (
             <p className="text-red-500 text-xs font-bold">{errorMsg}</p>
           )}
           {ttnResult ? (
             <div className="text-center space-y-1">
-              <p className="text-green-600 font-bold text-lg">🎉 ТТН создана!</p>
+              <p className="text-green-600 font-bold text-lg">🎉 ТТН створена!</p>
               <p className="text-2xl font-black font-mono text-foreground">{ttnResult}</p>
             </div>
           ) : (
@@ -415,7 +415,7 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
               disabled={submitting || !selectedCity || !selectedWarehouse}
               className="bg-blue-600 text-white font-bold px-6 py-3 rounded-xl hover:bg-blue-500 transition-colors text-sm uppercase tracking-wide disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {submitting ? "Создание..." : "Создать ТТН"}
+              {submitting ? "Створення..." : "Створити ТТН"}
             </button>
           )}
         </div>

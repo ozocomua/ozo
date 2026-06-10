@@ -62,8 +62,8 @@ function formatMoney(value: number): string {
 
 function paymentLabel(value: string | null): string {
   if (!value) return "—"
-  if (value === "card") return "Картой онлайн"
-  if (value === "cod") return "Накладной"
+  if (value === "card") return "Карткою онлайн"
+  if (value === "cod") return "Накладний"
   return value
 }
 
@@ -106,9 +106,9 @@ function buildCourierDetails(o: AdminOrder): string {
 
 function deliveryTypeLabel(value: string | null): string {
   if (!value) return ""
-  if (value === "warehouse") return "Отделение"
+  if (value === "warehouse") return "Відділення"
   if (value === "postomat") return "Поштомат"
-  if (value === "courier") return "Курьер"
+  if (value === "courier") return "Кур'єр"
   return value
 }
 
@@ -122,7 +122,7 @@ function hasStructuredDelivery(o: AdminOrder): boolean {
   return false
 }
 
-const PRESET_TAGS = ["Срочно", "Нужно уточнить", "Проблема оплаты", "Проблема доставки", "VIP"]
+const PRESET_TAGS = ["Терміново", "Потрібно уточнити", "Проблема оплати", "Проблема доставки", "VIP"]
 
 export function OrdersList({
   title,
@@ -273,7 +273,7 @@ export function OrdersList({
 
   async function deleteOrder(orderId: number, orderNumber: string) {
     const ok = window.confirm(
-      `Удалить заказ #${orderNumber}? Это действие нельзя отменить.`
+      `Видалити замовлення #${orderNumber}? Цю дію не можна скасувати.`
     )
     if (!ok) return
     setBusyById((s) => ({ ...s, [orderId]: true }))
@@ -370,7 +370,7 @@ export function OrdersList({
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <div className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
-                      Заказ №{o.orderNumber}
+                      Замовлення №{o.orderNumber}
                     </div>
                     <div className="text-xs text-muted-foreground mt-1">
                       {formatDate(o.createdAt)}
@@ -386,7 +386,7 @@ export function OrdersList({
 
                 <div className="flex flex-wrap gap-2">
                   <Badge variant={needCall ? "default" : "outline"}>
-                    {needCall ? "Звонить" : "Не звонить"}
+                    {needCall ? "Дзвонить" : "Не дзвонить"}
                   </Badge>
                   <Badge variant={pay === "PAID" ? "default" : "secondary"}>
                     {paymentStatusLabel(pay)}
@@ -420,7 +420,7 @@ export function OrdersList({
                   ) : null}
                   {o.deliveryType === "courier" && courierDetails ? (
                     <div>
-                      <span className="text-muted-foreground">Адрес:</span>{" "}
+                      <span className="text-muted-foreground">Адреса:</span>{" "}
                       <span className="font-medium">{courierDetails}</span>
                     </div>
                   ) : null}
@@ -429,7 +429,7 @@ export function OrdersList({
                 <div className="flex items-center justify-between gap-3">
                   <div className="text-base font-bold">{formatMoney(o.total)}</div>
                   <div className="text-xs text-muted-foreground">
-                    {expanded ? "Скрыть" : "Подробнее"}
+                    {expanded ? "Сховати" : "Детальніше"}
                   </div>
                 </div>
 
@@ -482,7 +482,7 @@ export function OrdersList({
                         onClick={() => void deleteOrder(o.id, o.orderNumber)}
                         disabled={busy}
                       >
-                        Удалить заказ
+                        Видалити замовлення
                       </Button>
 
                       {o.ttn ? (
@@ -502,7 +502,7 @@ export function OrdersList({
 
                     <div className="space-y-2">
                       <div className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
-                        Товары
+                        Товари
                       </div>
                       <div className="rounded-xl border bg-[#F9F9F7] p-3 text-sm whitespace-pre-wrap">
                         {(o.items ?? "").split(", ").join("\n")}
@@ -511,7 +511,7 @@ export function OrdersList({
 
                     <div className="space-y-2">
                       <div className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
-                        Комментарий
+                        Коментар
                       </div>
                       <div className="text-sm font-medium">
                         {o.comment || "—"}
@@ -536,7 +536,7 @@ export function OrdersList({
                             </button>
                           ))
                         ) : (
-                          <span className="text-sm text-muted-foreground">Нет тегов</span>
+                          <span className="text-sm text-muted-foreground">Немає тегів</span>
                         )}
                       </div>
                       <div className="flex flex-col gap-2">
@@ -545,23 +545,23 @@ export function OrdersList({
                           onChange={(e) =>
                             setTagDraftById((s) => ({ ...s, [o.id]: e.target.value }))
                           }
-                          placeholder="Добавить тег (Enter)"
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              e.preventDefault()
-                              void addTag(o.id, tagDraft)
-                            }
-                          }}
-                        />
-                        <Button
-                          variant="outline"
-                          onClick={() => void addTag(o.id, tagDraft)}
-                          disabled={busy}
-                        >
-                          Добавить
-                        </Button>
-                        <div className="flex flex-wrap gap-2">
-                          {PRESET_TAGS.map((t) => (
+                          placeholder="Додати тег (Enter)"
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.preventDefault()
+                                void addTag(o.id, tagDraft)
+                              }
+                            }}
+                          />
+                          <Button
+                            variant="outline"
+                            onClick={() => void addTag(o.id, tagDraft)}
+                            disabled={busy}
+                          >
+                            Додати
+                          </Button>
+                          <div className="flex flex-wrap gap-2">
+                            {PRESET_TAGS.map((t) => (
                             <button
                               key={t}
                               type="button"
@@ -641,7 +641,7 @@ export function OrdersList({
                     <TableCell>{o.user.phone}</TableCell>
                     <TableCell>
                       <Badge variant={needCall ? "default" : "outline"}>
-                        {needCall ? "Звонить" : "Не звонить"}
+                        {needCall ? "Дзвонить" : "Не дзвонить"}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -724,7 +724,7 @@ export function OrdersList({
                           onClick={() => void deleteOrder(o.id, o.orderNumber)}
                           disabled={Boolean(busyById[o.id])}
                         >
-                          Удалить
+                          Видалити
                         </Button>
                       </div>
                     </TableCell>
@@ -736,11 +736,11 @@ export function OrdersList({
                           <div className="grid gap-4 md:grid-cols-2">
                             <div className="space-y-2">
                               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                                Данные для отправки
+                                Дані для відправки
                               </p>
                               <div className="text-sm space-y-1">
                                 <div>
-                                  <span className="text-muted-foreground">ФИО:</span>{" "}
+                                  <span className="text-muted-foreground">ПІБ:</span>{" "}
                                   <span className="font-medium">{o.user.name ?? "—"}</span>
                                 </div>
                                 <div>
@@ -759,23 +759,23 @@ export function OrdersList({
                                 ) : null}
                                 {o.deliveryType === "courier" && courierDetails ? (
                                   <div>
-                                    <span className="text-muted-foreground">Адрес:</span>{" "}
-                                    <span className="font-medium">{courierDetails}</span>
-                                  </div>
-                                ) : null}
+                                    <span className="text-muted-foreground">Адреса:</span>{" "}
+                                <span className="font-medium">{courierDetails}</span>
                               </div>
-                            </div>
+                            ) : null}
+                          </div>
+                        </div>
 
-                            <div className="space-y-2">
-                              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                                Корзина и комментарий
+                        <div className="space-y-2">
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                            Кошик і коментар
                               </p>
                               <div className="text-sm space-y-2">
                                 <div className="rounded-xl border bg-[#F9F9F7] p-3 whitespace-pre-wrap">
                                   {(o.items ?? "").split(", ").join("\n")}
                                 </div>
                                 <div>
-                                  <span className="text-muted-foreground">Комментарий:</span>{" "}
+                                  <span className="text-muted-foreground">Коментар:</span>{" "}
                                   <span className="font-medium">{o.comment || "—"}</span>
                                 </div>
                               </div>
@@ -800,7 +800,7 @@ export function OrdersList({
                                   </button>
                                 ))
                               ) : (
-                                <span className="text-sm text-muted-foreground">Нет тегов</span>
+                                <span className="text-sm text-muted-foreground">Немає тегів</span>
                               )}
                             </div>
                             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -809,7 +809,7 @@ export function OrdersList({
                                 onChange={(e) =>
                                   setTagDraftById((s) => ({ ...s, [o.id]: e.target.value }))
                                 }
-                                placeholder="Добавить тег (Enter)"
+                                placeholder="Додати тег (Enter)"
                                 className="sm:w-[260px]"
                                 onKeyDown={(e) => {
                                   if (e.key === "Enter") {
@@ -823,7 +823,7 @@ export function OrdersList({
                                 onClick={() => void addTag(o.id, tagDraft)}
                                 disabled={Boolean(busyById[o.id])}
                               >
-                                Добавить
+                                Додати
                               </Button>
                               <div className="flex flex-wrap gap-2">
                                 {PRESET_TAGS.map((t) => (

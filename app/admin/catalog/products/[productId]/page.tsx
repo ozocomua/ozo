@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 
 export const metadata = {
-  title: "Редактировать товар | Админ панель",
+  title: "Редагувати товар | Адмін панель",
 };
 
 export default async function EditProductPage({ params }: { params: Promise<{ productId: string }> }) {

@@ -2,7 +2,7 @@ import { ProductForm } from "./product-form";
 import prisma from "@/lib/prisma";
 
 export const metadata = {
-  title: "Добавить товар | Админ панель",
+  title: "Додати товар | Адмін панель",
 };
 
 export default async function NewProductPage() {

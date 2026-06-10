@@ -45,7 +45,7 @@ export default function AdminBrandsPage() {
   }, [rows, q])
 
   async function deleteBrand(id: number, name: string) {
-    const answer = window.prompt(`Удалить бренд "${name}"? Введите DELETE для подтверждения.`)
+    const answer = window.prompt(`Видалити бренд "${name}"? Введіть DELETE для підтвердження.`)
     if (answer !== "DELETE") return
     setBusyById((s) => ({ ...s, [id]: true }))
     try {
@@ -65,14 +65,14 @@ export default function AdminBrandsPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-serif text-2xl font-medium tracking-tight">Бренды</h1>
-          <p className="text-muted-foreground mt-1 text-sm">Список брендов для карточки товара.</p>
+          <h1 className="font-serif text-2xl font-medium tracking-tight">Бренди</h1>
+          <p className="text-muted-foreground mt-1 text-sm">Список брендів для картки товару.</p>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Поиск: название или URL"
+            placeholder="Пошук: назва або URL"
             className="sm:w-[260px]"
           />
           <Button variant="outline" onClick={() => void load()} disabled={loading}>

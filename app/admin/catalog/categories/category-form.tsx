@@ -100,7 +100,7 @@ export function CategoryForm({
         toast.success("Сохранено!");
         onSuccess();
       } else {
-        toast.error(res.error || "Ошибка сохранения");
+        toast.error(res.error || "Помилка збереження");
       }
     });
   };
@@ -110,7 +110,7 @@ export function CategoryForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-medium">
-            {category.id === "new" ? "Новая категория" : "Редактирование"}
+            {category.id === "new" ? "Нова категорія" : "Редагування"}
           </h3>
         </div>
 

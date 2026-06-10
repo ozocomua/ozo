@@ -6,7 +6,7 @@ import prisma from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Товары | Админ панель",
+  title: "Товари | Адмін панель",
 };
 
 export default async function ProductsPage() {
@@ -20,11 +20,11 @@ export default async function ProductsPage() {
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Товары</h2>
+        <h2 className="text-3xl font-bold tracking-tight">Товари</h2>
         <a href="./new">
           <Button>
             <Plus className="mr-2 h-4 w-4" />
-            Добавить товар
+            Додати товар
           </Button>
         </a>
       </div>
@@ -34,7 +34,7 @@ export default async function ProductsPage() {
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             type="search"
-            placeholder="Поиск по SKU или названию..."
+            placeholder="Пошук за SKU або назвою..."
             className="pl-8"
           />
         </div>
@@ -45,10 +45,10 @@ export default async function ProductsPage() {
           <thead className="text-xs uppercase bg-muted">
             <tr>
               <th className="px-6 py-3">Артикул</th>
-              <th className="px-6 py-3">Название</th>
+              <th className="px-6 py-3">Назва</th>
               <th className="px-6 py-3">Бренд</th>
-              <th className="px-6 py-3">Цена</th>
-              <th className="px-6 py-3">Остаток</th>
+              <th className="px-6 py-3">Ціна</th>
+              <th className="px-6 py-3">Залишок</th>
               <th className="px-6 py-3">Статус</th>
             </tr>
           </thead>
@@ -56,7 +56,7 @@ export default async function ProductsPage() {
             {products.length === 0 ? (
               <tr>
                 <td colSpan={6} className="px-6 py-4 text-center text-muted-foreground">
-                  Нет добавленных товаров
+                  Немає доданих товарів
                 </td>
               </tr>
             ) : (
@@ -69,7 +69,7 @@ export default async function ProductsPage() {
                   <td className="px-6 py-4">{product.stock} шт</td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 rounded text-xs ${product.status === 'PUBLISHED' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                      {product.status === 'PUBLISHED' ? 'Опубликован' : 'Черновик'}
+                      {product.status === 'PUBLISHED' ? 'Опубліковано' : 'Чернетка'}
                     </span>
                   </td>
                 </tr>

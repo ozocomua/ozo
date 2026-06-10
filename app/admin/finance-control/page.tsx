@@ -21,7 +21,7 @@ type Transaction = {
 }
 type FinanceSettings = { usdRate: number; targetProfit: number; targetRevenue: number }
 
-const EXPENSE_CATEGORIES = ["Упаковка", "Логистика", "Брак", "Реклама", "Другое"]
+const EXPENSE_CATEGORIES = ["Пакування", "Логістика", "Брак", "Реклама", "Інше"]
 
 function toUSD(amount: number, rate: number) {
   return ((amount / (rate || 1))).toFixed(2) + " $"
@@ -58,7 +58,7 @@ export default function FinanceControlPage() {
             status: s.status || "transit",
             comment: s.comment || "",
             amount: s.amount || 0,
-            category: s.category || "Другое",
+            category: s.category || "Інше",
             items: (s.items as SaleItem[]) || [],
           }))
         )
@@ -176,7 +176,7 @@ export default function FinanceControlPage() {
   }
 
   const removeTransaction = (tIdx: number) => {
-    if (!confirm("Удалить?")) return
+    if (!confirm("Видалити?")) return
     const next = transactions.filter((_, i) => i !== tIdx)
     setTransactions(next)
     delayedSave(next)
@@ -220,12 +220,12 @@ export default function FinanceControlPage() {
       const data = await res.json()
       if (data[0]?.rate) updateSettings("usdRate", parseFloat(data[0].rate.toFixed(2)))
     } catch {
-      alert("Ошибка API НБУ")
+      alert("Помилка API НБУ")
     }
   }
 
   const clearJournal = () => {
-    if (!confirm("Очистить всё?")) return
+    if (!confirm("Очистити все?")) return
     const next: Transaction[] = []
     setTransactions(next)
     delayedSave(next)
@@ -238,10 +238,10 @@ export default function FinanceControlPage() {
       if (t.type === "expense") {
         data.push({
           Дата: t.date,
-          Тип: "Расход",
-          Категория: t.category,
-          Сумма: -t.amount,
-          Комментарий: t.comment,
+          Тип: "Витрата",
+          Категорія: t.category,
+          Сума: -t.amount,
+          Коментар: t.comment,
         })
       } else {
         t.items.forEach((si) => {
@@ -249,11 +249,11 @@ export default function FinanceControlPage() {
             si.type === "product" ? products.find((p) => p.id === si.itemId) : bundles.find((b) => b.id === si.itemId)
           data.push({
             Дата: t.date,
-            Тип: "Продажа",
-            Объект: item?.name ?? "",
-            "Кол-во": si.qty,
-            Цена: si.customPrice,
-            Комментарий: t.comment,
+            Тип: "Продаж",
+            Об'єкт: item?.name ?? "",
+            "К-сть": si.qty,
+            Ціна: si.customPrice,
+            Коментар: t.comment,
           })
         })
       }
@@ -289,7 +289,7 @@ export default function FinanceControlPage() {
   if (!loaded) {
     return (
       <div className="flex items-center justify-center py-20">
-        <p className="text-slate-400 text-sm">Загрузка журнала...</p>
+        <p className="text-slate-400 text-sm">Завантаження журналу...</p>
       </div>
     )
   }
@@ -359,7 +359,7 @@ export default function FinanceControlPage() {
               className="bg-slate-800 text-blue-400 text-[10px] font-bold w-12 rounded px-1 outline-none border border-slate-700"
             />
             <button onClick={fetchUsdRate} className="text-[9px] bg-slate-700 hover:bg-slate-600 px-2 py-0.5 rounded text-slate-300">
-              Обновить НБУ
+              Оновити НБУ
             </button>
           </div>
         </div>
@@ -368,7 +368,7 @@ export default function FinanceControlPage() {
             📊 Excel
           </button>
           <button onClick={clearJournal} className="bg-red-600 hover:bg-red-500 text-white text-xs font-bold py-2 px-4 rounded-xl transition shadow-lg">
-            🗑️ Очистить
+            🗑️ Очистити
           </button>
         </div>
       </header>
@@ -381,13 +381,13 @@ export default function FinanceControlPage() {
               onClick={addNewSale}
               className="flex-1 bg-blue-600 hover:bg-blue-500 py-5 rounded-2xl font-black uppercase text-sm shadow-xl transition-all active:scale-95 text-white"
             >
-              + Продажа
+              + Продаж
             </button>
             <button
               onClick={addNewExpense}
               className="flex-1 bg-red-600/80 hover:bg-red-600 py-5 rounded-2xl font-black uppercase text-sm shadow-xl transition-all active:scale-95 text-white"
             >
-              + Расход
+              + Витрата
             </button>
           </div>
 
@@ -397,8 +397,8 @@ export default function FinanceControlPage() {
                 <thead className="bg-slate-950/50 text-slate-500 text-[10px] uppercase font-black tracking-widest">
                   <tr>
                     <th className="p-5 w-20">Дата</th>
-                    <th className="p-5">Операция и Комментарий</th>
-                    <th className="p-5 text-right w-32">Итог</th>
+                    <th className="p-5">Операція та Коментар</th>
+                    <th className="p-5 text-right w-32">Підсумок</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-700/30">
@@ -420,7 +420,7 @@ export default function FinanceControlPage() {
                           <td className="p-5">
                             <div className="flex items-center gap-2 mb-3">
                               <span className="text-[9px] bg-red-600 text-white font-black uppercase px-2 py-0.5 rounded">
-                                РАСХОД
+                                ВИТРАТА
                               </span>
                               <select
                                 value={t.category}
@@ -441,7 +441,7 @@ export default function FinanceControlPage() {
                             />
                             <input
                               type="text"
-                              placeholder="Заметка..."
+                              placeholder="Нотатка..."
                               value={t.comment || ""}
                               onChange={(e) => updateComment(tIdx, e.target.value)}
                               className="w-full bg-slate-900/60 border border-slate-700/50 rounded-lg p-2 text-[10px] text-slate-400 outline-none focus:border-blue-500/50"
@@ -480,7 +480,7 @@ export default function FinanceControlPage() {
                               onChange={(e) => updateSaleStatus(tIdx, e.target.value)}
                               className={`text-[9px] uppercase px-2 py-1 rounded font-black ${t.status === "paid" ? "bg-green-600" : "bg-amber-600"}`}
                             >
-                              <option value="transit">🚚 В ПУТИ</option>
+                              <option value="transit">🚚 В ДОРОЗІ</option>
                               <option value="paid">✅ ОПЛАЧЕНО</option>
                             </select>
                             <button onClick={() => addSubSale(tIdx)} className="text-[9px] bg-slate-700 px-2 rounded hover:text-blue-400 font-bold uppercase tracking-tighter">
@@ -498,7 +498,7 @@ export default function FinanceControlPage() {
                                   className="bg-slate-700 text-[8px] uppercase px-1 rounded text-blue-300 outline-none"
                                 >
                                   <option value="product">Товар</option>
-                                  <option value="bundle">Набор</option>
+                                  <option value="bundle">Набір</option>
                                 </select>
                                 <select
                                   value={si.itemId}
@@ -540,7 +540,7 @@ export default function FinanceControlPage() {
                           <div className="mt-2">
                             <input
                               type="text"
-                              placeholder="Заметка..."
+                              placeholder="Нотатка..."
                               value={t.comment || ""}
                               onChange={(e) => updateComment(tIdx, e.target.value)}
                               className="w-full bg-slate-900/60 border border-slate-700/50 rounded-lg p-2 text-[10px] text-slate-400 outline-none focus:border-blue-500/50"
@@ -564,11 +564,11 @@ export default function FinanceControlPage() {
         {/* Right sidebar */}
         <aside className="space-y-4">
           <div className="bg-slate-800 p-6 rounded-[2.5rem] border border-blue-500/20">
-            <h2 className="text-[10px] font-black uppercase mb-6 text-blue-400 tracking-widest text-center italic">Месячные цели</h2>
+            <h2 className="text-[10px] font-black uppercase mb-6 text-blue-400 tracking-widest text-center italic">Місячні цілі</h2>
             <div className="space-y-10">
               <div className="space-y-3">
                 <div className="flex justify-between items-end">
-                  <span className="text-[9px] font-bold text-slate-500 uppercase">Чистая Прибыль</span>
+                  <span className="text-[9px] font-bold text-slate-500 uppercase">Чистий Прибуток</span>
                   <div className="text-[11px] font-bold flex items-center">
                     <span className="text-white">{Math.round(netProfit)}</span>
                     <span className="text-slate-600 mx-1">/</span>
@@ -589,17 +589,17 @@ export default function FinanceControlPage() {
                 </div>
                 <div className="flex justify-between text-[9px] font-black uppercase tracking-tighter">
                   <div className="text-blue-500">
-                    Выполнено: <span>{Math.round(Math.max(0, (netProfit / (settings.targetProfit || 1)) * 100)) || 0}</span>%
+                    Виконано: <span>{Math.round(Math.max(0, (netProfit / (settings.targetProfit || 1)) * 100)) || 0}</span>%
                   </div>
                   <div className="text-slate-500">
-                    Осталось: <span className="text-slate-300">{Math.max(0, settings.targetProfit - Math.round(netProfit))}</span> ₴
+                    Залишилось: <span className="text-slate-300">{Math.max(0, settings.targetProfit - Math.round(netProfit))}</span> ₴
                   </div>
                 </div>
               </div>
 
               <div className="space-y-3">
                 <div className="flex justify-between items-end">
-                  <span className="text-[9px] font-bold text-slate-500 uppercase">Общий Оборот</span>
+                  <span className="text-[9px] font-bold text-slate-500 uppercase">Загальний Обіг</span>
                   <div className="text-[11px] font-bold flex items-center">
                     <span className="text-white">{Math.round(monthRevenueValue)}</span>
                     <span className="text-slate-600 mx-1">/</span>
@@ -620,10 +620,10 @@ export default function FinanceControlPage() {
                 </div>
                 <div className="flex justify-between text-[9px] font-black uppercase tracking-tighter">
                   <div className="text-emerald-500">
-                    Выполнено: <span>{Math.round((monthRevenueValue / (settings.targetRevenue || 1)) * 100) || 0}</span>%
+                    Виконано: <span>{Math.round((monthRevenueValue / (settings.targetRevenue || 1)) * 100) || 0}</span>%
                   </div>
                   <div className="text-slate-500">
-                    Осталось: <span className="text-slate-300">{Math.max(0, settings.targetRevenue - Math.round(monthRevenueValue))}</span> ₴
+                    Залишилось: <span className="text-slate-300">{Math.max(0, settings.targetRevenue - Math.round(monthRevenueValue))}</span> ₴
                   </div>
                 </div>
               </div>
@@ -631,22 +631,22 @@ export default function FinanceControlPage() {
           </div>
 
           <div className="bg-red-600/10 border border-red-600/30 p-6 rounded-[2rem]">
-            <p className="text-red-500 text-[10px] uppercase font-black mb-3 italic">💸 Расходы</p>
+            <p className="text-red-500 text-[10px] uppercase font-black mb-3 italic">💸 Витрати</p>
             <div className="space-y-2">
               <p className="text-xs text-slate-400">
-                Всего за месяц: <span className="text-red-400 font-bold">{Math.round(totalExpenses)} ₴</span>
+                Всього за місяць: <span className="text-red-400 font-bold">{Math.round(totalExpenses)} ₴</span>
               </p>
             </div>
           </div>
 
           <div className="bg-amber-600/10 border border-amber-600/30 p-6 rounded-[2rem]">
-            <p className="text-amber-500 text-[10px] uppercase font-black mb-3 italic">🚚 В ПУТИ</p>
+            <p className="text-amber-500 text-[10px] uppercase font-black mb-3 italic">🚚 В ДОРОЗІ</p>
             <div className="space-y-2">
               <p className="text-xs text-slate-400">
-                Касса: <span className="text-white font-bold">{Math.round(transitCash)} ₴</span>
+                Каса: <span className="text-white font-bold">{Math.round(transitCash)} ₴</span>
               </p>
               <p className="text-xs text-slate-400">
-                Прибыль: <span className="text-amber-400 font-bold">{Math.round(transitProfit)} ₴</span>
+                Прибуток: <span className="text-amber-400 font-bold">{Math.round(transitProfit)} ₴</span>
               </p>
             </div>
           </div>
@@ -655,16 +655,16 @@ export default function FinanceControlPage() {
             <p className="text-green-500 text-[10px] uppercase font-black mb-3 italic">✅ ОПЛАЧЕНО</p>
             <div className="space-y-2">
               <p className="text-xs text-slate-400">
-                Касса: <span className="text-white font-bold">{Math.round(paidCash)} ₴</span>
+                Каса: <span className="text-white font-bold">{Math.round(paidCash)} ₴</span>
               </p>
               <p className="text-xs text-slate-400">
-                Прибыль: <span className="text-green-400 font-bold">{Math.round(paidProfit)} ₴</span>
+                Прибуток: <span className="text-green-400 font-bold">{Math.round(paidProfit)} ₴</span>
               </p>
             </div>
           </div>
 
           <div className="bg-slate-800 p-6 rounded-[2.5rem] border border-blue-500/20">
-            <h2 className="text-sm font-black uppercase mb-4 text-blue-400 tracking-widest italic">Остатки склада</h2>
+            <h2 className="text-sm font-black uppercase mb-4 text-blue-400 tracking-widest italic">Залишки складу</h2>
             <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
               {products.map((p) => {
                 const current = p.vol - (stockUsage[p.id] || 0)

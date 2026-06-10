@@ -99,7 +99,7 @@ export default function ProfitCalculatorPage() {
   }
 
   const handleReset = () => {
-    if (!confirm("Сбросить расходники к базовому списку? Данные товаров и наборов не изменятся.")) return
+    if (!confirm("Скинути витратники до базового списку? Дані товарів і наборів не зміняться.")) return
     const a = JSON.parse(JSON.stringify(DEFAULT_ADDONS))
     setAddons(a)
     save(a, products, bundles)
@@ -122,7 +122,7 @@ export default function ProfitCalculatorPage() {
 
   const addNewAddon = () => {
     const id = "a" + Date.now()
-    const next = { ...addons, [id]: { name: "Новая позиция", val: 0 } }
+    const next = { ...addons, [id]: { name: "Нова позиція", val: 0 } }
     setAddons(next)
     delayedSave(next, products, bundles)
   }
@@ -187,7 +187,7 @@ export default function ProfitCalculatorPage() {
   if (!loaded) {
     return (
       <div className="flex items-center justify-center py-20">
-        <p className="text-slate-400 text-sm">Загрузка калькулятора...</p>
+        <p className="text-slate-400 text-sm">Завантаження калькулятора...</p>
       </div>
     )
   }
@@ -201,14 +201,14 @@ export default function ProfitCalculatorPage() {
           </h1>
           <div className="flex items-center gap-2">
             <span className={`w-2 h-2 ${saveDot} rounded-full`} />
-            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Авто из каталога</p>
+            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Авто з каталогу</p>
           </div>
         </div>
         <button
           onClick={handleReset}
           className="bg-white text-slate-400 px-5 py-2.5 rounded-2xl border hover:text-red-500 transition text-xs font-bold uppercase"
         >
-          🔄 Сбросить расходники
+          🔄 Скинути витратники
         </button>
       </header>
 
@@ -217,7 +217,7 @@ export default function ProfitCalculatorPage() {
         <aside className="lg:col-span-3 space-y-6">
           <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-200">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="font-black text-xs uppercase tracking-widest text-slate-400">📦 Тара и Расходники</h3>
+              <h3 className="font-black text-xs uppercase tracking-widest text-slate-400">📦 Тара та Витратники</h3>
               <button onClick={addNewAddon} className="bg-blue-600 text-white w-6 h-6 rounded-lg font-black hover:bg-blue-700 transition">
                 +
               </button>
@@ -257,12 +257,12 @@ export default function ProfitCalculatorPage() {
           {/* Products — SINGLE type from catalog */}
           <section>
             <h2 className="text-xl font-black text-slate-800 mb-4 px-2">
-              Средства и Автохимия
-              <span className="text-slate-400 text-xs font-normal ml-2">({products.length} из каталога)</span>
+              Засоби та Автохімія
+              <span className="text-slate-400 text-xs font-normal ml-2">({products.length} з каталогу)</span>
             </h2>
             {products.length === 0 ? (
               <div className="bg-white rounded-[2rem] shadow-sm border border-slate-200 p-10 text-center">
-                <p className="text-slate-400 text-sm">Нет товаров с типом «Одиночний». Добавьте товары в каталоге и установите тип «Одиночний».</p>
+                <p className="text-slate-400 text-sm">Немає товарів з типом «Одиночний». Додайте товари в каталозі та встановіть тип «Одиночний».</p>
               </div>
             ) : (
               <div className="bg-white rounded-[2rem] shadow-sm border border-slate-200 overflow-hidden">
@@ -270,13 +270,13 @@ export default function ProfitCalculatorPage() {
                   <table className="w-full text-left">
                     <thead className="bg-slate-50 border-b border-slate-100 text-slate-400 text-[10px] uppercase font-black tracking-widest">
                       <tr>
-                        <th className="p-5">Наименование</th>
-                        <th className="p-5 text-center">Закуп (факт)</th>
-                        <th className="p-5 text-center">Объем/г</th>
-                        <th className="p-5 text-center">Порция</th>
-                        <th className="p-5 text-center">Себ.</th>
-                        <th className="p-5 text-center">Цена продажи</th>
-                        <th className="p-5 text-right">Выгода</th>
+                        <th className="p-5">Найменування</th>
+                        <th className="p-5 text-center">Закупівля (факт)</th>
+                        <th className="p-5 text-center">Об'єм/г</th>
+                        <th className="p-5 text-center">Порція</th>
+                        <th className="p-5 text-center">Собів.</th>
+                        <th className="p-5 text-center">Ціна продажу</th>
+                        <th className="p-5 text-right">Вигода</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-50 text-sm font-medium">
@@ -348,16 +348,16 @@ export default function ProfitCalculatorPage() {
           <section>
             <div className="flex justify-between items-end mb-4 px-2">
               <h2 className="text-xl font-black text-slate-800">
-                Комбо-Наборы
-                <span className="text-slate-400 text-xs font-normal ml-2">({bundles.length} из каталога)</span>
+                Комбо-Набори
+                <span className="text-slate-400 text-xs font-normal ml-2">({bundles.length} з каталогу)</span>
               </h2>
               <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight italic">
-                * В наборах тара из позиций химии не учитывается
+                * У наборах тара з позицій хімії не враховується
               </p>
             </div>
             {bundles.length === 0 ? (
               <div className="bg-white rounded-[2rem] shadow-sm border border-slate-200 p-10 text-center">
-                <p className="text-slate-400 text-sm">Нет товаров с типом «Набір». Добавьте товары в каталоге и установите тип «Набір».</p>
+                <p className="text-slate-400 text-sm">Немає товарів з типом «Набір». Додайте товари в каталозі та встановіть тип «Набір».</p>
               </div>
             ) : (
               <div className="bg-white rounded-[2rem] shadow-sm border border-slate-200 overflow-hidden">
@@ -365,10 +365,10 @@ export default function ProfitCalculatorPage() {
                   <table className="w-full text-left">
                     <thead className="bg-slate-100 border-b border-slate-100 text-slate-400 text-[10px] uppercase font-black tracking-widest">
                       <tr>
-                        <th className="p-5">Название набора и состав</th>
-                        <th className="p-5 text-center">Себ. набора</th>
-                        <th className="p-5 text-center">Цена продажи</th>
-                        <th className="p-5 text-right">Выгода</th>
+                        <th className="p-5">Назва набору та склад</th>
+                        <th className="p-5 text-center">Собів. набору</th>
+                        <th className="p-5 text-center">Ціна продажу</th>
+                        <th className="p-5 text-right">Вигода</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-50 text-sm font-medium">
@@ -405,12 +405,12 @@ export default function ProfitCalculatorPage() {
                                   onClick={(e) => { e.stopPropagation(); togglePop("bundle", bIdx) }}
                                   className="text-[9px] bg-blue-50 text-blue-600 px-3 py-1 rounded-lg hover:bg-blue-600 hover:text-white transition font-black border border-blue-100"
                                 >
-                                  + СОСТАВ
+                                  + СКЛАД
                                 </button>
                               </div>
                               {popup?.type === "bundle" && popup.idx === bIdx && (
                                 <div data-pop className="absolute left-5 z-50 bg-white border shadow-2xl rounded-2xl p-4 mt-2 w-72 max-h-80 overflow-y-auto">
-                                  <p className="text-[10px] font-black text-slate-400 mb-2 uppercase">Добавить химию (без тары):</p>
+                                  <p className="text-[10px] font-black text-slate-400 mb-2 uppercase">Додати хімію (без тари):</p>
                                   <div className="space-y-1 mb-4">
                                     {products.map((p) => (
                                       <div
@@ -423,7 +423,7 @@ export default function ProfitCalculatorPage() {
                                       </div>
                                     ))}
                                   </div>
-                                  <p className="text-[10px] font-black text-slate-400 mb-2 uppercase">Добавить тару/расходники:</p>
+                                  <p className="text-[10px] font-black text-slate-400 mb-2 uppercase">Додати тару/витратники:</p>
                                   <div className="space-y-1">
                                     {Object.entries(addons).map(([aid, a]) => (
                                       <div
@@ -465,7 +465,7 @@ export default function ProfitCalculatorPage() {
           <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white flex flex-col md:flex-row justify-between items-center shadow-2xl gap-8">
             <div>
               <p className="text-slate-400 text-[10px] uppercase tracking-widest font-black opacity-60 text-center md:text-left">
-                Средняя прибыль (химия)
+                Середній прибуток (хімія)
               </p>
               <p className="text-5xl font-black text-blue-400 mt-2 text-center md:text-left">
                 {Math.round(count ? totalProfit / count : 0)} ₴
@@ -477,7 +477,7 @@ export default function ProfitCalculatorPage() {
                 <p className="text-3xl font-black mt-1 text-green-400">{Math.round(totalRev ? (totalProfit / totalRev) * 100 : 0)}%</p>
               </div>
               <div className="text-center">
-                <p className="text-slate-400 text-[10px] uppercase tracking-widest font-black opacity-60">Оборот</p>
+                <p className="text-slate-400 text-[10px] uppercase tracking-widest font-black opacity-60">Обіг</p>
                 <p className="text-3xl font-black mt-1">{Math.round(totalRev)} ₴</p>
               </div>
             </div>
