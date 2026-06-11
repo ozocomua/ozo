@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import Image from "next/image"
 import { X, ChevronLeft, ChevronRight } from "lucide-react"
 import { normalizeImageUrl } from "@/lib/image-path"
@@ -23,6 +23,9 @@ export default function ProductGallery({
 
   const mainAlt = (seoAlt?.trim() || name).replace(/<[^>]*>/g, "").trim()
 
+  /* ── Touch swipe for lightbox ── */
+  const touchX = useRef(0)
+
   /* ── Keyboard navigation inside lightbox ── */
   const lightboxPrev = useCallback(() => {
     setActive((prev) => (prev === 0 ? images.length - 1 : prev - 1))
@@ -31,6 +34,18 @@ export default function ProductGallery({
   const lightboxNext = useCallback(() => {
     setActive((prev) => (prev === images.length - 1 ? 0 : prev + 1))
   }, [images.length])
+
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    touchX.current = e.touches[0].clientX
+  }, [])
+
+  const onTouchEnd = useCallback((e: React.TouchEvent) => {
+    const dx = e.changedTouches[0].clientX - touchX.current
+    if (Math.abs(dx) > 60) {
+      if (dx > 0) lightboxPrev()
+      else lightboxNext()
+    }
+  }, [lightboxPrev, lightboxNext])
 
   useEffect(() => {
     if (!lightbox) return
@@ -157,8 +172,12 @@ export default function ProductGallery({
             </button>
           )}
 
-          {/* Image */}
-          <div className="relative z-10 max-w-[95vw] max-h-[90vh] flex items-center justify-center">
+          {/* Image — swipeable on touch devices */}
+          <div
+            className="relative z-10 max-w-[95vw] max-h-[90vh] flex items-center justify-center select-none"
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
+          >
             <img
               src={normalizeImageUrl(images[active] || "/placeholder.jpg")}
               alt={mainAlt}
