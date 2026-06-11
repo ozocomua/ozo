@@ -276,7 +276,7 @@ export async function duplicateProduct(productId: number) {
         oldPrice: src.oldPrice,
         isPopular: src.isPopular,
         isNew: src.isNew,
-        relatedIds: src.relatedIds,
+        relatedIds: src.relatedIds as any,
         bundleProductId: src.bundleProductId,
         brandId: src.brandId,
         images: {
