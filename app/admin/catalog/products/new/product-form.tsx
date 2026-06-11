@@ -214,7 +214,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
       const res = await duplicateProduct(initialData.id);
       if (res.success) {
         toast.success("Товар дубльовано");
-        router.push(`../${res.data.id}`);
+        router.push(`../${res.data?.id}`);
       } else {
         toast.error(res.error);
       }
@@ -231,7 +231,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
     if (res.success) {
       toast.success("Бренд додано");
       setBrandsList([...brandsList, res.data]);
-      form.setValue("brandId", String(res.data.id));
+      form.setValue("brandId", String(res.data?.id));
     } else {
       toast.error(res.error || "Помилка створення");
     }
