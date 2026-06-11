@@ -60,7 +60,7 @@ export function CategoriesClient({ initialCategories }: { initialCategories: any
       toast.success("Категория удалена");
       if (selectedCategory?.id === categoryToDelete) setSelectedCategory(null);
     } else {
-      toast.error(result.message || "Помилка видалення");
+      toast.error(result.error || "Помилка видалення");
     }
     setCategoryToDelete(null);
   };
