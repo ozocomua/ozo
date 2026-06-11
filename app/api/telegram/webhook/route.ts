@@ -183,7 +183,7 @@ export async function POST(req: Request) {
     const cq = body.callback_query as Record<string, unknown>
     const data = typeof cq.data === "string" ? cq.data : ""
     const msg = cq.message as Record<string, unknown> | undefined
-    const chatId = msg?.chat ? (msg.chat as Record<string, unknown>).id : undefined
+    const chatId = msg?.chat ? (msg.chat as Record<string, unknown>).id as string | number : undefined
     const messageId = typeof msg?.message_id === "number" ? msg.message_id : undefined
     const currentText = typeof msg?.text === "string" ? msg.text : ""
     const callbackQueryId = typeof cq.id === "string" ? cq.id : ""
