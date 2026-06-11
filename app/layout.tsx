@@ -67,7 +67,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="uk" className={`${inter.variable} ${playfair.variable} bg-background`} suppressHydrationWarning>
-      <head>
+      <body className="font-sans antialiased" suppressHydrationWarning>
+        <Providers>
+          <CartProvider>
+            {children}
+          </CartProvider>
+        </Providers>
+        <Toaster />
         {/* Google Analytics */}
         {process.env.NEXT_PUBLIC_GA_ID && (
           <>
@@ -79,14 +85,6 @@ export default function RootLayout({
             />
           </>
         )}
-      </head>
-      <body className="font-sans antialiased" suppressHydrationWarning>
-        <Providers>
-          <CartProvider>
-            {children}
-          </CartProvider>
-        </Providers>
-        <Toaster />
       </body>
     </html>
   )
