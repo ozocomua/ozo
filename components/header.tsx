@@ -55,16 +55,21 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
   }
 
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      const clickedInsideDesktop = desktopSearchRef.current?.contains(e.target as Node)
-      const clickedInsideMobile = mobileSearchRef.current?.contains(e.target as Node)
+    const handleClickOutside = (e: Event) => {
+      const target = e.target as Node
+      const clickedInsideDesktop = desktopSearchRef.current?.contains(target)
+      const clickedInsideMobile = mobileSearchRef.current?.contains(target)
       if (!clickedInsideDesktop && !clickedInsideMobile) {
         setShowDropdown(false)
         setIsSearchActive(false)
       }
     }
     document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
+    document.addEventListener("touchstart", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+      document.removeEventListener("touchstart", handleClickOutside)
+    }
   }, [])
 
   const handleSelect = () => {
@@ -98,12 +103,26 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
             <div className="relative w-full">
               <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
               <input
-                type="text"
+                type="search"
+                autoComplete="off"
                 value={searchQuery}
                 onChange={(e) => handleChange(e.target.value)}
                 placeholder="Пошук..."
-                className="w-full pl-9 pr-4 py-2 text-sm bg-secondary rounded-full outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
+                className="w-full pl-9 pr-10 py-2 text-sm bg-secondary rounded-full outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
               />
+              {searchQuery && (
+                <button
+                  onClick={() => {
+                    setSearchQuery("")
+                    setResults([])
+                    setShowDropdown(false)
+                  }}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="Очистити пошук"
+                >
+                  <X size={14} />
+                </button>
+              )}
             </div>
             {showDropdown && (
               <SearchDropdown results={results} searchQuery={searchQuery} onSelect={handleSelect} />
@@ -153,7 +172,10 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
                   <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
                   <input
                     ref={mobileInputRef}
-                    type="text"
+                    type="search"
+                    inputMode="search"
+                    enterKeyHint="search"
+                    autoComplete="off"
                     value={searchQuery}
                     onChange={(e) => handleChange(e.target.value)}
                     placeholder="Пошук..."

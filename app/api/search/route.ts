@@ -10,27 +10,26 @@ export async function GET(req: Request) {
   }
 
   try {
-    // "search" mode handles word boundaries better than "contains"
+    // MySQL: no "mode" needed if collation is utf8mb4_general_ci (default)
+    // Separate image query to avoid sub-select issues
     const products = await prisma.product.findMany({
       where: {
         isPublished: true,
         OR: [
-          { name: { contains: q, mode: "insensitive" } },
-          { sku: { contains: q, mode: "insensitive" } },
+          { name: { contains: q } },
+          { sku: { contains: q } },
+          { description: { contains: q } },
         ],
       },
-      take: 5,
+      take: 8,
+      orderBy: { name: "asc" },
       select: {
         id: true,
         name: true,
         slug: true,
         price: true,
         oldPrice: true,
-        images: {
-          select: { url: true },
-          orderBy: { sort: "asc" },
-          take: 1,
-        },
+        images: { select: { url: true }, take: 1 },
       },
     })
 
@@ -46,6 +45,6 @@ export async function GET(req: Request) {
     })
   } catch (error) {
     console.error("SEARCH_ERROR:", error)
-    return NextResponse.json({ error: "Помилка пошуку" }, { status: 500 })
+    return NextResponse.json({ products: [] })
   }
 }
