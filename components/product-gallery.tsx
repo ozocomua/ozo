@@ -56,130 +56,7 @@ export default function ProductGallery({
   return (
     <>
       {/* ── Normal gallery ── */}
-      {/* Desktop: main image left, thumbnails right. Mobile: main image above, thumbnails below */}
-      {images.length > 1 ? (
-        <>
-          {/* Desktop layout */}
-          <div className="hidden md:flex gap-3">
-            {/* Thumbnails column — right side on desktop */}
-            <div className="flex flex-col gap-2 overflow-y-auto pr-1 order-2" style={{ maxHeight: "500px" }}>
-              {images.map((src, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setActive(i)
-                  }}
-                  className={`relative shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 transition-colors ${
-                    i === active
-                      ? "border-foreground"
-                      : "border-border hover:border-foreground/30"
-                  }`}
-                >
-                  <Image
-                    src={normalizeImageUrl(src)}
-                    alt={`${mainAlt} — фото ${i + 1}`}
-                    fill
-                    className="object-cover"
-                    sizes="64px"
-                    unoptimized
-                  />
-                </button>
-              ))}
-            </div>
-
-            {/* Main image */}
-            <button
-              type="button"
-              onClick={() => setLightbox(true)}
-              className="relative aspect-square rounded-2xl overflow-hidden bg-secondary flex-1 cursor-zoom-in group order-1"
-              aria-label={`${mainAlt} — відкрити на повний екран`}
-            >
-              <Image
-                src={normalizeImageUrl(images[active] || "/placeholder.jpg")}
-                alt={mainAlt}
-                fill
-                unoptimized
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
-                sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 768px) calc(100vw - 64px), (max-width: 1200px) 45vw, 500px"
-                priority
-              />
-              <div className="absolute inset-0 bg-transparent group-hover:bg-black/5 transition-colors" />
-
-              {badge && (
-                <span className="absolute top-3 left-3 bg-foreground text-background text-xs font-medium tracking-wide px-2.5 py-1 rounded-full">
-                  {badge}
-                </span>
-              )}
-              {!badge && isPopular && (
-                <span className="absolute top-3 left-3 bg-amber-500 text-white text-xs font-medium tracking-wide px-2.5 py-1 rounded-full">
-                  Популярний
-                </span>
-              )}
-            </button>
-          </div>
-
-          {/* Mobile layout: thumbnails below */}
-          <div className="md:hidden">
-            <button
-              type="button"
-              onClick={() => setLightbox(true)}
-              className="relative aspect-square rounded-2xl overflow-hidden bg-secondary w-full cursor-zoom-in group"
-              aria-label={`${mainAlt} — відкрити на повний екран`}
-            >
-              <Image
-                src={normalizeImageUrl(images[active] || "/placeholder.jpg")}
-                alt={mainAlt}
-                fill
-                unoptimized
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
-                sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 768px) calc(100vw - 64px), (max-width: 1200px) 45vw, 500px"
-                priority
-              />
-              <div className="absolute inset-0 bg-transparent group-hover:bg-black/5 transition-colors" />
-
-              {badge && (
-                <span className="absolute top-3 left-3 bg-foreground text-background text-xs font-medium tracking-wide px-2.5 py-1 rounded-full">
-                  {badge}
-                </span>
-              )}
-              {!badge && isPopular && (
-                <span className="absolute top-3 left-3 bg-amber-500 text-white text-xs font-medium tracking-wide px-2.5 py-1 rounded-full">
-                  Популярний
-                </span>
-              )}
-            </button>
-
-            <div className="flex gap-2 overflow-x-auto mt-3">
-              {images.map((src, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setActive(i)
-                  }}
-                  className={`relative shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 transition-colors ${
-                    i === active
-                      ? "border-foreground"
-                      : "border-border hover:border-foreground/30"
-                  }`}
-                >
-                  <Image
-                    src={normalizeImageUrl(src)}
-                    alt={`${mainAlt} — фото ${i + 1}`}
-                    fill
-                    className="object-cover"
-                    sizes="64px"
-                    unoptimized
-                  />
-                </button>
-              ))}
-            </div>
-          </div>
-        </>
-      ) : (
+      <div className="space-y-3">
         <button
           type="button"
           onClick={() => setLightbox(true)}
@@ -195,6 +72,7 @@ export default function ProductGallery({
             sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 768px) calc(100vw - 64px), (max-width: 1200px) 45vw, 500px"
             priority
           />
+          {/* subtle zoom hint */}
           <div className="absolute inset-0 bg-transparent group-hover:bg-black/5 transition-colors" />
 
           {badge && (
@@ -208,7 +86,36 @@ export default function ProductGallery({
             </span>
           )}
         </button>
-      )}
+
+        {images.length > 1 && (
+          <div className="flex gap-2 overflow-x-auto">
+            {images.map((src, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setActive(i)
+                }}
+                className={`relative shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 transition-colors ${
+                  i === active
+                    ? "border-foreground"
+                    : "border-border hover:border-foreground/30"
+                }`}
+              >
+                <Image
+                  src={normalizeImageUrl(src)}
+                  alt={`${mainAlt} — фото ${i + 1}`}
+                  fill
+                  className="object-cover"
+                  sizes="64px"
+                  unoptimized
+                />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* ── Fullscreen Lightbox ── */}
       {lightbox && (
