@@ -85,6 +85,12 @@ export default function ProductCard({ product }: ProductCardProps) {
         <p className="text-xs text-muted-foreground mt-1 leading-relaxed line-clamp-2 flex-1">
           {truncate(stripHtml(product.description), 100)}
         </p>
+        {!outOfStock && (
+          <div className="flex items-center gap-1.5 mt-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+            <span className="text-[11px] font-medium text-emerald-600">В наявності</span>
+          </div>
+        )}
         <div className="flex items-center justify-between mt-3 max-md:flex max-md:items-end max-md:justify-between max-md:mt-1">
           <div className="flex items-baseline gap-0.5 md:gap-2 max-md:flex max-md:flex-col max-md:items-center">
             {product.oldPrice && product.oldPrice > displayPrice && (
