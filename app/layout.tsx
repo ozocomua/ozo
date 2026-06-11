@@ -34,7 +34,6 @@ export const metadata: Metadata = {
   openGraph: {
     title: "OZO — все для птахівництва",
     description: "Обладнання для птахівництва: клітки, годівниці, напувалки, інкубатори. Вигідні ціни та швидка доставка Новою Поштою по Україні.",
-    url: process.env.NEXT_PUBLIC_SITE_URL?.trim() || "",
     siteName: "OZO",
     locale: "uk_UA",
     type: "website",
