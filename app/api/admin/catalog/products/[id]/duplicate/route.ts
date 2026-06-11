@@ -38,6 +38,7 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
       const p = await tx.product.create({
         data: {
           name: src.name,
+          sku: `COPY-${Date.now()}`,
           slug: slug.slice(0, 191),
           description: src.description,
           fullDescription: src.fullDescription,
