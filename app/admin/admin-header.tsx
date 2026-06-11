@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Menu, X } from "lucide-react"
 import { AdminNav } from "./admin-nav"
@@ -8,13 +8,28 @@ import { AdminLogoutButton } from "./logout-button"
 
 export function AdminHeader() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [usdRate, setUsdRate] = useState<number | null>(null)
+
+  useEffect(() => {
+    fetch("/api/admin/finance")
+      .then(r => r.json())
+      .then(d => { if (d.settings?.usdRate) setUsdRate(d.settings.usdRate) })
+      .catch(() => {})
+  }, [])
 
   return (
     <header className="relative border-b border-black/5 bg-white">
       <div className="mx-auto max-w-6xl px-4 py-4 space-y-3">
-        {/* Top row: logo | desktop nav + burger */}
+        {/* Top row: logo | USD rate | desktop nav + burger */}
         <div className="flex items-center justify-between gap-4">
-          <span className="font-serif text-lg italic">Адмін</span>
+          <div className="flex items-center gap-3">
+            <span className="font-serif text-lg italic">Адмін</span>
+            {usdRate !== null && (
+              <span className="text-[10px] font-bold bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">
+                $ {usdRate.toFixed(2)}
+              </span>
+            )}
+          </div>
 
           {/* Desktop right side — always visible */}
           <div className="hidden md:flex items-center gap-3 text-[11px] font-bold uppercase tracking-widest">
