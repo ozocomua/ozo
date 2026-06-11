@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { Inter, Playfair_Display } from "next/font/google"
 import "./globals.css"
 import { CartProvider } from "@/lib/cart-context"
+import { RecentlyViewedProvider } from "@/lib/recently-viewed-context"
 import { Providers } from "./providers"
 import { Toaster } from "@/components/ui/sonner"
 
@@ -48,9 +49,11 @@ export default function RootLayout({
     <html lang="uk" className={`${inter.variable} ${playfair.variable} bg-background`} suppressHydrationWarning>
       <body className="font-sans antialiased" suppressHydrationWarning>
         <Providers>
-          <CartProvider>
-            {children}
-          </CartProvider>
+          <RecentlyViewedProvider>
+            <CartProvider>
+              {children}
+            </CartProvider>
+          </RecentlyViewedProvider>
         </Providers>
         <Toaster />
       </body>

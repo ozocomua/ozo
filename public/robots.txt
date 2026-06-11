@@ -1,8 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /admin/
-Disallow: /api/
-Disallow: /checkout/
-
-Sitemap: https://ozo.com.ua/sitemap.xml
-Host: https://ozo.com.ua

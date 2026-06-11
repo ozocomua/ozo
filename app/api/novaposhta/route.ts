@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
+import { cached } from '@/lib/cache';
 
 const API_KEY = '2e75104ead1958d18097f414c758facd';
+
+const CITIES_TTL = 24 * 60 * 60 * 1000;  // 24 hours
+const WAREHOUSES_TTL = 6 * 60 * 60 * 1000; // 6 hours
 
 // Добавляем GET метод для тестирования получения данных отправителя
 export async function GET(req: Request) {
@@ -94,20 +98,27 @@ export async function POST(req: Request) {
 
     // 1. Якщо це пошук міста або відділення (не створення ТТН)
     if (body.calledMethod !== 'save') {
-      const response = await fetch('https://api.novaposhta.ua/v2.0/json/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          apiKey: API_KEY,
-          modelName: body.modelName,
-          calledMethod: body.calledMethod,
-          methodProperties: body.methodProperties || {}
-        }),
+      const cacheKey = `np:api:${body.modelName}:${body.calledMethod}:${JSON.stringify(body.methodProperties || {})}`;
+      const ttl = body.calledMethod === 'getCities' ? CITIES_TTL : WAREHOUSES_TTL;
+
+      const resData = await cached(cacheKey, ttl, async () => {
+        const response = await fetch('https://api.novaposhta.ua/v2.0/json/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            apiKey: API_KEY,
+            modelName: body.modelName,
+            calledMethod: body.calledMethod,
+            methodProperties: body.methodProperties || {}
+          }),
+        });
+        const data = await response.json();
+        if (!data.success) {
+          console.error("Nova Poshta API Error:", data.errors || data.data);
+        }
+        return data;
       });
-      const resData = await response.json();
-      if (!resData.success) {
-        console.error("Nova Poshta API Error:", resData.errors || resData.data);
-      }
+
       return NextResponse.json(resData);
     }
 

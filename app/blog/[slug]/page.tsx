@@ -8,6 +8,7 @@ import ProductCard from "@/components/product-card"
 import type { Metadata } from "next"
 import { getTopCategories, getPostBySlug, getProductsByIds } from "@/lib/storefront-db"
 import { normalizeImageUrl } from "@/lib/image-path"
+import Breadcrumbs from "@/components/breadcrumbs"
 
 export const dynamic = "force-dynamic"
 
@@ -44,6 +45,11 @@ export default async function BlogPostPage({ params }: Props) {
     <>
       <Header categories={headerCategories} />
       <main className="max-w-3xl mx-auto px-4 py-8">
+        <Breadcrumbs items={[
+          { label: "На головну", href: "/" },
+          { label: "Блог", href: "/blog" },
+          { label: post.title, href: `/blog/${slug}` },
+        ]} />
         <Link
           href="/blog"
           className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest font-bold text-muted-foreground hover:text-foreground transition-colors mb-6"

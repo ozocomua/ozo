@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma"
 import { hashPassword } from "@/lib/password"
 import { createPaymentLink } from "@/lib/myiban"
 import { sendOrderNotification } from "@/lib/telegram"
+import { logger } from "@/lib/logger"
 
 export async function POST(req: Request) {
   try {
@@ -273,10 +274,15 @@ export async function POST(req: Request) {
     })
 
   } catch (error) {
-    console.error("ОШИБКА_ЗАКАЗА:", error)
     const message = error instanceof Error ? error.message : "Помилка сервера"
     const isValidationError =
       message.includes("Недостатньо товару") || message.includes("не знайдено")
+
+    logger.error(`POST /api/checkout | ${message}`, {
+      stack: error instanceof Error ? error.stack : undefined,
+      validationError: isValidationError,
+    })
+
     return NextResponse.json(
       { success: false, error: message },
       { status: isValidationError ? 400 : 500 }

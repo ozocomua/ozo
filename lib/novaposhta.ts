@@ -1,4 +1,9 @@
+import { cached } from "./cache"
+
 const API_URL = "https://api.novaposhta.ua/v2.0/json/"
+
+const CITIES_TTL = 24 * 60 * 60 * 1000 // 24 hours
+const WAREHOUSES_TTL = 6 * 60 * 60 * 1000 // 6 hours
 
 interface NpResponse<T> {
   success: boolean
@@ -55,10 +60,13 @@ interface NpCity {
 }
 
 export async function searchCities(query: string): Promise<NpCity[]> {
-  return npRequest<NpCity>("Address", "getCities", {
-    FindByString: query,
-    Limit: "20",
-  })
+  const key = `np:cities:${query.toLowerCase().trim()}`
+  return cached(key, CITIES_TTL, () =>
+    npRequest<NpCity>("Address", "getCities", {
+      FindByString: query,
+      Limit: "20",
+    }),
+  )
 }
 
 interface NpWarehouse {
@@ -67,10 +75,13 @@ interface NpWarehouse {
 }
 
 export async function searchWarehouses(cityRef: string): Promise<NpWarehouse[]> {
-  return npRequest<NpWarehouse>("Address", "getWarehouses", {
-    CityRef: cityRef,
-    Limit: "50",
-  })
+  const key = `np:warehouses:${cityRef}`
+  return cached(key, WAREHOUSES_TTL, () =>
+    npRequest<NpWarehouse>("Address", "getWarehouses", {
+      CityRef: cityRef,
+      Limit: "50",
+    }),
+  )
 }
 
 export interface NpRecipientResult {

@@ -11,6 +11,9 @@ __v0_jsx-dev-runtime.ts
 .env*.local
 components/env.local
 
+# Logs
+logs/
+
 # Common ignores
 node_modules
 .next/

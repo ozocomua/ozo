@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 import Header from "@/components/header"
+import Breadcrumbs from "@/components/breadcrumbs"
 
 const MENU_ITEMS = [
   { name: "Про нас", href: "/about" },
@@ -26,6 +27,12 @@ export function InfoLayoutClient({
 }) {
   const pathname = usePathname()
 
+  const currentItem = MENU_ITEMS.find((item) => item.href === pathname)
+  const crumbs = [
+    { label: "На головну", href: "/" },
+    ...(currentItem ? [{ label: currentItem.name, href: currentItem.href }] : []),
+  ]
+
   return (
     <>
       <Header categories={headerCategories} />
@@ -40,6 +47,10 @@ export function InfoLayoutClient({
             <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
             На головну
           </Link>
+
+          <div className="mb-4">
+            <Breadcrumbs items={crumbs} />
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-12 lg:gap-16">
 

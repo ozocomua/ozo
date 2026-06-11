@@ -1,3 +1,5 @@
+import { logger } from "@/lib/logger"
+
 export interface TelegramOrderPayload {
   orderNumber: string
   clientName: string | null
@@ -160,10 +162,16 @@ export async function sendTtnNotification(order: {
     })
     const json = await res.json().catch(() => ({}))
     if (!res.ok) {
-      console.error("[telegram] TTN sendMessage FAILED:", JSON.stringify(json))
+      logger.error("[telegram] TTN sendMessage FAILED", {
+        orderNumber: order.orderNumber,
+        response: json,
+      })
     }
   } catch (err) {
-    console.error("[telegram] TTN sendMessage error:", err)
+    logger.error("[telegram] TTN sendMessage network error", {
+      orderNumber: order.orderNumber,
+      error: err instanceof Error ? err.message : String(err),
+    })
   }
 }
 
@@ -271,11 +279,15 @@ export async function sendOrderNotification(order: {
     console.log("[telegram] response body:", JSON.stringify(json))
 
     if (!res.ok) {
-      console.error("[telegram] sendMessage FAILED:", JSON.stringify(json))
-    } else {
-      console.log("[telegram] sendMessage OK")
+      logger.error("[telegram] sendOrderNotification FAILED", {
+        orderNumber: order.orderNumber,
+        response: json,
+      })
     }
   } catch (err) {
-    console.error("[telegram] sendMessage NETWORK error:", err)
+    logger.error("[telegram] sendOrderNotification network error", {
+      orderNumber: order.orderNumber,
+      error: err instanceof Error ? err.message : String(err),
+    })
   }
 }

@@ -6,6 +6,7 @@ import Image from "next/image"
 import { getTopCategories, getPublishedPosts, countPublishedPosts } from "@/lib/storefront-db"
 import { normalizeImageUrl } from "@/lib/image-path"
 import BlogPostsClient from "@/components/blog-posts-client"
+import Breadcrumbs from "@/components/breadcrumbs"
 
 export const dynamic = "force-dynamic"
 
@@ -27,6 +28,7 @@ export default async function BlogPage() {
       <Header categories={headerCategories} />
       <main>
         <section className="max-w-5xl mx-auto px-4 pt-8 pb-2">
+          <Breadcrumbs items={[{ label: "На головну", href: "/" }, { label: "Блог", href: "/blog" }]} />
           <h1 className="font-serif text-2xl md:text-3xl font-bold text-foreground mb-8">
             Блог
           </h1>

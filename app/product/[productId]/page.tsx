@@ -12,6 +12,8 @@ import ProductDescription from "@/components/product-description"
 import { ReviewsSection } from "@/components/reviews-section"
 import { StarRating } from "@/components/star-rating"
 import { WriteReviewInline } from "@/components/write-review-inline"
+import TrackRecentlyViewed from "@/components/track-recently-viewed"
+import RecentlyViewedProducts from "@/components/recently-viewed-products"
 import { getTopCategories, getProductBySlug, getProductsByCategoryId, getCategoryBySlug, getProductsByIds } from "@/lib/storefront-db"
 import { cleanMetaTitle, cleanMetaDescription, stripHtml, truncate } from "@/lib/html-utils"
 import type { Metadata } from "next"
@@ -303,6 +305,16 @@ export default async function ProductPage({ params }: Props) {
           productName={product.name}
         />
 
+        <TrackRecentlyViewed
+          product={{
+            id: product.id,
+            name: product.name,
+            slug: product.slug,
+            image: product.image,
+            price: product.price,
+          }}
+        />
+
         {showBundle && bundleProduct && bundlePartner && (
           <BundleOffer current={product} partner={bundlePartner} bundleProduct={bundleProduct} />
         )}
@@ -339,6 +351,8 @@ export default async function ProductPage({ params }: Props) {
             </div>
           </div>
         )}
+
+        <RecentlyViewedProducts />
       </main>
       <Footer />
       <script
