@@ -50,7 +50,7 @@ export default function DeliveryPage() {
               <span className="text-2xl shrink-0">📦</span>
               <div>
                 <p className="font-medium text-foreground">Відправка замовлень</p>
-                <p>Замовлення, оформлені до 15:00, відправляються в той самий день. Після 15:00 — наступного дня.</p>
+                <p>Замовлення, оформлені до 17:00, відправляються в той самий день. Після 17:00 — наступного дня.</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
@@ -71,7 +71,7 @@ export default function DeliveryPage() {
               <span className="text-2xl shrink-0">💰</span>
               <div>
                 <p className="font-medium text-foreground">Вартість доставки</p>
-                <p>За тарифами перевізника. Орієнтовно: від 70 грн (Нова Пошта, відділення). Точну вартість розраховує перевізник при оформленні.</p>
+                <p>За тарифами перевізника. Точну вартість розраховує перевізник при оформленні.</p>
               </div>
             </div>
           </div>

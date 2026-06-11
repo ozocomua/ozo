@@ -23,8 +23,6 @@ export default function CatalogProducts({ initialProducts, total, pageSize = 24,
       switch (sort) {
         case "price_asc": return pA - pB
         case "price_desc": return pB - pA
-        case "name_asc": return a.name.localeCompare(b.name, "uk")
-        case "name_desc": return b.name.localeCompare(a.name, "uk")
         default: return 0
       }
     })
@@ -70,8 +68,6 @@ export default function CatalogProducts({ initialProducts, total, pageSize = 24,
           <option value="default">За замовчуванням</option>
           <option value="price_asc">Від дешевих до дорогих</option>
           <option value="price_desc">Від дорогих до дешевих</option>
-          <option value="name_asc">За назвою (А-Я)</option>
-          <option value="name_desc">За назвою (Я-А)</option>
         </select>
       </div>
 
