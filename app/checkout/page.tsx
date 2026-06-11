@@ -291,6 +291,7 @@ export default function CheckoutPage() {
                   </span>
                 )}
               </div>
+              <div className="relative">
                 <label className="text-[10px] uppercase font-bold opacity-40 ml-4">Місто доставки</label>
                 <input 
                   className="w-full bg-white rounded-2xl p-5 mt-2 shadow-sm outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"

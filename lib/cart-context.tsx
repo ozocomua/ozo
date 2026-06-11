@@ -199,7 +199,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                             <p className="text-[11px] font-bold text-foreground/80">
                               {reached
                                 ? "🎉 Вітаємо! Ви отримали БЕЗКОШТОВНУ доставку Новою Поштою!"
-                                : <>Додайте товари ще на <span className="text-[#0B53A4] font-black">🔥 {amountLeft} грн</span> для БЕЗКОШТОВНОЇ доставки!</>
+                                : `Додайте товари ще на 🔥 ${amountLeft} грн для БЕЗКОШТОВНОЇ доставки!`
                               }
                             </p>
                           </div>
