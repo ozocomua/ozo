@@ -50,13 +50,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       siteName: "OZO",
       locale: "uk_UA",
       type: "product",
-      ...(product.image ? { images: [{ url: product.image, width: 1200, height: 630 }] } : {}),
+      images: product.image ? [{ url: product.image, width: 1200, height: 630 }] : [],
     },
     twitter: {
       card: "summary_large_image",
       title: metaTitle || product.name,
       description: metaDescription || undefined,
-      ...(product.image ? { images: [product.image] } : {}),
+      images: product.image ? [product.image] : [],
     },
   }
 }
