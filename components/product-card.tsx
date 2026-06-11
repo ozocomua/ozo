@@ -82,25 +82,27 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       <div className="p-3 flex flex-col flex-1">
         <h3 className="font-semibold text-foreground text-sm line-clamp-2 break-words min-h-[2.5rem]">{product.name}</h3>
-        <p className="text-xs text-muted-foreground mt-1 leading-relaxed line-clamp-2 flex-1">
+        <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed line-clamp-2">
           {truncate(stripHtml(product.description), 100)}
         </p>
-        {!outOfStock && (
-          <div className="flex items-center gap-1.5 mt-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-            <span className="text-[11px] font-medium text-emerald-600">В наявності</span>
-          </div>
-        )}
-        <div className="flex items-center justify-between mt-3 max-md:flex max-md:items-end max-md:justify-between max-md:mt-1">
-          <div className="flex items-baseline gap-0.5 md:gap-2 max-md:flex max-md:flex-col max-md:items-center">
-            {product.oldPrice && product.oldPrice > displayPrice && (
-              <span className="text-xs text-muted-foreground line-through whitespace-nowrap max-md:text-sm max-md:text-muted-foreground max-md:line-through max-md:translate-y-[1px] md:-translate-y-[1px]">
-                {product.oldPrice} ₴
-              </span>
+        <div className="flex items-center justify-between mt-1.5">
+          <div className="flex flex-col gap-0.5">
+            {!outOfStock && (
+              <div className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                <span className="text-[10px] font-medium text-emerald-600">В наявності</span>
+              </div>
             )}
-            <span className="text-base font-bold text-foreground whitespace-nowrap max-md:text-base max-md:font-bold max-md:text-foreground max-md:-translate-y-[2px]">
-              {showFrom ? "від " : ""}{displayPrice} ₴
-            </span>
+            <div className="flex items-baseline gap-1">
+              {product.oldPrice && product.oldPrice > displayPrice && (
+                <span className="text-xs text-muted-foreground line-through whitespace-nowrap">
+                  {product.oldPrice} ₴
+                </span>
+              )}
+              <span className="text-base font-bold text-foreground whitespace-nowrap">
+                {showFrom ? "від " : ""}{displayPrice} ₴
+              </span>
+            </div>
           </div>
           {outOfStock ? (
             <span className="text-xs text-muted-foreground font-medium px-3 py-1.5">
