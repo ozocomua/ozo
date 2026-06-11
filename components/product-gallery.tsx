@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useRef } from "react"
+import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
 import { X, ChevronLeft, ChevronRight } from "lucide-react"
 import { normalizeImageUrl } from "@/lib/image-path"
@@ -22,26 +22,6 @@ export default function ProductGallery({
   const [lightbox, setLightbox] = useState(false)
 
   const mainAlt = (seoAlt?.trim() || name).replace(/<[^>]*>/g, "").trim()
-
-  /* ── Touch swipe for lightbox ── */
-  const touchStartX = useRef(0)
-  const touchStartY = useRef(0)
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX
-    touchStartY.current = e.touches[0].clientY
-  }
-
-  const onTouchEnd = (e: React.TouchEvent) => {
-    const dx = e.changedTouches[0].clientX - touchStartX.current
-    const dy = e.changedTouches[0].clientY - touchStartY.current
-
-    // Only swipe if horizontal movement > vertical (avoid vertical scroll conflicts)
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
-      if (dx < -50 && active < images.length - 1) setActive(active + 1)
-      else if (dx > 50 && active > 0) setActive(active - 1)
-    }
-  }
 
   /* ── Keyboard navigation inside lightbox ── */
   const lightboxPrev = useCallback(() => {
@@ -73,106 +53,16 @@ export default function ProductGallery({
     return () => { document.body.style.overflow = "" }
   }, [lightbox])
 
-  const badgeElement = badge ? (
-    <span className="absolute top-3 left-3 bg-foreground text-background text-xs font-medium tracking-wide px-2.5 py-1 rounded-full z-10">
-      {badge}
-    </span>
-  ) : isPopular ? (
-    <span className="absolute top-3 left-3 bg-amber-500 text-white text-xs font-medium tracking-wide px-2.5 py-1 rounded-full z-10">
-      Популярний
-    </span>
-  ) : null
-
-  /* ── Thumbnails (reusable) ── */
-  const thumbnails = images.map((src, i) => (
-    <button
-      key={i}
-      type="button"
-      onClick={(e) => {
-        e.stopPropagation()
-        setActive(i)
-      }}
-      className={`relative shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 transition-colors ${
-        i === active
-          ? "border-foreground"
-          : "border-border hover:border-foreground/30"
-      }`}
-    >
-      <Image
-        src={normalizeImageUrl(src)}
-        alt={`${mainAlt} — фото ${i + 1}`}
-        fill
-        className="object-cover"
-        sizes="64px"
-        unoptimized
-      />
-    </button>
-  ))
-
   return (
     <>
       {/* ── Normal gallery ── */}
-      {images.length > 1 ? (
-        <>
-          {/* Desktop: main image left + thumbnails right */}
-          <div className="hidden md:flex gap-3">
-            {/* Main image */}
-            <button
-              type="button"
-              onClick={() => setLightbox(true)}
-              className="relative aspect-square rounded-2xl overflow-hidden bg-secondary flex-1 cursor-zoom-in group order-1"
-              aria-label={`${mainAlt} — відкрити на повний екран`}
-            >
-              <Image
-                src={normalizeImageUrl(images[active] || "/placeholder.jpg")}
-                alt={mainAlt}
-                fill
-                unoptimized
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
-                sizes="(max-width: 1200px) 45vw, 500px"
-                priority
-              />
-              <div className="absolute inset-0 bg-transparent group-hover:bg-black/5 transition-colors" />
-              {badgeElement}
-            </button>
-
-            {/* Thumbnails — right column */}
-            <div className="flex flex-col gap-2 overflow-y-auto pr-1 order-2" style={{ maxHeight: "500px" }}>
-              {thumbnails}
-            </div>
-          </div>
-
-          {/* Mobile: main image above + thumbnails below */}
-          <div className="md:hidden space-y-3">
-            <button
-              type="button"
-              onClick={() => setLightbox(true)}
-              className="relative aspect-square rounded-2xl overflow-hidden bg-secondary w-full cursor-zoom-in group"
-              aria-label={`${mainAlt} — відкрити на повний екран`}
-            >
-              <Image
-                src={normalizeImageUrl(images[active] || "/placeholder.jpg")}
-                alt={mainAlt}
-                fill
-                unoptimized
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
-                sizes="(max-width: 640px) calc(100vw - 32px), 100vw"
-                priority
-              />
-              <div className="absolute inset-0 bg-transparent group-hover:bg-black/5 transition-colors" />
-              {badgeElement}
-            </button>
-
-            <div className="flex gap-2 overflow-x-auto">
-              {thumbnails}
-            </div>
-          </div>
-        </>
-      ) : (
+      {/* Desktop: horizontal row (main left, thumbs right).
+          Mobile: vertical stack (main top, thumbs bottom). */}
+      <div className="flex flex-col md:flex-row gap-3">
         <button
           type="button"
           onClick={() => setLightbox(true)}
-          className="relative aspect-square rounded-2xl overflow-hidden bg-secondary w-full cursor-zoom-in group"
+          className="relative aspect-square rounded-2xl overflow-hidden bg-secondary w-full md:flex-1 cursor-zoom-in group"
           aria-label={`${mainAlt} — відкрити на повний екран`}
         >
           <Image
@@ -185,9 +75,49 @@ export default function ProductGallery({
             priority
           />
           <div className="absolute inset-0 bg-transparent group-hover:bg-black/5 transition-colors" />
-          {badgeElement}
+
+          {badge && (
+            <span className="absolute top-3 left-3 bg-foreground text-background text-xs font-medium tracking-wide px-2.5 py-1 rounded-full">
+              {badge}
+            </span>
+          )}
+          {!badge && isPopular && (
+            <span className="absolute top-3 left-3 bg-amber-500 text-white text-xs font-medium tracking-wide px-2.5 py-1 rounded-full">
+              Популярний
+            </span>
+          )}
         </button>
-      )}
+
+        {images.length > 1 && (
+          {/* Desktop: vertical thumbs column. Mobile: horizontal scroll row. */}
+          <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-y-auto md:overflow-x-hidden md:max-h-[500px] md:w-16 md:shrink-0">
+            {images.map((src, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setActive(i)
+                }}
+                className={`relative shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 transition-colors ${
+                  i === active
+                    ? "border-foreground"
+                    : "border-border hover:border-foreground/30"
+                }`}
+              >
+                <Image
+                  src={normalizeImageUrl(src)}
+                  alt={`${mainAlt} — фото ${i + 1}`}
+                  fill
+                  className="object-cover"
+                  sizes="64px"
+                  unoptimized
+                />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* ── Fullscreen Lightbox ── */}
       {lightbox && (
@@ -228,18 +158,14 @@ export default function ProductGallery({
             </button>
           )}
 
-          {/* Image — touch-swipeable */}
-          <div
-            className="relative z-10 max-w-[95vw] max-h-[90vh] flex items-center justify-center select-none"
-            onTouchStart={onTouchStart}
-            onTouchEnd={onTouchEnd}
-            onClick={(e) => e.stopPropagation()}
-          >
+          {/* Image */}
+          <div className="relative z-10 max-w-[95vw] max-h-[90vh] flex items-center justify-center">
             <img
               src={normalizeImageUrl(images[active] || "/placeholder.jpg")}
               alt={mainAlt}
-              className="max-h-[90vh] max-w-[95vw] object-contain rounded-lg select-none pointer-events-none"
+              className="max-h-[90vh] max-w-[95vw] object-contain rounded-lg select-none"
               draggable={false}
+              onClick={(e) => e.stopPropagation()}
             />
           </div>
 
