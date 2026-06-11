@@ -79,6 +79,18 @@ function isSettingsSection(pathname: string): boolean {
   return parts[1] === "settings"
 }
 
+function isCalculatorSection(pathname: string): boolean {
+  const parts = normalizePath(pathname).split("/").filter(Boolean)
+  if (parts.length < 2) return false
+  return parts[1] === "profit-calculator"
+}
+
+function isFinanceSection(pathname: string): boolean {
+  const parts = normalizePath(pathname).split("/").filter(Boolean)
+  if (parts.length < 2) return false
+  return parts[1] === "finance-control"
+}
+
 function buildHref(base: string, segment: string): string {
   if (!segment) return base
   return segment.includes("/") ? `${base}/${segment}` : `${base}/${segment}`
@@ -120,6 +132,8 @@ export function AdminNav() {
   const reviewsSection = isReviewsSection(pathname)
   const blogSection = isBlogSection(pathname)
   const settingsSection = isSettingsSection(pathname)
+  const calculatorSection = isCalculatorSection(pathname)
+  const financeSection = isFinanceSection(pathname)
   const normalizedPath = normalizePath(pathname)
 
   const [pendingCount, setPendingCount] = useState(0)
@@ -133,7 +147,7 @@ export function AdminNav() {
       .catch(() => {})
   }, [])
 
-  const subNavItems = catalogSection ? catalog : reviewsSection ? reviewsSub : settingsSection ? [] : blogSection ? [] : orders
+  const subNavItems = catalogSection ? catalog : reviewsSection ? reviewsSub : settingsSection || calculatorSection || financeSection ? [] : blogSection ? [] : orders
 
   return (
     <>
@@ -152,6 +166,10 @@ export function AdminNav() {
               active = reviewsSection
             } else if (item.key === "settings") {
               active = settingsSection
+            } else if (item.key === "calculator") {
+              active = calculatorSection
+            } else if (item.key === "finance") {
+              active = financeSection
             } else {
               active =
                   !catalogSection &&
@@ -159,6 +177,8 @@ export function AdminNav() {
                   !blogSection &&
                   !reviewsSection &&
                   !settingsSection &&
+                  !calculatorSection &&
+                  !financeSection &&
                   (normalizedPath === base || normalizedPath.startsWith(`${base}/`))
             }
             return (
