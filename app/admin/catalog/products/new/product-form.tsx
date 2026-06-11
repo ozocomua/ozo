@@ -547,7 +547,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
                 <input
                   type="checkbox"
                   checked={isPopular}
-                  onChange={() => setIsPopular((v) => !v)}
+                  onChange={() => setIsPopular((v: boolean) => !v)}
                   className="h-4 w-4"
                 />
                 <span className="text-sm">Популярний товар (виводити першим на головній)</span>
@@ -557,7 +557,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
                 <input
                   type="checkbox"
                   checked={isNew}
-                  onChange={() => setIsNew((v) => !v)}
+                  onChange={() => setIsNew((v: boolean) => !v)}
                   className="h-4 w-4"
                 />
                 <span className="text-sm">Новинка (плашка "Новинка")</span>
