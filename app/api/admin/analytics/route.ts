@@ -88,13 +88,15 @@ export async function GET(_req: Request) {
   }
 
   let categories: { name: string; total: number }[] = []
+  let byProduct: { name: string; total: number }[] = []
 
   if (productIdsFromOrders.size > 0) {
-    // Get products with their categories
+    // Get products with their categories + names
     const products = await prisma.product.findMany({
       where: { id: { in: Array.from(productIdsFromOrders) } },
       select: {
         id: true,
+        name: true,
         categories: {
           select: { category: { select: { name: true } } },
           take: 1,
@@ -102,14 +104,17 @@ export async function GET(_req: Request) {
       },
     })
 
+    const productNameMap = new Map<number, string>()
     const productCategoryMap = new Map<number, string>()
     for (const p of products) {
+      productNameMap.set(p.id, p.name)
       const catName = p.categories[0]?.category?.name || "Без категорії"
       productCategoryMap.set(p.id, catName)
     }
 
-    // Now sum totals by category from orders
+    // Sum totals by category and by product
     const categoryTotals = new Map<string, number>()
+    const productTotals = new Map<string, number>()
     for (const o of monthOrders) {
       const items = o.orderItems as any
       if (!Array.isArray(items)) continue
@@ -117,16 +122,20 @@ export async function GET(_req: Request) {
         const pid = Number(item?.productId)
         if (!Number.isFinite(pid) || pid < 1) continue
         const cat = productCategoryMap.get(pid) || "Без категорії"
-        const qty = Number(item?.quantity) || 1
-        // Approximate: distribute order total proportionally by items count
+        const pName = productNameMap.get(pid) || `#${pid}`
         const itemShare = o.total / items.length
         categoryTotals.set(cat, (categoryTotals.get(cat) || 0) + itemShare)
+        productTotals.set(pName, (productTotals.get(pName) || 0) + itemShare)
       }
     }
 
-    categories = Array.from(categoryTotals.entries())
-      .map(([name, total]) => ({ name, total: Math.round(total * 100) / 100 }))
-      .sort((a, b) => b.total - a.total)
+    const toSorted = (m: Map<string, number>) =>
+      Array.from(m.entries())
+        .map(([name, total]) => ({ name, total: Math.round(total * 100) / 100 }))
+        .sort((a, b) => b.total - a.total)
+
+    categories = toSorted(categoryTotals)
+    byProduct = toSorted(productTotals)
   }
 
   // ---- 3. Summary stats ----
@@ -136,6 +145,7 @@ export async function GET(_req: Request) {
   return NextResponse.json({
     profitByDay: allDays,
     categories,
+    byProduct,
     totalRevenue,
     orderCount,
     month,

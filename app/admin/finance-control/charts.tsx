@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 type AnalyticsData = {
   profitByDay: { date: string; total: number }[]
   categories: { name: string; total: number }[]
+  byProduct: { name: string; total: number }[]
   totalRevenue: number
   orderCount: number
   month: number
@@ -40,6 +41,7 @@ export default function FinanceCharts() {
   const [data, setData] = useState<AnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [breakdown, setBreakdown] = useState<"categories" | "products">("categories")
 
   /* ── Date state ── */
   const now = new Date()
@@ -224,21 +226,44 @@ export default function FinanceCharts() {
         </div>
 
         <div className="rounded-2xl border bg-white p-5">
-          <h3 className="font-serif text-lg font-medium mb-1">Продажі за категоріями</h3>
+          <div className="flex items-center justify-between mb-1">
+            <h3 className="font-serif text-lg font-medium">
+              {breakdown === "categories" ? "Продажі за категоріями" : "Продажі за товарами"}
+            </h3>
+            <div className="flex rounded-lg border bg-slate-50 p-0.5">
+              <button
+                onClick={() => setBreakdown("categories")}
+                className={`text-[10px] font-bold uppercase px-2.5 py-1 rounded-md transition-colors ${breakdown === "categories" ? "bg-white shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                Категорії
+              </button>
+              <button
+                onClick={() => setBreakdown("products")}
+                className={`text-[10px] font-bold uppercase px-2.5 py-1 rounded-md transition-colors ${breakdown === "products" ? "bg-white shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                Товари
+              </button>
+            </div>
+          </div>
           <p className="text-[11px] text-muted-foreground mb-4">{rangeLabel}</p>
-          {data.categories.length > 0 ? (
-            <ResponsiveContainer width="100%" height={280}>
-              <PieChart>
-                <Pie data={data.categories} dataKey="total" nameKey="name" cx="50%" cy="50%" outerRadius={95} innerRadius={50} paddingAngle={2} stroke="none">
-                  {data.categories.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
-                </Pie>
-                <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid #e2e8f0", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", fontSize: 13 }} formatter={(value: number) => [`${value.toLocaleString("uk-UA")} ₴`, "Виторг"]} />
-                <Legend verticalAlign="bottom" iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12, paddingTop: 12 }} />
-              </PieChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="flex items-center justify-center h-[280px] text-sm text-muted-foreground">Немає даних про категорії</div>
-          )}
+          {(() => {
+            const slice = breakdown === "categories" ? data.categories : data.byProduct
+            return slice.length > 0 ? (
+              <ResponsiveContainer width="100%" height={280}>
+                <PieChart>
+                  <Pie data={slice} dataKey="total" nameKey="name" cx="50%" cy="50%" outerRadius={95} innerRadius={50} paddingAngle={2} stroke="none">
+                    {slice.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                  </Pie>
+                  <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid #e2e8f0", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", fontSize: 13 }} formatter={(value: number) => [`${value.toLocaleString("uk-UA")} ₴`, "Виторг"]} />
+                  <Legend verticalAlign="bottom" iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12, paddingTop: 12 }} />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-[280px] text-sm text-muted-foreground">
+                {breakdown === "categories" ? "Немає даних про категорії" : "Немає даних про товари"}
+              </div>
+            )
+          })()}
         </div>
       </div>
     </div>
