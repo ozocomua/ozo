@@ -7,7 +7,7 @@ import { getTopCategories, getPublishedPosts, countPublishedPosts } from "@/lib/
 import { normalizeImageUrl } from "@/lib/image-path"
 import BlogPostsClient from "@/components/blog-posts-client"
 
-export const revalidate = 60
+export const dynamic = "force-dynamic"
 
 export function generateMetadata(): Metadata {
   return {

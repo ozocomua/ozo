@@ -17,6 +17,7 @@ import { cleanMetaTitle, cleanMetaDescription, stripHtml, truncate } from "@/lib
 import type { Metadata } from "next"
 
 export const dynamic = "force-dynamic"
+export const revalidate = 0
 
 interface Props {
   params: Promise<{ productId: string }>

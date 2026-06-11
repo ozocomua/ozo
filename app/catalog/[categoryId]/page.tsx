@@ -10,7 +10,7 @@ import Breadcrumbs from "@/components/breadcrumbs"
 import { getTopCategories, getCategoryBySlug, getProductsByCategoryId, getAllBrands, getSubcategories, countProductsByCategoryId } from "@/lib/storefront-db"
 import type { Metadata } from "next"
 
-export const revalidate = 300
+export const dynamic = "force-dynamic"
 
 interface Props {
   params: Promise<{ categoryId: string }>
