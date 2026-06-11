@@ -47,7 +47,6 @@ export default function OtherCategoriesScroll({ categories }: { categories: Cate
                 alt={cat.name}
                 fill
                 unoptimized
-                loading="lazy"
                 className="object-cover transition-all duration-500 group-hover:scale-105"
                 sizes="(max-width: 768px) 160px, 192px"
               />

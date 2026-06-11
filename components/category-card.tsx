@@ -32,7 +32,6 @@ export default function CategoryCard({ category }: CategoryCardProps) {
           alt={category.name}
           fill
           unoptimized
-          loading="lazy"
           className="object-cover transition-all duration-500 group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, 50vw"
         />

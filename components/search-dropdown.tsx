@@ -54,7 +54,6 @@ export default function SearchDropdown({ results, searchQuery, onSelect }: Searc
                 width={40}
                 height={40}
                 unoptimized
-                loading="lazy"
                 className="w-full h-full object-cover"
               />
             ) : (
