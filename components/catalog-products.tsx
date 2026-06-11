@@ -15,47 +15,19 @@ export default function CatalogProducts({ initialProducts, total, pageSize = 24,
   const [sort, setSort] = useState<string>("default")
   const [products, setProducts] = useState<StorefrontProduct[]>(initialProducts)
   const [loading, setLoading] = useState(false)
-  const [minPrice, setMinPrice] = useState<string>("")
-  const [maxPrice, setMaxPrice] = useState<string>("")
-  const [inStockOnly, setInStockOnly] = useState(false)
 
-  const filtered = useMemo(() => {
-    let result = [...products]
-
-    // Filter by price
-    const min = parseFloat(minPrice)
-    const max = parseFloat(maxPrice)
-    if (!isNaN(min)) {
-      result = result.filter(p => {
-        const price = p.variants?.[0]?.priceRetail ?? p.price ?? 0
-        return price >= min
-      })
-    }
-    if (!isNaN(max)) {
-      result = result.filter(p => {
-        const price = p.variants?.[0]?.priceRetail ?? p.price ?? 0
-        return price <= max
-      })
-    }
-
-    // Filter by stock
-    if (inStockOnly) {
-      result = result.filter(p => p.stock > 0)
-    }
-
-    // Sort
-    const pA_raw = (a: any) => (a.variants?.[0]?.priceRetail ?? a.price) || 0
-    const pB_raw = (b: any) => (b.variants?.[0]?.priceRetail ?? b.price) || 0
+  const sorted = useMemo(() => {
+    const result = [...products]
+    const priceOf = (a: any) => (a.variants?.[0]?.priceRetail ?? a.price) || 0
     result.sort((a, b) => {
       switch (sort) {
-        case "price_asc": return pA_raw(a) - pA_raw(b)
-        case "price_desc": return pA_raw(b) - pA_raw(a)
+        case "price_asc": return priceOf(a) - priceOf(b)
+        case "price_desc": return priceOf(b) - priceOf(a)
         default: return 0
       }
     })
-
     return result
-  }, [products, sort, minPrice, maxPrice, inStockOnly])
+  }, [products, sort])
 
   const hasMore = products.length < total
 
@@ -99,37 +71,8 @@ export default function CatalogProducts({ initialProducts, total, pageSize = 24,
         </select>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3 mb-4">
-        <div className="flex items-center gap-2">
-          <input
-            type="number"
-            placeholder="Мін. ціна"
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
-            className="w-24 text-sm border border-border rounded-lg px-3 py-2 bg-white focus:border-[#00B5D1] focus:ring-1 focus:ring-[#00B5D1] outline-none"
-          />
-          <span className="text-muted-foreground text-sm">—</span>
-          <input
-            type="number"
-            placeholder="Макс. ціна"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-            className="w-24 text-sm border border-border rounded-lg px-3 py-2 bg-white focus:border-[#00B5D1] focus:ring-1 focus:ring-[#00B5D1] outline-none"
-          />
-        </div>
-        <label className="flex items-center gap-1.5 text-sm cursor-pointer select-none">
-          <input
-            type="checkbox"
-            checked={inStockOnly}
-            onChange={(e) => setInStockOnly(e.target.checked)}
-            className="w-4 h-4 rounded border-border text-[#00B5D1] focus:ring-[#00B5D1]"
-          />
-          В наявності
-        </label>
-      </div>
-
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
-        {filtered.map((product) => (
+        {sorted.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
