@@ -22,7 +22,7 @@ export async function GET(req: Request) {
     : []
 
   try {
-    const where: Parameters<typeof prisma.order.findMany>[0]["where"] = {}
+    const where: any = {}
 
     if (status) {
       if (status === "NEW") {

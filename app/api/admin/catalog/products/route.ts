@@ -17,7 +17,7 @@ export async function GET(req: Request) {
   const published =
     publishedRaw === "true" ? true : publishedRaw === "false" ? false : null
 
-  const where: Parameters<typeof prisma.product.findMany>[0]["where"] = {}
+  const where: any = {}
 
   if (q) {
     where.OR = [
