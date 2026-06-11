@@ -54,6 +54,7 @@ export default function BlogPostsClient({ initialPosts, total, pageSize = 12 }: 
                 alt={post.title}
                 fill
                 unoptimized
+                loading="lazy"
                 className="object-cover transition-transform duration-300 group-hover:scale-105"
                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />

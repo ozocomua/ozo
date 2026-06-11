@@ -166,8 +166,6 @@ export async function getAllProducts(opts?: { limit?: number; skip?: number }): 
       categories: { select: { category: { select: { slug: true } } }, orderBy: { categoryId: "asc" }, take: 1 },
       images: { select: { url: true, sort: true, isMain: true }, orderBy: { sort: "asc" } },
       variants: { select: { id: true, sku: true, size: true, volume: true, packageType: true, priceRetail: true, stock: true }, orderBy: { id: "asc" } },
-      relatedProducts: { select: { id: true, slug: true, name: true } },
-      reviews: { select: { id: true, rating: true, comment: true, userName: true, createdAt: true }, orderBy: { createdAt: "desc" } },
     },
   })
 
@@ -233,6 +231,7 @@ export async function getPublishedPosts(opts?: { limit?: number; skip?: number }
     skip,
     take: limit,
     orderBy: { createdAt: "desc" },
+    select: { id: true, title: true, slug: true, excerpt: true, image: true, status: true, metaTitle: true, metaDescription: true, productIds: true, ctaText: true, ctaUrl: true, createdAt: true, updatedAt: true },
   }) as Promise<StorefrontPost[]>
 }
 
