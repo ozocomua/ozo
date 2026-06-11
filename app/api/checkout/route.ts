@@ -256,7 +256,7 @@ export async function POST(req: Request) {
     }
 
     // 4. ГЕНЕРАЦІЯ ПОСИЛАННЯ (Тільки для оплати карткою)
-    let paymentUrl = ""
+    let paymentUrl: string | undefined = ""
     if (paymentType === 'card') {
       try {
         paymentUrl = await createPaymentLink(txResult.total, finalOrderNumber)

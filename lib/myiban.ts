@@ -1,4 +1,4 @@
-export async function createPaymentLink(amount: number, orderId: string) {
+export async function createPaymentLink(amount: number, orderId: string): Promise<string | undefined> {
   const response = await fetch("https://myiban.com.ua/api/v1/links", {
     method: "POST",
     headers: {
