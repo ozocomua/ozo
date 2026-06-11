@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma"
 import { CategoryForm } from "../category-form"
 
+export const dynamic = "force-dynamic"
+
 export default async function AdminEditCategoryPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const categoryId = Number(id)
@@ -12,7 +14,6 @@ export default async function AdminEditCategoryPage({ params }: { params: Promis
     <CategoryForm
       category={category ?? {}}
       categories={categories}
-      onSuccess={() => {}}
     />
   )
 }

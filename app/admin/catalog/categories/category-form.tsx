@@ -45,7 +45,7 @@ export function CategoryForm({
 }: { 
   category: any; 
   categories: any[];
-  onSuccess: () => void;
+  onSuccess?: () => void;
 }) {
   const [isPending, startTransition] = useTransition();
 
