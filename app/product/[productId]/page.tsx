@@ -37,41 +37,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     console.log("[generateMetadata] metaDescription:", metaDescription)
   }
 
-  // OpenGraph requires absolute image URLs
-  let ogImage: string | undefined
-  if (product.image) {
-    ogImage = product.image.startsWith("http")
-      ? product.image
-      : `${SITE_URL}${product.image.startsWith("/") ? "" : "/"}${product.image}`
-  }
-
-  const meta: Metadata = {
+  return {
     title: metaTitle || product.name,
     description: metaDescription || undefined,
     alternates: {
       canonical: `${SITE_URL}/product/${productId}`,
     },
-    openGraph: {
-      title: metaTitle || product.name,
-      description: metaDescription || undefined,
-      url: `${SITE_URL}/product/${productId}`,
-      siteName: "OZO",
-      locale: "uk_UA",
-      type: "product" as const,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: metaTitle || product.name,
-      description: metaDescription || undefined,
-    },
   }
-
-  if (ogImage) {
-    meta.openGraph!.images = [{ url: ogImage, width: 1200, height: 630 }]
-    meta.twitter!.images = [ogImage]
-  }
-
-  return meta
 }
 
 export default async function ProductPage({ params }: Props) {
