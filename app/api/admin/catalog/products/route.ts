@@ -99,6 +99,7 @@ export async function POST(req: Request) {
       : []
 
   const name = product && typeof product.name === "string" ? product.name.trim() : ""
+  const sku = product && typeof product.sku === "string" ? product.sku.trim() : ""
   const slug = product && typeof product.slug === "string" ? product.slug.trim() : ""
   const description = product && typeof product.description === "string" ? product.description.trim() : ""
   const fullDescription = product && typeof product.fullDescription === "string" ? product.fullDescription.trim() : ""
@@ -111,8 +112,8 @@ export async function POST(req: Request) {
   const brandIdRaw = product ? product.brandId : null
   const brandId = typeof brandIdRaw === "number" && Number.isFinite(brandIdRaw) ? brandIdRaw : null
 
-  if (!name || !slug || !fullDescription) {
-    return NextResponse.json({ error: "name, slug, fullDescription are required" }, { status: 400 })
+  if (!name || !slug || !fullDescription || !sku) {
+    return NextResponse.json({ error: "name, sku, slug, fullDescription are required" }, { status: 400 })
   }
 
   const parsedVariants = variants
@@ -170,6 +171,7 @@ export async function POST(req: Request) {
       const p = await tx.product.create({
         data: {
           name: name.slice(0, 160),
+          sku: sku.slice(0, 191),
           slug: slug.slice(0, 191),
           description: description.slice(0, 400),
           fullDescription,
