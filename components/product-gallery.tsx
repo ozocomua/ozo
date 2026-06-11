@@ -23,10 +23,8 @@ export default function ProductGallery({
 
   const mainAlt = (seoAlt?.trim() || name).replace(/<[^>]*>/g, "").trim()
 
-  /* ── Touch swipe for lightbox ── */
   const touchX = useRef(0)
 
-  /* ── Keyboard navigation inside lightbox ── */
   const lightboxPrev = useCallback(() => {
     setActive((prev) => (prev === 0 ? images.length - 1 : prev - 1))
   }, [images.length])
@@ -58,7 +56,6 @@ export default function ProductGallery({
     return () => window.removeEventListener("keydown", handler)
   }, [lightbox, lightboxPrev, lightboxNext])
 
-  /* ── Lock body scroll ── */
   useEffect(() => {
     if (lightbox) {
       document.body.style.overflow = "hidden"
@@ -71,8 +68,6 @@ export default function ProductGallery({
   return (
     <>
       {/* ── Normal gallery ── */}
-      {/* Desktop: horizontal row (main left, thumbs right).
-          Mobile: vertical stack (main top, thumbs bottom). */}
       <div className="flex flex-col md:flex-row gap-3">
         <button
           type="button"
@@ -136,29 +131,25 @@ export default function ProductGallery({
       {/* ── Fullscreen Lightbox ── */}
       {lightbox && (
         <div className="fixed inset-0 z-[400] flex items-center justify-center">
-          {/* Dark backdrop */}
           <div
             className="absolute inset-0 bg-black/90 cursor-zoom-out"
             onClick={() => setLightbox(false)}
           />
 
-          {/* Close button */}
           <button
             type="button"
             onClick={() => setLightbox(false)}
-            className="absolute top-4 right-4 z-10 p-2.5 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+            className="absolute top-4 right-4 z-20 p-2.5 rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors shadow-lg"
           >
             <X size={24} />
           </button>
 
-          {/* Image counter */}
           {images.length > 1 && (
-            <span className="absolute top-5 left-1/2 -translate-x-1/2 z-10 text-white/70 text-xs font-bold tracking-widest">
+            <span className="absolute top-5 left-1/2 -translate-x-1/2 z-20 text-white/70 text-xs font-bold tracking-widest">
               {active + 1} / {images.length}
             </span>
           )}
 
-          {/* Prev arrow */}
           {images.length > 1 && (
             <button
               type="button"
@@ -166,13 +157,12 @@ export default function ProductGallery({
                 e.stopPropagation()
                 lightboxPrev()
               }}
-              className="absolute left-3 md:left-6 z-10 p-3 rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors shadow-lg"
+              className="absolute left-3 md:left-6 z-20 p-3 rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors shadow-lg"
             >
               <ChevronLeft size={28} />
             </button>
           )}
 
-          {/* Image — swipeable on touch devices */}
           <div
             className="relative z-10 max-w-[95vw] max-h-[90vh] flex items-center justify-center select-none"
             onTouchStart={onTouchStart}
@@ -181,13 +171,11 @@ export default function ProductGallery({
             <img
               src={normalizeImageUrl(images[active] || "/placeholder.jpg")}
               alt={mainAlt}
-              className="max-h-[90vh] max-w-[95vw] object-contain rounded-lg select-none"
+              className="max-h-[90vh] max-w-[95vw] object-contain rounded-lg select-none pointer-events-none"
               draggable={false}
-              onClick={(e) => e.stopPropagation()}
             />
           </div>
 
-          {/* Next arrow */}
           {images.length > 1 && (
             <button
               type="button"
@@ -195,7 +183,7 @@ export default function ProductGallery({
                 e.stopPropagation()
                 lightboxNext()
               }}
-              className="absolute right-3 md:right-6 z-10 p-3 rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors shadow-lg"
+              className="absolute right-3 md:right-6 z-20 p-3 rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors shadow-lg"
             >
               <ChevronRight size={28} />
             </button>
