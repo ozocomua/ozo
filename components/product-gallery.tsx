@@ -166,7 +166,7 @@ export default function ProductGallery({
                 e.stopPropagation()
                 lightboxPrev()
               }}
-              className="absolute left-3 md:left-6 z-10 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+              className="absolute left-3 md:left-6 z-10 p-3 rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors shadow-lg"
             >
               <ChevronLeft size={28} />
             </button>
@@ -195,7 +195,7 @@ export default function ProductGallery({
                 e.stopPropagation()
                 lightboxNext()
               }}
-              className="absolute right-3 md:right-6 z-10 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+              className="absolute right-3 md:right-6 z-10 p-3 rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors shadow-lg"
             >
               <ChevronRight size={28} />
             </button>
