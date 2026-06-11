@@ -16,10 +16,6 @@ type FinanceSettings = { usdRate: number; targetProfit: number; targetRevenue: n
 
 const EXPENSE_CATEGORIES = ["Пакування", "Логістика", "Брак", "Реклама", "Інше"]
 
-function toUSD(amount: number, rate: number) {
-  return ((amount / (rate || 1))).toFixed(2) + " $"
-}
-
 export default function FinanceControlPage() {
   const [loaded, setLoaded] = useState(false)
   const [products, setProducts] = useState<CalculatorProduct[]>([])
@@ -115,14 +111,6 @@ export default function FinanceControlPage() {
     setSettings(next); delayedSave(transactions, next)
   }
 
-  const fetchUsd = async () => {
-    try {
-      const res = await fetch("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=USD&json")
-      const data = await res.json()
-      if (data[0]?.rate) updateSetting("usdRate", parseFloat(data[0].rate.toFixed(2)))
-    } catch { alert("Помилка API НБУ") }
-  }
-
   const clearAll = () => {
     if (!confirm("Очистити все?")) return
     setTransactions([]); delayedSave([])
@@ -158,18 +146,12 @@ export default function FinanceControlPage() {
           <h1 className="text-2xl font-serif font-bold text-foreground">Фінанси OZO</h1>
           <p className="text-xs text-muted-foreground mt-1">Журнал продажів та витрат</p>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Курс $:</span>
-          <input type="number" step="0.1" value={settings.usdRate} onChange={e => updateSetting("usdRate", parseFloat(e.target.value) || 41.5)}
-            className="bg-white border rounded-lg px-2 py-1 text-xs font-bold text-blue-600 w-16 outline-none text-center" />
-          <button onClick={fetchUsd} className="text-[10px] bg-blue-600 text-white px-2 py-1 rounded-lg hover:bg-blue-500 transition">НБУ</button>
-        </div>
       </div>
 
       {/* ═══ Summary cards ═══ */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
-          { label: "Виторг", value: `${Math.round(totalRevenue).toLocaleString("uk-UA")} ₴`, sub: `≈ ${toUSD(totalRevenue, settings.usdRate)}`, color: "text-blue-600" },
+          { label: "Виторг", value: `${Math.round(totalRevenue).toLocaleString("uk-UA")} ₴`, sub: "", color: "text-blue-600" },
           { label: "Витрати", value: `${Math.round(totalExpenses).toLocaleString("uk-UA")} ₴`, sub: "", color: "text-red-500" },
           { label: "Оплачено", value: `${Math.round(paidCash).toLocaleString("uk-UA")} ₴`, sub: "", color: "text-green-600" },
           { label: "В дорозі", value: `${Math.round(transitCash).toLocaleString("uk-UA")} ₴`, sub: "", color: "text-amber-600" },
@@ -296,7 +278,6 @@ export default function FinanceControlPage() {
                   </td>
                   <td className="p-4 text-right align-top">
                     <div className="font-bold">{Math.round(t.items.reduce((s, si) => s + si.customPrice * si.qty, 0))} ₴</div>
-                    <div className="text-[9px] text-muted-foreground">{toUSD(t.items.reduce((s, si) => s + si.customPrice * si.qty, 0), settings.usdRate)}</div>
                   </td>
                 </tr>
               ))}
