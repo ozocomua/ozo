@@ -1,11 +1,12 @@
 "use client"
 
 import { useCart } from "@/lib/cart-context"
-import { ArrowLeft, MapPin, Box, Home, Check, CreditCard, Wallet, Loader2, Trash2 } from "lucide-react"
+import { ArrowLeft, MapPin, Box, Home, Check, CreditCard, Wallet, Loader2, Trash2, WifiOff } from "lucide-react"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import CodWarningModal from "@/components/cod-warning-modal"
 import CallbackWidget from "@/components/ui/callbackwidget"
+import FastOrderModal from "./fast-order-modal"
 import { toast } from "sonner"
 
 const TOP_CITIES = [
@@ -51,6 +52,7 @@ export default function CheckoutPage() {
   const [showCities, setShowCities] = useState(false)
   const [showPoints, setShowPoints] = useState(false)
   const [isLoadingPoints, setIsLoadingPoints] = useState(false)
+  const [showFastOrder, setShowFastOrder] = useState(false)
 
   useEffect(() => {
     refreshPrices()
@@ -216,7 +218,12 @@ export default function CheckoutPage() {
       }
     } catch (err: any) {
       console.error(err)
-      toast.error(`Помилка: ${err.message}`)
+      const isNetworkError = err instanceof TypeError || err?.message?.includes("fetch") || err?.message?.includes("Network")
+      if (isNetworkError) {
+        setShowFastOrder(true)
+      } else {
+        toast.error(`Помилка: ${err.message}`)
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -432,6 +439,15 @@ export default function CheckoutPage() {
                 >
                   {isSubmitting ? <Loader2 className="animate-spin" size={16} /> : "Замовити зараз"}
                 </button>
+                {/* fallback for poor internet */}
+                <button
+                  type="button"
+                  onClick={() => setShowFastOrder(true)}
+                  className="w-full mt-3 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-amber-600 hover:bg-amber-50 transition-all flex items-center justify-center gap-2"
+                >
+                  <WifiOff size={14} />
+                  Слабкий інтернет? Ми зателефонуємо
+                </button>
               </div>
             </section>
           </div>
@@ -504,6 +520,15 @@ export default function CheckoutPage() {
               >
                 {isSubmitting ? <Loader2 className="animate-spin" size={16} /> : "Замовити зараз"}
               </button>
+              {/* fallback for poor internet */}
+              <button
+                type="button"
+                onClick={() => setShowFastOrder(true)}
+                className="w-full mt-3 py-2.5 rounded-xl text-[9px] font-bold uppercase tracking-widest text-white/50 hover:text-amber-300 hover:bg-white/5 transition-all flex items-center justify-center gap-2"
+              >
+                <WifiOff size={12} />
+                Слабкий інтернет? Ми зателефонуємо
+              </button>
             </div>
           </div>
         </div>
@@ -521,6 +546,9 @@ export default function CheckoutPage() {
         onCancel={() => setShowCodWarning(false)}
       />
       <CallbackWidget />
+      {showFastOrder && (
+        <FastOrderModal onClose={() => setShowFastOrder(false)} />
+      )}
     </div>
   )
 }
