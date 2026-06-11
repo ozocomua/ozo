@@ -10,13 +10,13 @@ export async function GET(req: Request) {
   }
 
   try {
+    // "search" mode handles word boundaries better than "contains"
     const products = await prisma.product.findMany({
       where: {
         isPublished: true,
         OR: [
-          { name: { contains: q } },
-          { sku: { contains: q } },
-          { description: { contains: q } },
+          { name: { contains: q, mode: "insensitive" } },
+          { sku: { contains: q, mode: "insensitive" } },
         ],
       },
       take: 5,
@@ -46,6 +46,6 @@ export async function GET(req: Request) {
     })
   } catch (error) {
     console.error("SEARCH_ERROR:", error)
-    return NextResponse.json({ error: "Ошибка сервера" }, { status: 500 })
+    return NextResponse.json({ error: "Помилка пошуку" }, { status: 500 })
   }
 }

@@ -28,7 +28,8 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
   const [isSearchActive, setIsSearchActive] = useState(false)
 
   const debounceRef = useRef<ReturnType<typeof setTimeout>>()
-  const searchContainerRef = useRef<HTMLDivElement>(null)
+  const desktopSearchRef = useRef<HTMLDivElement>(null)
+  const mobileSearchRef = useRef<HTMLDivElement>(null)
   const mobileInputRef = useRef<HTMLInputElement>(null)
 
   const fetchResults = useCallback(async (q: string) => {
@@ -55,7 +56,9 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
+      const clickedInsideDesktop = desktopSearchRef.current?.contains(e.target as Node)
+      const clickedInsideMobile = mobileSearchRef.current?.contains(e.target as Node)
+      if (!clickedInsideDesktop && !clickedInsideMobile) {
         setShowDropdown(false)
         setIsSearchActive(false)
       }
@@ -91,7 +94,7 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
           </Link>
 
           {/* Desktop search */}
-          <div ref={searchContainerRef} className="hidden md:flex flex-1 max-w-md mx-6 relative">
+          <div ref={desktopSearchRef} className="hidden md:flex flex-1 max-w-md mx-6 relative">
             <div className="relative w-full">
               <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
               <input
@@ -141,24 +144,38 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
 
           {/* Mobile search */}
           <div
-            ref={searchContainerRef}
+            ref={mobileSearchRef}
             className={`md:hidden flex items-center gap-1 transition-all duration-300 ${isSearchActive ? "flex-1 ml-3" : ""}`}
           >
             {isSearchActive ? (
-              <div className="relative flex-1">
-                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
-                <input
-                  ref={mobileInputRef}
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => handleChange(e.target.value)}
-                  onFocus={() => setIsSearchActive(true)}
-                  placeholder="Пошук..."
-                  className="w-full pl-9 pr-3 py-1.5 text-sm bg-secondary rounded-full outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
-                />
-                {showDropdown && (
-                  <SearchDropdown results={results} searchQuery={searchQuery} onSelect={handleSelect} />
-                )}
+              <div className="relative flex-1 flex items-center gap-1">
+                <div className="relative flex-1">
+                  <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                  <input
+                    ref={mobileInputRef}
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => handleChange(e.target.value)}
+                    placeholder="Пошук..."
+                    className="w-full pl-9 pr-3 py-2 text-base bg-secondary rounded-full outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
+                    style={{ fontSize: "16px" }}
+                  />
+                  {showDropdown && (
+                    <SearchDropdown results={results} searchQuery={searchQuery} onSelect={handleSelect} />
+                  )}
+                </div>
+                <button
+                  onClick={() => {
+                    setIsSearchActive(false)
+                    setSearchQuery("")
+                    setResults([])
+                    setShowDropdown(false)
+                  }}
+                  className="p-2 text-foreground active:scale-90 transition-all duration-300"
+                  aria-label="Закрити пошук"
+                >
+                  <X size={20} />
+                </button>
               </div>
             ) : (
               <button
