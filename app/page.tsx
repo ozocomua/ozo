@@ -3,6 +3,7 @@ import Header from "@/components/header"
 import Footer from "@/components/footer"
 import Link from "next/link"
 import Image from "next/image"
+import { ArrowRight } from "lucide-react"
 import HomepageProducts from "@/components/homepage-products"
 import DeliveryBanner from "@/components/delivery-banner"
 import { StoreSchema } from "@/components/json-ld"
@@ -41,6 +42,15 @@ export default async function HomePage() {
               <br />
               <span className="text-white/60">якісне обладнання</span>
             </h1>
+            <div className="mt-6">
+              <Link
+                href="/catalog"
+                className="inline-flex items-center gap-2 bg-white text-[#0B53A4] text-sm md:text-base font-bold px-6 py-3 rounded-full hover:bg-white/90 active:scale-95 transition-all shadow-lg"
+              >
+                Перейти до каталогу
+                <ArrowRight size={18} />
+              </Link>
+            </div>
           </div>
         </section>
 

@@ -43,6 +43,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: {
       canonical: `${SITE_URL}/product/${productId}`,
     },
+    openGraph: {
+      title: metaTitle || product.name,
+      description: metaDescription || undefined,
+      url: `${SITE_URL}/product/${productId}`,
+      siteName: "OZO",
+      images: product.image ? [{ url: product.image, width: 1200, height: 630 }] : [],
+      locale: "uk_UA",
+      type: "product",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: metaTitle || product.name,
+      description: metaDescription || undefined,
+      images: product.image ? [product.image] : [],
+    },
   }
 }
 
@@ -330,7 +345,7 @@ export default async function ProductPage({ params }: Props) {
         {related.length > 0 && (
           <div className="mt-14">
             <h2 className="text-xs tracking-[0.2em] text-muted-foreground uppercase mb-5">
-              З цієї категорії
+              Вам також може сподобатись
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {related.map((p) => (
