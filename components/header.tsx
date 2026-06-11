@@ -86,7 +86,10 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border px-4 pt-3 md:pt-0">
+      <header
+        className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border px-4"
+        style={{ paddingTop: "max(16px, env(safe-area-inset-top))" }}
+      >
         <div className="max-w-5xl mx-auto h-16 flex items-center justify-between relative">
           <Link
             href="/"
@@ -223,7 +226,10 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
       </header>
 
       {menuOpen && (
-        <div className="fixed inset-0 z-40 bg-background flex flex-col pt-[77px] animate-in fade-in duration-200">
+        <div
+          className="fixed inset-0 z-40 bg-background flex flex-col animate-in fade-in duration-200"
+          style={{ paddingTop: "calc(64px + max(16px, env(safe-area-inset-top)))" }}
+        >
           <nav className="flex flex-col px-4 pt-6 gap-1">
             <p className="text-xs tracking-widest text-muted-foreground uppercase mb-4 font-bold">
               Категорії
