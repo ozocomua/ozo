@@ -121,7 +121,7 @@ export async function POST(req: Request) {
     })
 
     if (updatedOrder && updatedOrder.ttn) {
-      sendTtnNotification(updatedOrder).catch((err) =>
+      sendTtnNotification(updatedOrder as any).catch((err) =>
         console.error("[create-document] TTN notification failed:", err)
       )
     }
