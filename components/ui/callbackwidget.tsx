@@ -78,6 +78,13 @@ export default function CallbackWidget() {
 
       {isOpen && (
         <div className="absolute bottom-20 right-0 w-[90vw] md:w-[350px] bg-white rounded-[2.5rem] shadow-2xl border border-black/5 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <button
+            onClick={() => setIsOpen(false)}
+            className="absolute top-4 right-4 z-10 p-1.5 rounded-full bg-black/5 text-black/40 hover:bg-black/10 hover:text-black/60 transition-colors"
+            aria-label="Закрити"
+          >
+            <X size={18} />
+          </button>
           <div className="p-8">
             {status === 'success' ? (
               <div className="py-10 text-center space-y-4 animate-in zoom-in duration-500">
