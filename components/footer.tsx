@@ -1,9 +1,13 @@
 "use client"
 
+import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { Phone, MessageSquare, Send } from "lucide-react"
 
 export default function Footer() {
+  const pathname = usePathname()
+  const isHome = pathname === "/"
+
   const openCallback = () => {
     window.dispatchEvent(new Event('open-callback'));
   };
@@ -100,9 +104,18 @@ export default function Footer() {
               Зворотній зв'язок
             </button>
           </div>
-          <Link href="/" className="text-[11px] sm:text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors font-bold">
-            На головну
-          </Link>
+          {isHome ? (
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="text-[11px] sm:text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors font-bold"
+            >
+              Догори ↑
+            </button>
+          ) : (
+            <Link href="/" className="text-[11px] sm:text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors font-bold">
+              На головну
+            </Link>
+          )}
         </div>
       </div>
     </footer>
