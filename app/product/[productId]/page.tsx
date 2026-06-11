@@ -43,21 +43,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: {
       canonical: `${SITE_URL}/product/${productId}`,
     },
-    openGraph: {
-      title: metaTitle || product.name,
-      description: metaDescription || undefined,
-      url: `${SITE_URL}/product/${productId}`,
-      siteName: "OZO",
-      locale: "uk_UA",
-      type: "product",
-      ...(product.image ? { images: [{ url: product.image, width: 1200, height: 630 }] } : {}),
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: metaTitle || product.name,
-      description: metaDescription || undefined,
-      ...(product.image ? { images: [product.image] } : {}),
-    },
   }
 }
 
