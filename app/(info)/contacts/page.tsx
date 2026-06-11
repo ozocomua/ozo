@@ -83,7 +83,7 @@ export default function ContactsPage() {
             >
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-black/10 text-black rounded-xl group-hover:bg-black group-hover:text-white transition-colors">
-                  <TikTokIcon size={20} /> {/* Використовуйте TikTokIcon замість Video */}
+                  <TikTokIcon width={20} height={20} />
                 </div>
                 <span className="font-bold">TikTok</span>
               </div>
