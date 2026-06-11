@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react"
 import { toast } from "sonner"
+import FinanceCharts from "./charts"
 
 type CalculatorAddon = { name: string; val: number }
 type CalculatorProduct = { id: number; name: string; buy: number; vol: number; dose: number; sale: number; adds: string[] }
@@ -346,7 +347,9 @@ export default function FinanceControlPage() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <header className="flex justify-between items-end mb-10">
+      <FinanceCharts />
+
+      <header className="flex justify-between items-end mb-10 mt-10">
         <div>
           <h1 className="text-4xl font-black italic uppercase tracking-tighter text-blue-500">OZO Control</h1>
           <div className="flex items-center gap-2 mt-1">

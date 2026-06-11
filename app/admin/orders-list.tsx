@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Download } from "lucide-react"
 import type { OrderStatus } from "@/lib/order-status"
 import { ORDER_STATUSES, normalizeOrderStatus } from "@/lib/order-status"
 import type { PaymentStatus } from "@/lib/payment-status"
@@ -290,6 +291,31 @@ export function OrdersList({
     }
   }
 
+  async function exportToExcel() {
+    const XLSX = await import("xlsx")
+    const rows = orders.map((o) => ({
+      "№": o.orderNumber,
+      "Дата": formatDate(o.createdAt),
+      "Клієнт": o.user.name ?? "—",
+      "Телефон": o.user.phone,
+      "Дзвінок": o.noCall ? "Не дзвонить" : "Дзвонить",
+      "Оплата": paymentLabel(o.paymentType),
+      "Статус оплати": paymentStatusLabel(normalizePaymentStatus(o.paymentStatus) ?? "UNPAID"),
+      "Сума (грн)": o.total,
+      "Доставка": buildDeliverySummary(o),
+      "Товари": (o.items ?? "").split(", ").join("\n"),
+      "Статус": statusLabelByValue.get(normalizeOrderStatus(o.status) ?? "NEW") ?? o.status,
+      "ТТН": o.ttn || "—",
+      "Коментар": o.comment || "—",
+      "Теги": o.tags?.map((t) => t.name).join(", ") || "—",
+    }))
+
+    const ws = XLSX.utils.json_to_sheet(rows)
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, "Замовлення")
+    XLSX.writeFile(wb, `zamovlennya-${new Date().toISOString().slice(0, 10)}.xlsx`)
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -314,6 +340,10 @@ export function OrdersList({
           />
           <Button variant="outline" onClick={() => void load()} disabled={loading}>
             Оновити
+          </Button>
+          <Button variant="outline" onClick={() => void exportToExcel()} disabled={orders.length === 0}>
+            <Download size={16} className="mr-1.5" />
+            Excel
           </Button>
         </div>
       </div>
