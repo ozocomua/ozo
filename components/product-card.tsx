@@ -82,8 +82,8 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       <div className="p-3 flex flex-col flex-1">
         <h3 className="font-semibold text-foreground text-sm line-clamp-2 break-words min-h-[2.5rem]">{product.name}</h3>
-        <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed line-clamp-2">
-          {truncate(stripHtml(product.description), 100)}
+        <p className="text-[11px] text-muted-foreground mt-1 leading-snug line-clamp-2">
+          {truncate(stripHtml(product.description), 70)}
         </p>
         <div className="flex items-center justify-between mt-1.5">
           <div className="flex flex-col gap-0.5">
