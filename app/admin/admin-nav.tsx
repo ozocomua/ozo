@@ -8,22 +8,22 @@ type NavItem = { key: string; label: string; segment: string }
 
 const sections: NavItem[] = [
   { key: "orders", label: "Замовлення", segment: "" },
-  { key: "callbacks", label: "📞 Заявки на дзвінок", segment: "callbacks" },
+  { key: "callbacks", label: "Заявки на дзвінок", segment: "callbacks" },
   { key: "catalog", label: "Каталог", segment: "catalog" },
-  { key: "blog", label: "📝 Блог", segment: "blog" },
+  { key: "blog", label: "Блог", segment: "blog" },
   { key: "reviews", label: "Відгуки", segment: "reviews" },
   { key: "calculator", label: "Калькулятор", segment: "profit-calculator" },
   { key: "finance", label: "Фінанси", segment: "finance-control" },
-  { key: "settings", label: "⚙️ Налаштування", segment: "settings" },
+  { key: "settings", label: "Налаштування", segment: "settings" },
 ]
 
 const orders: NavItem[] = [
+  { key: "all", label: "Всі", segment: "all" },
   { key: "new", label: "Нові", segment: "" },
   { key: "packed", label: "Упаковані", segment: "packed" },
   { key: "shipped", label: "Відправлені", segment: "shipped" },
   { key: "refused", label: "Відмови", segment: "refused" },
   { key: "received", label: "Отримані", segment: "received" },
-  { key: "all", label: "Всі", segment: "all" },
 ]
 
 const catalog: NavItem[] = [
@@ -168,7 +168,7 @@ export function AdminNav() {
                 active={active}
                 label={
                   item.key === "callbacks" && pendingCount > 0
-                    ? `📞 Заявки (${pendingCount})`
+                    ? `Заявки (${pendingCount})`
                     : item.label
                 }
               />
