@@ -283,7 +283,14 @@ export default function CheckoutPage() {
 
             {/* ДОСТАВКА */}
             <section className="space-y-6">
-              <div className="relative">
+              <div className="flex items-center justify-between">
+                <h4 className="text-[10px] uppercase font-bold opacity-40 ml-4">Доставка</h4>
+                {cartTotal >= 2500 && (
+                  <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
+                    🚚 Безкоштовно
+                  </span>
+                )}
+              </div>
                 <label className="text-[10px] uppercase font-bold opacity-40 ml-4">Місто доставки</label>
                 <input 
                   className="w-full bg-white rounded-2xl p-5 mt-2 shadow-sm outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
@@ -405,6 +412,9 @@ export default function CheckoutPage() {
                   <div className="flex flex-col">
                     <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">Всього</span>
                     <span className="text-[9px] opacity-20 uppercase tracking-tighter">{paymentType === 'cod' ? '+ комісія пошти' : 'без комісії'}</span>
+                    {cartTotal >= 2500 && (
+                      <span className="text-[10px] font-bold text-emerald-600 mt-1">🚚 Доставка безкоштовно</span>
+                    )}
                   </div>
                   <span className="text-3xl font-black">{cartTotal} ₴</span>
                 </div>
@@ -473,6 +483,9 @@ export default function CheckoutPage() {
                   <span className="text-[9px] opacity-20 uppercase tracking-tighter">
                     {paymentType === 'cod' ? '+ комісія пошти' : 'без комісії'}
                   </span>
+                  {cartTotal >= 2500 && (
+                    <span className="text-[10px] font-bold text-emerald-300 mt-1">🚚 Доставка безкоштовно</span>
+                  )}
                 </div>
                 <span className="text-4xl font-black">{cartTotal} ₴</span>
               </div>

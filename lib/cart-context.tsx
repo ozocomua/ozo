@@ -185,8 +185,35 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
               </div>
 
               <div className="flex-1 overflow-y-auto pr-2 space-y-6 mb-8 custom-scrollbar">
-                {cart.length > 0 ? (
-                  cart.map((item) => (
+                {cart.length > 0 && (
+                  <>
+                    {/* Free shipping progress bar */}
+                    {(() => {
+                      const FREE_SHIPPING_LIMIT = 2500
+                      const amountLeft = FREE_SHIPPING_LIMIT - cartTotal
+                      const progressPct = Math.min((cartTotal / FREE_SHIPPING_LIMIT) * 100, 100)
+                      const reached = cartTotal >= FREE_SHIPPING_LIMIT
+                      return (
+                        <div className="rounded-2xl bg-gradient-to-r from-[#0B53A4]/5 to-[#00B5D1]/10 border border-[#00B5D1]/20 p-4 space-y-2">
+                          <div className="flex justify-between items-baseline gap-2">
+                            <p className="text-[11px] font-bold text-foreground/80">
+                              {reached
+                                ? "🎉 Вітаємо! Ви отримали БЕЗКОШТОВНУ доставку Новою Поштою!"
+                                : <>Додайте товари ще на <span className="text-[#0B53A4] font-black">🔥 {amountLeft} грн</span> для БЕЗКОШТОВНОЇ доставки!</>
+                              }
+                            </p>
+                          </div>
+                          <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all duration-500 ease-out ${reached ? "bg-emerald-500" : "bg-[#00B5D1]"}`}
+                              style={{ width: `${progressPct}%` }}
+                            />
+                          </div>
+                        </div>
+                      )
+                    })()}
+
+                    {cart.map((item) => (
                     <div key={item.id} className="flex gap-5 items-center pb-6 border-b border-black/[0.05] last:border-0 last:pb-0">
                       {item.slug ? (
                         <Link href={`/product/${item.slug}`} onClick={() => setIsModalOpen(false)} className="w-20 h-20 bg-secondary rounded-2xl overflow-hidden flex-shrink-0 border border-black/[0.03]">
@@ -229,7 +256,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                       </div>
                     </div>
                   ))
-                ) : (
+                </>
+                )}
+                {cart.length === 0 && (
                   <div className="py-16 text-center flex flex-col items-center gap-4">
                     <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center text-muted-foreground"><ShoppingBag size={24} /></div>
                     <p className="text-muted-foreground font-medium uppercase text-xs tracking-widest">Кошик порожній</p>
