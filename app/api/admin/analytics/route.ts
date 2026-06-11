@@ -15,14 +15,38 @@ export async function GET(_req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const now = new Date()
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
-  const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
+  const url = new URL(_req.url)
+  const fromParam = url.searchParams.get("from")
+  const toParam = url.searchParams.get("to")
 
-  // ---- 1. Profit by day (all orders this month, excluding refused) ----
+  const now = new Date()
+  let startDate: Date
+  let endDate: Date
+  let month: number
+  let year: number
+
+  if (fromParam && toParam) {
+    startDate = new Date(fromParam + "T00:00:00")
+    endDate = new Date(toParam + "T23:59:59")
+    month = startDate.getMonth()
+    year = startDate.getFullYear()
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+      startDate = new Date(now.getFullYear(), now.getMonth(), 1)
+      endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
+      month = now.getMonth()
+      year = now.getFullYear()
+    }
+  } else {
+    startDate = new Date(now.getFullYear(), now.getMonth(), 1)
+    endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
+    month = now.getMonth()
+    year = now.getFullYear()
+  }
+
+  // ---- 1. Profit by day (all orders in range, excluding refused) ----
   const monthOrders = await prisma.order.findMany({
     where: {
-      createdAt: { gte: startOfMonth, lte: endOfMonth },
+      createdAt: { gte: startDate, lte: endDate },
       status: { not: "Відмова" },
     },
     select: { total: true, createdAt: true, orderItems: true },
@@ -41,8 +65,9 @@ export async function GET(_req: Request) {
 
   // Fill gaps with zeros for days without orders
   const allDays: { date: string; total: number }[] = []
-  const d = new Date(startOfMonth)
-  const label = new Date(now)
+  const d = new Date(startDate)
+  const end = new Date(endDate)
+  const label = now > end ? end : now
   while (d <= label) {
     const key = d.toISOString().slice(0, 10)
     allDays.push({ date: key, total: profitByDayMap.get(key) || 0 })
@@ -113,7 +138,9 @@ export async function GET(_req: Request) {
     categories,
     totalRevenue,
     orderCount,
-    month: now.getMonth(),
-    year: now.getFullYear(),
+    month,
+    year,
+    dateFrom: startDate.toISOString().slice(0, 10),
+    dateTo: endDate.toISOString().slice(0, 10),
   })
 }
