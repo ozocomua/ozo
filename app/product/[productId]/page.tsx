@@ -37,27 +37,50 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     console.log("[generateMetadata] metaDescription:", metaDescription)
   }
 
+  // OpenGraph requires absolute image URLs
+  const ogImage = product.image
+    ? (product.image.startsWith("http")
+        ? product.image
+        : `${SITE_URL}${product.image.startsWith("/") ? "" : "/"}${product.image}`)
+    : undefined
+
   return {
     title: metaTitle || product.name,
     description: metaDescription || undefined,
     alternates: {
       canonical: `${SITE_URL}/product/${productId}`,
     },
-    openGraph: {
-      title: metaTitle || product.name,
-      description: metaDescription || undefined,
-      url: `${SITE_URL}/product/${productId}`,
-      siteName: "OZO",
-      images: product.image ? [{ url: product.image, width: 1200, height: 630 }] : [],
-      locale: "uk_UA",
-      type: "product",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: metaTitle || product.name,
-      description: metaDescription || undefined,
-      images: product.image ? [product.image] : [],
-    },
+    ...(ogImage ? {
+      openGraph: {
+        title: metaTitle || product.name,
+        description: metaDescription || undefined,
+        url: `${SITE_URL}/product/${productId}`,
+        siteName: "OZO",
+        images: [{ url: ogImage, width: 1200, height: 630 }],
+        locale: "uk_UA",
+        type: "product",
+      },
+      twitter: {
+        card: "summary_large_image" as const,
+        title: metaTitle || product.name,
+        description: metaDescription || undefined,
+        images: [ogImage],
+      },
+    } : {
+      openGraph: {
+        title: metaTitle || product.name,
+        description: metaDescription || undefined,
+        url: `${SITE_URL}/product/${productId}`,
+        siteName: "OZO",
+        locale: "uk_UA",
+        type: "product",
+      },
+      twitter: {
+        card: "summary_large_image" as const,
+        title: metaTitle || product.name,
+        description: metaDescription || undefined,
+      },
+    }),
   }
 }
 
