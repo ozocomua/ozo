@@ -89,7 +89,6 @@ export default function ProductGallery({
         </button>
 
         {images.length > 1 && (
-          {/* Desktop: vertical thumbs column. Mobile: horizontal scroll row. */}
           <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-y-auto md:overflow-x-hidden md:max-h-[500px] md:w-16 md:shrink-0">
             {images.map((src, i) => (
               <button
