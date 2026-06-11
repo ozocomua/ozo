@@ -185,8 +185,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
               </div>
 
               <div className="flex-1 overflow-y-auto pr-2 space-y-6 mb-8 custom-scrollbar">
-                {cart.length > 0 && (
-                  <>
+                {cart.length > 0
+                  ? (<React.Fragment>
                     {/* Free shipping progress bar */}
                     {(() => {
                       const FREE_SHIPPING_LIMIT = 2500
@@ -256,14 +256,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                       </div>
                     </div>
                   ))
-                </>
-                )}
-                {cart.length === 0 && (
-                  <div className="py-16 text-center flex flex-col items-center gap-4">
-                    <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center text-muted-foreground"><ShoppingBag size={24} /></div>
-                    <p className="text-muted-foreground font-medium uppercase text-xs tracking-widest">Кошик порожній</p>
-                  </div>
-                )}
+                </React.Fragment>
+                  )
+                  : (
+                    <div className="py-16 text-center flex flex-col items-center gap-4">
+                      <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center text-muted-foreground"><ShoppingBag size={24} /></div>
+                      <p className="text-muted-foreground font-medium uppercase text-xs tracking-widest">Кошик порожній</p>
+                    </div>
+                  )
+                }
               </div>
 
               {cart.length > 0 && (
