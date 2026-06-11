@@ -52,7 +52,7 @@ const statusLabelByValue = new Map<OrderStatus, string>(
 function formatDate(value: string): string {
   const d = new Date(value)
   if (Number.isNaN(d.getTime())) return value
-  return d.toLocaleString("ru-RU")
+  return d.toLocaleString("uk-UA", { timeZone: "Europe/Kyiv" })
 }
 
 function formatMoney(value: number): string {

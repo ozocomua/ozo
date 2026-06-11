@@ -65,7 +65,7 @@ export default function FinanceControlPage() {
   const addSale = () => {
     const item = products[0] ?? bundles[0]
     const next: Transaction[] = [{
-      id: Date.now(), timestamp: Date.now(), date: new Date().toLocaleDateString("ru-RU",{day:"2-digit",month:"2-digit"}),
+      id: Date.now(), timestamp: Date.now(), date: new Date().toLocaleDateString("uk-UA", { day: "2-digit", month: "2-digit", timeZone: "Europe/Kyiv" }),
       type: "sale", status: "transit", comment: "", amount: 0, category: "",
       items: [{ type: "product", itemId: item?.id ?? 0, qty: 1, customPrice: item?.sale ?? 0 }],
     }, ...transactions]
@@ -74,7 +74,7 @@ export default function FinanceControlPage() {
 
   const addExpense = () => {
     const next: Transaction[] = [{
-      id: Date.now()+1, timestamp: Date.now()+1, date: new Date().toLocaleDateString("ru-RU",{day:"2-digit",month:"2-digit"}),
+      id: Date.now()+1, timestamp: Date.now()+1, date: new Date().toLocaleDateString("uk-UA", { day: "2-digit", month: "2-digit", timeZone: "Europe/Kyiv" }),
       type: "expense", status: "paid", comment: "", amount: 0, category: EXPENSE_CATEGORIES[0], items: [],
     }, ...transactions]
     setTransactions(next); delayedSave(next)

@@ -79,7 +79,7 @@ async function handleShipped(orderId: number, chatId: string | number, messageId
 
   if (oldStatus !== "SHIPPED") {
     const linkTag = `[order:${order.id}]`
-    const today = new Date().toLocaleDateString("ru-RU", { day: "2-digit", month: "2-digit" })
+    const today = new Date().toLocaleDateString("uk-UA", { day: "2-digit", month: "2-digit", timeZone: "Europe/Kyiv" })
 
     const rawOrderItems = order.orderItems as
       | { productId: number; quantity: number }[]

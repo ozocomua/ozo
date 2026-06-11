@@ -109,7 +109,7 @@ export async function PATCH(
 
     if (nextStatus) {
       const linkTag = `[order:${order.id}]`
-      const today = new Date().toLocaleDateString("ru-RU", { day: "2-digit", month: "2-digit" })
+      const today = new Date().toLocaleDateString("uk-UA", { day: "2-digit", month: "2-digit", timeZone: "Europe/Kyiv" })
 
       if (nextStatus === "SHIPPED" && oldStatus !== "SHIPPED") {
         const rawOrderItems = order.orderItems as
