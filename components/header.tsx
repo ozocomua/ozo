@@ -24,6 +24,8 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
 
   const [searchQuery, setSearchQuery] = useState("")
   const [results, setResults] = useState<SearchProduct[]>([])
+  const [suggestion, setSuggestion] = useState<string | null>(null)
+  const [isFuzzy, setIsFuzzy] = useState(false)
   const [showDropdown, setShowDropdown] = useState(false)
   const [isSearchActive, setIsSearchActive] = useState(false)
 
@@ -35,6 +37,8 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
   const fetchResults = useCallback(async (q: string) => {
     if (q.length < 2) {
       setResults([])
+      setSuggestion(null)
+      setIsFuzzy(false)
       setShowDropdown(false)
       return
     }
@@ -42,9 +46,13 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
       const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`)
       const data = await res.json()
       setResults(data.products ?? [])
+      setSuggestion(data.suggestion ?? null)
+      setIsFuzzy(data.fuzzy ?? false)
       setShowDropdown(true)
     } catch {
       setResults([])
+      setSuggestion(null)
+      setIsFuzzy(false)
     }
   }, [])
 
@@ -128,7 +136,14 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
               )}
             </div>
             {showDropdown && (
-              <SearchDropdown results={results} searchQuery={searchQuery} onSelect={handleSelect} />
+              <SearchDropdown
+                results={results}
+                searchQuery={searchQuery}
+                suggestion={suggestion}
+                isFuzzy={isFuzzy}
+                onSelect={handleSelect}
+                onSuggestionClick={(s) => handleChange(s)}
+              />
             )}
           </div>
 
@@ -186,7 +201,14 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
                     style={{ fontSize: "16px" }}
                   />
                   {showDropdown && (
-                    <SearchDropdown results={results} searchQuery={searchQuery} onSelect={handleSelect} />
+                    <SearchDropdown
+                      results={results}
+                      searchQuery={searchQuery}
+                      suggestion={suggestion}
+                      isFuzzy={isFuzzy}
+                      onSelect={handleSelect}
+                      onSuggestionClick={(s) => handleChange(s)}
+                    />
                   )}
                 </div>
                 <button

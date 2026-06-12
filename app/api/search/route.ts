@@ -1,50 +1,25 @@
 import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { fuzzySearch } from "@/lib/search-service"
+import { cached } from "@/lib/cache"
+
+// Cache search results for 15 seconds (debounce-friendly, avoids DB spam)
+const SEARCH_CACHE_TTL = 15_000
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const q = (searchParams.get("q") ?? "").trim()
 
   if (q.length < 2) {
-    return NextResponse.json({ products: [] })
+    return NextResponse.json({ products: [], suggestion: null, fuzzy: false })
   }
 
   try {
-    // MySQL: no "mode" needed if collation is utf8mb4_general_ci (default)
-    // Separate image query to avoid sub-select issues
-    const products = await prisma.product.findMany({
-      where: {
-        isPublished: true,
-        OR: [
-          { name: { contains: q } },
-          { sku: { contains: q } },
-          { description: { contains: q } },
-        ],
-      },
-      take: 8,
-      orderBy: { name: "asc" },
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        price: true,
-        oldPrice: true,
-        images: { select: { url: true }, take: 1 },
-      },
-    })
+    const cacheKey = `search:${q.toLowerCase()}`
+    const result = await cached(cacheKey, SEARCH_CACHE_TTL, () => fuzzySearch(q))
 
-    return NextResponse.json({
-      products: products.map((p) => ({
-        id: p.id,
-        name: p.name,
-        slug: p.slug,
-        price: p.price,
-        oldPrice: p.oldPrice,
-        image: p.images[0]?.url ?? null,
-      })),
-    })
+    return NextResponse.json(result)
   } catch (error) {
     console.error("SEARCH_ERROR:", error)
-    return NextResponse.json({ products: [] })
+    return NextResponse.json({ products: [], suggestion: null, fuzzy: false })
   }
 }
