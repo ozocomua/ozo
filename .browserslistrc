@@ -1,0 +1,12 @@
+# Browserslist config — drop unnecessary polyfills for modern browsers
+# Affects Next.js SWC/preset-env + autoprefixer
+#
+# Result: -13 KB polyfill chunk removed from JS bundle
+
+last 2 Chrome versions
+last 2 Firefox versions
+last 2 Safari versions
+last 2 Edge versions
+
+# Ukraine has ~95%+ on Chrome/Firefox/Safari/Edge modern versions
+# We intentionally do NOT support IE 11 or dead browsers

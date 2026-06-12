@@ -37,8 +37,8 @@ export default function HomepageProducts({ initialProducts, total, pageSize = 12
         </h2>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+        {products.map((product, i) => (
+          <ProductCard key={product.id} product={product} index={i} />
         ))}
       </div>
 

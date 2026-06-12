@@ -9,9 +9,10 @@ import { stripHtml, truncate } from "@/lib/html-utils"
 
 interface ProductCardProps {
   product: StorefrontProduct
+  index?: number
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, index }: ProductCardProps) {
   const { addToCart } = useCart()
 
   const outOfStock = product.stock === 0
@@ -52,6 +53,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           alt={product.name}
           fill
           unoptimized
+          priority={index !== undefined && index < 4}
           className={`object-cover transition-transform duration-300 ${outOfStock ? "" : "group-hover:scale-105"}`}
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
         />

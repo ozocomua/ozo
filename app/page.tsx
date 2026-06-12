@@ -76,7 +76,7 @@ export default async function HomePage() {
                   alt={cat.name}
                   fill
                   unoptimized
-                  priority={i === 0}
+                  priority={i < 4}
                   className="object-cover transition-all duration-500 group-hover:scale-105"
                   sizes="(max-width: 768px) 50vw, 25vw"
                 />
@@ -113,7 +113,7 @@ export default async function HomePage() {
                   alt={cat.name}
                   fill
                   unoptimized
-                  priority={i === 0}
+                  priority={i < 4}
                   className="object-cover transition-all duration-500 group-hover:scale-105"
                   sizes="(max-width: 768px) 50vw, 25vw"
                 />
