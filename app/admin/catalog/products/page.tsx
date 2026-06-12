@@ -2,6 +2,7 @@ import { Plus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import prisma from "@/lib/prisma";
+import TogglePublishButton from "@/components/toggle-publish-button";
 
 export const dynamic = "force-dynamic";
 
@@ -12,8 +13,15 @@ export const metadata = {
 export default async function ProductsPage() {
   const products = await prisma.product.findMany({
     orderBy: { createdAt: "desc" },
-    include: {
-      brand: true,
+    select: {
+      id: true,
+      sku: true,
+      name: true,
+      price: true,
+      stock: true,
+      status: true,
+      isPublished: true,
+      brand: { select: { name: true } },
     },
   });
 
@@ -50,12 +58,13 @@ export default async function ProductsPage() {
               <th className="px-6 py-3">Ціна</th>
               <th className="px-6 py-3">Залишок</th>
               <th className="px-6 py-3">Статус</th>
+              <th className="px-6 py-3 w-14">Показ</th>
             </tr>
           </thead>
           <tbody>
             {products.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-4 text-center text-muted-foreground">
+                <td colSpan={7} className="px-6 py-4 text-center text-muted-foreground">
                   Немає доданих товарів
                 </td>
               </tr>
@@ -71,6 +80,9 @@ export default async function ProductsPage() {
                     <span className={`px-2 py-1 rounded text-xs ${product.status === 'PUBLISHED' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
                       {product.status === 'PUBLISHED' ? 'Опубліковано' : 'Чернетка'}
                     </span>
+                  </td>
+                  <td className="px-6 py-3">
+                    <TogglePublishButton productId={product.id} initialPublished={product.isPublished} />
                   </td>
                 </tr>
               ))
