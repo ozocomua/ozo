@@ -2,7 +2,7 @@ import { Plus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import prisma from "@/lib/prisma";
-import TogglePublishButton from "@/components/toggle-publish-button";
+import ProductRowActions from "@/components/product-row-actions";
 
 export const dynamic = "force-dynamic";
 
@@ -58,7 +58,7 @@ export default async function ProductsPage() {
               <th className="px-6 py-3">Ціна</th>
               <th className="px-6 py-3">Залишок</th>
               <th className="px-6 py-3">Статус</th>
-              <th className="px-6 py-3 w-14">Показ</th>
+              <th className="px-6 py-3 w-[140px]">Дії</th>
             </tr>
           </thead>
           <tbody>
@@ -70,7 +70,7 @@ export default async function ProductsPage() {
               </tr>
             ) : (
               products.map((product) => (
-                <tr key={product.id} className="border-b hover:bg-muted/50 cursor-pointer">
+                <tr key={product.id} className="border-b hover:bg-muted/50">
                   <td className="px-6 py-4 font-medium">{product.sku}</td>
                   <td className="px-6 py-4">{product.name}</td>
                   <td className="px-6 py-4">{product.brand?.name || "—"}</td>
@@ -81,8 +81,8 @@ export default async function ProductsPage() {
                       {product.status === 'PUBLISHED' ? 'Опубліковано' : 'Чернетка'}
                     </span>
                   </td>
-                  <td className="px-6 py-3">
-                    <TogglePublishButton productId={product.id} initialPublished={product.isPublished} />
+                  <td className="px-6 py-2">
+                    <ProductRowActions productId={product.id} initialPublished={product.isPublished} />
                   </td>
                 </tr>
               ))
