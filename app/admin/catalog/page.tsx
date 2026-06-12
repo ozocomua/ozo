@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Eye, EyeOff, Copy, Pencil, Trash2 } from "lucide-react"
+import { toast } from "sonner"
 
 type BrandRow = { id: number; name: string }
 type CategoryRow = { id: number; name: string; parentId: number | null }
@@ -126,6 +128,23 @@ export default function AdminCatalogProductsPage() {
     }
   }
 
+  async function togglePublish(id: number) {
+    setBusyById((s) => ({ ...s, [id]: true }))
+    try {
+      const res = await fetch(`/api/admin/catalog/products/${id}/toggle-visibility`, { method: "POST" })
+      const data = await res.json()
+      if (res.ok) {
+        setProducts((prev) =>
+          prev.map((p) => (p.id === id ? { ...p, isPublished: data.isPublished } : p))
+        )
+        toast.success(data.isPublished ? "Товар показано" : "Товар приховано")
+      }
+    } catch { /* ignore */ }
+    finally {
+      setBusyById((s) => ({ ...s, [id]: false }))
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -233,22 +252,32 @@ export default function AdminCatalogProductsPage() {
                   </div>
                 ) : null}
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" onClick={() => { window.location.href = window.location.pathname + `/products/${p.id}` }}>
-                    Редагувати
+                  <Button variant="outline" size="sm" onClick={() => { window.location.href = window.location.pathname + `/products/${p.id}` }}>
+                    <Pencil size={14} />
                   </Button>
                   <Button
                     variant="outline"
+                    size="sm"
                     onClick={() => void duplicateProduct(p.id)}
                     disabled={Boolean(busyById[p.id])}
                   >
-                    Дубль
+                    <Copy size={14} />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => void togglePublish(p.id)}
+                    disabled={Boolean(busyById[p.id])}
+                  >
+                    {p.isPublished ? <Eye size={14} className="text-green-600" /> : <EyeOff size={14} />}
                   </Button>
                   <Button
                     variant="destructive"
+                    size="sm"
                     onClick={() => void deleteProduct(p.id, p.name)}
                     disabled={Boolean(busyById[p.id])}
                   >
-                    Видалити
+                    <Trash2 size={14} />
                   </Button>
                 </div>
               </div>
@@ -296,7 +325,7 @@ export default function AdminCatalogProductsPage() {
                   <div className="text-sm text-muted-foreground">{stock}</div>
                   <div className="flex items-center justify-end gap-2">
                     <Button variant="outline" size="sm" onClick={() => { window.location.href = window.location.pathname + `/products/${p.id}` }}>
-                      Редагувати
+                      <Pencil size={14} />
                     </Button>
                     <Button
                       variant="outline"
@@ -304,7 +333,15 @@ export default function AdminCatalogProductsPage() {
                       onClick={() => void duplicateProduct(p.id)}
                       disabled={Boolean(busyById[p.id])}
                     >
-                      Дубль
+                      <Copy size={14} />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => void togglePublish(p.id)}
+                      disabled={Boolean(busyById[p.id])}
+                    >
+                      {p.isPublished ? <Eye size={14} className="text-green-600" /> : <EyeOff size={14} />}
                     </Button>
                     <Button
                       variant="destructive"
@@ -312,7 +349,7 @@ export default function AdminCatalogProductsPage() {
                       onClick={() => void deleteProduct(p.id, p.name)}
                       disabled={Boolean(busyById[p.id])}
                     >
-                      Видалити
+                      <Trash2 size={14} />
                     </Button>
                   </div>
                 </div>
