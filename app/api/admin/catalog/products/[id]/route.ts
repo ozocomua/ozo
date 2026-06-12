@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { requireAdminOr401 } from "@/lib/admin-api"
+import { deleteUploadsByUrls } from "@/lib/upload-cleanup"
 
 function parseId(raw: string): number | null {
   const id = Number(raw)
@@ -253,6 +254,15 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   }
 
   try {
+    // Fetch image URLs before deleting the product
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+      select: { images: { select: { url: true } } },
+    })
+    // Delete files from disk
+    if (product) {
+      await deleteUploadsByUrls(product.images.map((i) => i.url))
+    }
     await prisma.product.delete({ where: { id: productId } })
     return NextResponse.json({ ok: true })
   } catch {

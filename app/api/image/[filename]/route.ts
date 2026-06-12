@@ -31,10 +31,16 @@ export async function GET(_req: Request, { params }: { params: Promise<{ filenam
 
   try {
     const buf = await readFile(absPath)
+
+    // .webp files are immutable (content-addressed by UUID) → cache 1 year
+    const cacheControl = ext === ".webp"
+      ? "public, max-age=31536000, immutable"
+      : "public, max-age=0, must-revalidate"
+
     return new NextResponse(buf, {
       headers: {
         "Content-Type": contentType,
-        "Cache-Control": "public, max-age=0, must-revalidate",
+        "Cache-Control": cacheControl,
       },
     })
   } catch {

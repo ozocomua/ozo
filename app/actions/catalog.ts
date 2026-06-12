@@ -317,12 +317,15 @@ export async function deleteProduct(productId: number, confirmationSku: string) 
   try {
     const product = await prisma.product.findUnique({
       where: { id: productId },
-      select: { sku: true },
+      select: { sku: true, images: { select: { url: true } } },
     });
     if (!product) return { success: false, error: "Товар не найден" };
     if (product.sku !== confirmationSku) {
       return { success: false, error: "Неверный SKU подтверждения" };
     }
+    // Delete image files from disk before removing DB records
+    const { deleteUploadsByUrls } = await import("@/lib/upload-cleanup")
+    await deleteUploadsByUrls(product.images.map((i) => i.url))
     await prisma.product.delete({ where: { id: productId } });
     revalidatePath("/admin/catalog");
     revalidatePath("/");
