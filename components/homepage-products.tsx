@@ -36,7 +36,10 @@ export default function HomepageProducts({ initialProducts, total, pageSize = 12
           Всі продукти
         </h2>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+      <div
+        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"
+        style={{ contentVisibility: "auto", containIntrinsicSize: "auto 600px" }}
+      >
         {products.map((product, i) => (
           <ProductCard key={product.id} product={product} index={i} />
         ))}
