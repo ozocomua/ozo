@@ -1,9 +1,10 @@
 "use client"
 
-import { useState, useEffect, useCallback, use } from "react"
+import { useState, useEffect, useCallback, useMemo, use } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import { adminRootFromPathname } from "../../../admin-nav"
+import { Search, Loader2 } from "lucide-react"
 
 type OrderData = {
   id: number
@@ -34,15 +35,22 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
   const [order, setOrder] = useState<OrderData | null>(null)
   const [loading, setLoading] = useState(true)
 
+  // City search
   const [cityQuery, setCityQuery] = useState("")
   const [cities, setCities] = useState<CityOption[]>([])
   const [cityOpen, setCityOpen] = useState(false)
   const [selectedCity, setSelectedCity] = useState<CityOption | null>(null)
   const [cityLoading, setCityLoading] = useState(false)
+  // Track whether we've auto-selected the city from order
+  const [cityAutoFilled, setCityAutoFilled] = useState(false)
 
+  // Warehouse search
   const [warehouses, setWarehouses] = useState<WarehouseOption[]>([])
+  const [warehouseQuery, setWarehouseQuery] = useState("")
+  const [warehouseOpen, setWarehouseOpen] = useState(false)
   const [selectedWarehouse, setSelectedWarehouse] = useState<WarehouseOption | null>(null)
   const [warehouseLoading, setWarehouseLoading] = useState(false)
+  const [warehouseAutoFilled, setWarehouseAutoFilled] = useState(false)
 
   const [weight, setWeight] = useState(1)
   const [seats, setSeats] = useState(1)
@@ -55,6 +63,7 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
   const [ttnResult, setTtnResult] = useState<string | null>(null)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
+  // ── Load order ──────────────────────────────────────────────
   useEffect(() => {
     fetch(`/api/admin/orders?status=ALL`)
       .then((r) => r.json())
@@ -64,12 +73,48 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
         if (found) {
           setDeclaredValue(found.total)
           setRedeliveryString(String(found.total))
-          if (found.cityName) setCityQuery(found.cityName)
         }
       })
       .finally(() => setLoading(false))
   }, [orderId])
 
+  // ── Auto-select city from order ─────────────────────────────
+  useEffect(() => {
+    if (!order || cityAutoFilled) return
+    if (!order.cityRef || !order.cityName) return
+
+    // Auto-fill: set city directly from order data
+    const autoCity: CityOption = { name: order.cityName, ref: order.cityRef }
+    setSelectedCity(autoCity)
+    setCityQuery(order.cityName)
+    setCityAutoFilled(true)
+
+    // Immediately fetch warehouses for this city
+    setWarehouseLoading(true)
+    fetch(`/api/admin/novaposhta/warehouses?cityRef=${encodeURIComponent(order.cityRef)}`)
+      .then((r) => r.json())
+      .then((data) => {
+        const list = Array.isArray(data) ? (data as WarehouseOption[]) : []
+        setWarehouses(list)
+
+        // ── Auto-select warehouse from order ──────────────────
+        if (!warehouseAutoFilled && order.deliveryPoint) {
+          const clientPoint = order.deliveryPoint.toLowerCase().trim()
+          const match = list.find((w) =>
+            w.name.toLowerCase().includes(clientPoint) ||
+            clientPoint.includes(w.name.toLowerCase())
+          )
+          if (match) {
+            setSelectedWarehouse(match)
+            setWarehouseQuery(match.name)
+            setWarehouseAutoFilled(true)
+          }
+        }
+      })
+      .finally(() => setWarehouseLoading(false))
+  }, [order, cityAutoFilled, warehouseAutoFilled])
+
+  // ── City search (debounced) ─────────────────────────────────
   const searchCities = useCallback(async (q: string) => {
     if (q.length < 2) {
       setCities([])
@@ -79,36 +124,46 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
     try {
       const res = await fetch(`/api/admin/novaposhta/cities?search=${encodeURIComponent(q)}`)
       const data = await res.json()
-      setCities(Array.isArray(data) ? data : [])
+      setCities(Array.isArray(data) ? (data as CityOption[]) : [])
     } finally {
       setCityLoading(false)
     }
   }, [])
 
   useEffect(() => {
-    if (!cityQuery) {
-      setCities([])
-      return
-    }
+    if (!cityQuery || cityAutoFilled) return
     const t = setTimeout(() => searchCities(cityQuery), 300)
     return () => clearTimeout(t)
-  }, [cityQuery, searchCities])
+  }, [cityQuery, searchCities, cityAutoFilled])
 
+  // ── Select city ─────────────────────────────────────────────
   const selectCity = (c: CityOption) => {
     setSelectedCity(c)
     setCityQuery(c.name)
     setCityOpen(false)
     setCities([])
     setSelectedWarehouse(null)
+    setWarehouseQuery("")
     setWarehouses([])
+    setWarehouseAutoFilled(false)
 
     setWarehouseLoading(true)
     fetch(`/api/admin/novaposhta/warehouses?cityRef=${encodeURIComponent(c.ref)}`)
       .then((r) => r.json())
-      .then((data) => setWarehouses(Array.isArray(data) ? data : []))
+      .then((data) => setWarehouses(Array.isArray(data) ? (data as WarehouseOption[]) : []))
       .finally(() => setWarehouseLoading(false))
   }
 
+  // ── Client-side warehouse filter ────────────────────────────
+  const filteredWarehouses = useMemo(() => {
+    if (!warehouseQuery.trim()) return warehouses.slice(0, 30)
+    const q = warehouseQuery.toLowerCase().trim()
+    return warehouses
+      .filter((w) => w.name.toLowerCase().includes(q))
+      .slice(0, 50)
+  }, [warehouses, warehouseQuery])
+
+  // ── Submit ──────────────────────────────────────────────────
   const handleSubmit = async () => {
     if (!selectedCity || !selectedWarehouse || !order) return
     setSubmitting(true)
@@ -183,6 +238,7 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
       </div>
 
       <div className="bg-white border rounded-2xl p-6 space-y-6">
+        {/* ── Дані отримувача ──────────────────────────────── */}
         <div>
           <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">
             Дані отримувача
@@ -199,13 +255,13 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
             {order.cityName && (
               <div>
                 <span className="text-muted-foreground">Місто клієнта:</span>{" "}
-                <span className="font-medium">{order.cityName}</span>
+                <span className="font-medium text-green-700">{order.cityName}</span>
               </div>
             )}
             {order.deliveryPoint && (
               <div>
                 <span className="text-muted-foreground">Відділення клієнта:</span>{" "}
-                <span className="font-medium">{order.deliveryPoint}</span>
+                <span className="font-medium text-green-700">{order.deliveryPoint}</span>
               </div>
             )}
             {order.deliveryType === "courier" && order.courierHouse && (
@@ -224,33 +280,48 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
           </div>
         </div>
 
+        {/* ── Адреса доставки НП ───────────────────────────── */}
         <div className="border-t pt-6">
           <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">
             Адреса доставки НП
           </h2>
 
+          {/* Auto-fill badge */}
+          {cityAutoFilled && selectedCity && (
+            <div className="bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 text-xs text-emerald-700 mb-4">
+              ✅ Місто та відділення підставлено автоматично із замовлення. За потреби — змініть.
+            </div>
+          )}
+
           <div className="space-y-4">
+            {/* City search */}
             <div className="relative">
               <label className="text-xs font-bold text-slate-600 uppercase block mb-1">
                 Місто
               </label>
-              <input
-                type="text"
-                value={cityQuery}
-                onChange={(e) => {
-                  setCityQuery(e.target.value)
-                  setCityOpen(true)
-                  setSelectedCity(null)
-                  setWarehouses([])
-                  setSelectedWarehouse(null)
-                }}
-                onFocus={() => cities.length > 0 && setCityOpen(true)}
-                placeholder="Введіть місто..."
-                className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-blue-500 transition-colors"
-              />
-              {cityLoading && (
-                <div className="absolute right-3 top-9 text-[10px] text-slate-400">Пошук...</div>
-              )}
+              <div className="relative">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" />
+                <input
+                  type="text"
+                  value={cityQuery}
+                  onChange={(e) => {
+                    setCityQuery(e.target.value)
+                    setCityOpen(true)
+                    setCityAutoFilled(false)
+                    setSelectedCity(null)
+                    setWarehouses([])
+                    setSelectedWarehouse(null)
+                    setWarehouseQuery("")
+                    setWarehouseAutoFilled(false)
+                  }}
+                  onFocus={() => setCityOpen(true)}
+                  placeholder="Введіть місто..."
+                  className="w-full border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm outline-none focus:border-blue-500 transition-colors"
+                />
+                {cityLoading && (
+                  <Loader2 size={14} className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-slate-300" />
+                )}
+              </div>
               {cityOpen && cities.length > 0 && (
                 <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl z-50 max-h-60 overflow-y-auto">
                   {cities.map((c) => (
@@ -267,35 +338,92 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
               )}
             </div>
 
-            <div>
+            {/* Warehouse search (replaces <select>) */}
+            <div className="relative">
               <label className="text-xs font-bold text-slate-600 uppercase block mb-1">
                 Відділення
               </label>
-              {warehouseLoading ? (
-                <p className="text-[10px] text-slate-400 py-2">Завантаження відділень...</p>
-              ) : (
-                <select
-                  value={selectedWarehouse?.ref ?? ""}
+              <div className="relative">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" />
+                <input
+                  type="text"
+                  value={warehouseQuery}
                   onChange={(e) => {
-                    const found = warehouses.find((w) => w.ref === e.target.value)
-                    setSelectedWarehouse(found ?? null)
+                    setWarehouseQuery(e.target.value)
+                    setWarehouseOpen(true)
+                    setWarehouseAutoFilled(false)
+                    setSelectedWarehouse(null)
                   }}
-                  className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-blue-500 transition-colors"
-                >
-                  <option value="">
-                    {selectedCity ? "Оберіть відділення" : "Спочатку оберіть місто"}
-                  </option>
-                  {warehouses.map((w) => (
-                    <option key={w.ref} value={w.ref}>
+                  onFocus={() => setWarehouseOpen(true)}
+                  onBlur={() => setTimeout(() => setWarehouseOpen(false), 200)}
+                  disabled={!selectedCity}
+                  placeholder={
+                    !selectedCity
+                      ? "Спочатку оберіть місто"
+                      : warehouseLoading
+                      ? "Завантаження відділень..."
+                      : "Почніть вводити номер або назву відділення..."
+                  }
+                  className="w-full border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm outline-none focus:border-blue-500 transition-colors disabled:bg-slate-50 disabled:text-slate-400"
+                />
+                {warehouseLoading && (
+                  <Loader2 size={14} className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-slate-300" />
+                )}
+                {selectedWarehouse && (
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-emerald-600 font-bold">
+                    ✓
+                  </span>
+                )}
+              </div>
+              {warehouseOpen && filteredWarehouses.length > 0 && (
+                <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl z-50 max-h-60 overflow-y-auto">
+                  {filteredWarehouses.map((w) => (
+                    <button
+                      key={w.ref}
+                      type="button"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => {
+                        setSelectedWarehouse(w)
+                        setWarehouseQuery(w.name)
+                        setWarehouseOpen(false)
+                      }}
+                      className="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 transition-colors first:rounded-t-xl last:rounded-b-xl"
+                    >
                       {w.name}
-                    </option>
+                    </button>
                   ))}
-                </select>
+                </div>
+              )}
+              {warehouseOpen && !warehouseLoading && filteredWarehouses.length === 0 && selectedCity && warehouseQuery.trim() && (
+                <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl z-50 p-4 text-center">
+                  <p className="text-xs text-slate-400">Нічого не знайдено за «{warehouseQuery}»</p>
+                </div>
+              )}
+              {/* Show first 10 when no query */}
+              {warehouseOpen && !warehouseQuery.trim() && warehouses.length > 0 && !warehouseLoading && filteredWarehouses.length > 0 && (
+                <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl z-50 max-h-60 overflow-y-auto">
+                  {filteredWarehouses.map((w) => (
+                    <button
+                      key={w.ref}
+                      type="button"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => {
+                        setSelectedWarehouse(w)
+                        setWarehouseQuery(w.name)
+                        setWarehouseOpen(false)
+                      }}
+                      className="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 transition-colors first:rounded-t-xl last:rounded-b-xl"
+                    >
+                      {w.name}
+                    </button>
+                  ))}
+                </div>
               )}
             </div>
           </div>
         </div>
 
+        {/* ── Параметри вантажу ────────────────────────────── */}
         <div className="border-t pt-6">
           <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">
             Параметри вантажу
