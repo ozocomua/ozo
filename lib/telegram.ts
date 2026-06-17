@@ -80,25 +80,28 @@ export async function sendTtnNotification(order: {
         const prods = await import("@/lib/prisma").then((m) =>
           m.default.product.findMany({
             where: { id: { in: pids } },
-            select: { id: true, name: true },
+            select: { id: true, name: true, price: true },
           })
         )
         const nameById = new Map(prods.map((p) => [p.id, p.name]))
+        const productPriceById = new Map(prods.map((p) => [p.id, p.price]))
 
-        // Fetch variant sizes for items that have variantId
+        // Fetch variant sizes AND prices for items that have variantId
         const variantIds = entries
           .map((e) => e.variantId)
           .filter((v): v is number => v !== null && v !== undefined && Number.isFinite(v) && v > 0)
         const sizeById = new Map<number, string>()
+        const variantPriceById = new Map<number, number>()
         if (variantIds.length > 0) {
           const variants = await import("@/lib/prisma").then((m) =>
             m.default.productVariant.findMany({
               where: { id: { in: variantIds } },
-              select: { id: true, size: true, volume: true },
+              select: { id: true, size: true, volume: true, priceRetail: true },
             })
           )
           for (const v of variants) {
             sizeById.set(v.id, v.size || v.volume || "")
+            variantPriceById.set(v.id, v.priceRetail)
           }
         }
 
@@ -109,7 +112,12 @@ export async function sendTtnNotification(order: {
           const name = escapeMd(rawName)
           const sizeStr = e.variantId ? (sizeById.get(e.variantId) || "") : ""
           const fullName = sizeStr ? `${name} \\(${escapeMd(sizeStr)}\\)` : name
-          return `\\- ${fullName} \\— x${qty}`
+          // Price: variant price takes priority, fallback to product price
+          const unitPrice = e.variantId
+            ? (variantPriceById.get(e.variantId) ?? productPriceById.get(pid) ?? 0)
+            : (productPriceById.get(pid) ?? 0)
+          const lineTotal = Math.round(unitPrice * qty)
+          return `\\- ${fullName} \\— x${qty} \\(${lineTotal} ₴\\)`
         })
         productsList = lines.join("\n")
       } catch {
@@ -132,7 +140,7 @@ export async function sendTtnNotification(order: {
     `• *ТТН:* \`${order.ttn}\``,
     `• *Клієнт:* ${escapeMd(clientName)} \\(${escapeMd(phone)}\\)`,
     ``,
-    `📋 *СКЛАД ЗАМОВЛЕННЯ ДЛЯ ФАСОВКИ:*`,
+    `📋 *СКЛАД ЗАМОВЛЕННЯ:*`,
     productsList,
     ``,
     `💵 *Сума до сплати:* ${order.total} грн \\(${escapeMd(paymentLabel)}\\)`,
