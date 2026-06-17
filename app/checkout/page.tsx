@@ -4,7 +4,7 @@ import { useCart } from "@/lib/cart-context"
 import { ArrowLeft, MapPin, Box, Home, Check, CreditCard, Wallet, Loader2, Trash2 } from "lucide-react"
 import Link from "next/link"
 import { maskPhoneInput, stripPhoneFormatting, isValidPhone } from "@/lib/phone-format"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import CodWarningModal from "@/components/cod-warning-modal"
 import CallbackWidget from "@/components/ui/callbackwidget"
 import { toast } from "sonner"
@@ -82,6 +82,8 @@ export default function CheckoutPage() {
     const isCourier = deliveryType === 'courier'
     
     try {
+      // Always fetch ALL warehouses without FindByString limit — we filter locally
+      // NovaPoshta API doesn't handle numeric search ("70") well
       const res = await fetch('/api/novaposhta', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -89,8 +91,8 @@ export default function CheckoutPage() {
           modelName: 'Address',
           calledMethod: isCourier ? 'getStreet' : 'getWarehouses',
           methodProperties: isCourier 
-            ? { CityRef: selectedCity.ref, FindByString: query, Limit: "30" }
-            : { CityRef: selectedCity.ref, FindByString: query, Limit: "500" } 
+            ? { CityRef: selectedCity.ref, FindByString: query || "", Limit: "30" }
+            : { CityRef: selectedCity.ref, Limit: "500" } 
         })
       })
       const data = await res.json()
@@ -103,7 +105,7 @@ export default function CheckoutPage() {
                                item.TypeOfWarehouse === "f6552995-1f93-11e2-896d-0026b97ed48a";
             return deliveryType === 'postomat' ? isPostomat : !isPostomat;
           })
-          setDeliveryPoints(filtered.slice(0, 100))
+          setDeliveryPoints(filtered)
         }
       }
     } catch (err) { console.error(err) }
@@ -119,11 +121,24 @@ export default function CheckoutPage() {
     }
   }, [cityInput, showCities])
 
+  // Debounced fetch for warehouses/points
   useEffect(() => {
-    if (selectedCity.ref) {
-      fetchPoints(pointInput)
-    }
+    if (!selectedCity.ref) return
+    const timer = setTimeout(() => fetchPoints(pointInput), 350)
+    return () => clearTimeout(timer)
   }, [selectedCity.ref, deliveryType, pointInput])
+
+  // Client-side filter: search locally by typed query (handles "70", "центральна", etc.)
+  const filteredPoints = useMemo(() => {
+    if (!pointInput.trim()) return deliveryPoints.slice(0, 20)
+    const q = pointInput.toLowerCase().trim()
+    return deliveryPoints
+      .filter((p: any) => {
+        const desc = (p.Description || p.Present || "").toLowerCase()
+        return desc.includes(q)
+      })
+      .slice(0, 30)
+  }, [deliveryPoints, pointInput])
 
   // ОНОВЛЕНА ЛОГІКА ТЕЛЕФОНУ
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -332,9 +347,9 @@ export default function CheckoutPage() {
                   />
                   {isLoadingPoints && <Loader2 className="absolute right-5 top-7 animate-spin opacity-20" size={18} />}
                 </div>
-                {showPoints && deliveryPoints.length > 0 && (
+                {showPoints && filteredPoints.length > 0 && (
                   <div className="absolute top-full left-0 right-0 bg-white shadow-2xl z-50 rounded-2xl mt-1 max-h-60 overflow-y-auto border border-black/5">
-                    {deliveryPoints.map(p => (
+                    {filteredPoints.map(p => (
                       <div key={p.Ref} className="p-4 hover:bg-gradient-to-r hover:from-[#0B53A4] hover:to-[#00B5D1] hover:text-white cursor-pointer text-sm border-b border-black/5 last:border-0"
                         onClick={() => { setSelectedPoint(p.Description || p.Present); setPointInput(p.Description || p.Present); setShowPoints(false); }}>
                         <span className="truncate block">{p.Description || p.Present}</span>
