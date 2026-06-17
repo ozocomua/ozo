@@ -3,6 +3,7 @@
 import { useCart } from "@/lib/cart-context"
 import { ArrowLeft, MapPin, Box, Home, Check, CreditCard, Wallet, Loader2, Trash2 } from "lucide-react"
 import Link from "next/link"
+import { maskPhoneInput, stripPhoneFormatting, isValidPhone } from "@/lib/phone-format"
 import { useState, useEffect } from "react"
 import CodWarningModal from "@/components/cod-warning-modal"
 import CallbackWidget from "@/components/ui/callbackwidget"
@@ -126,18 +127,8 @@ export default function CheckoutPage() {
 
   // ОНОВЛЕНА ЛОГІКА ТЕЛЕФОНУ
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value;
-
-    // Гарантуємо, що номер починається з +380
-    if (!value.startsWith('+380')) {
-      value = '+380';
-    }
-
-    // Залишаємо тільки плюс і цифри, обмежуємо до 13 символів
-    const cleaned = '+' + value.slice(1).replace(/\D/g, '');
-    if (cleaned.length <= 13) {
-      setFormData({ ...formData, phone: cleaned });
-    }
+    const { masked } = maskPhoneInput(e.target.value)
+    setFormData({ ...formData, phone: masked })
   }
 
   const handleSubmit = async () => {
@@ -153,7 +144,7 @@ export default function CheckoutPage() {
     }
 
     const orderData = {
-      phone: formData.phone,
+      phone: stripPhoneFormatting(formData.phone),
       firstName: formData.firstName,
       lastName: formData.lastName,
       middleName: formData.middleName,
@@ -424,7 +415,7 @@ export default function CheckoutPage() {
                   disabled={
                     isSubmitting ||
                     !selectedPoint ||
-                    formData.phone.length < 13 ||
+                    !isValidPhone(formData.phone) ||
                     !formData.firstName.trim() ||
                     !formData.lastName.trim()
                   }
@@ -496,7 +487,7 @@ export default function CheckoutPage() {
                 disabled={
                   isSubmitting ||
                   !selectedPoint ||
-                  formData.phone.length < 13 ||
+                  !isValidPhone(formData.phone) ||
                   !formData.firstName.trim() ||
                   !formData.lastName.trim()
                 }

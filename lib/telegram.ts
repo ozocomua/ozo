@@ -1,4 +1,5 @@
 import { logger } from "@/lib/logger"
+import { formatPhone } from "@/lib/phone-format"
 
 export interface TelegramOrderPayload {
   orderNumber: string
@@ -61,7 +62,7 @@ export async function sendTtnNotification(order: {
   }
 
   const clientName = order.user.name || "Не вказано"
-  const phone = order.user.phone || "Не вказано"
+  const phone = formatPhone(order.user.phone)
 
   const paymentLabelMap: Record<string, string> = { card: "Оплачено карткою", cod: "Накладений платіж" }
   const paymentLabel = paymentLabelMap[order.paymentType] || order.paymentType
@@ -209,7 +210,7 @@ export async function sendOrderNotification(order: {
   }
 
   const clientName = order.user.name || "Не вказано"
-  const phone = order.user.phone || "Не вказано"
+  const phone = formatPhone(order.user.phone)
   const city = order.cityName || ""
   const warehouse = order.deliveryPoint || ""
   const deliveryParts = [city, warehouse].filter(Boolean)
@@ -225,13 +226,12 @@ export async function sendOrderNotification(order: {
     : ""
 
   const paymentText = paymentLabel(order.paymentType)
-  const cleanPhone = (order.user.phone || "").replace(/\D/g, "")
 
   const text = [
     `🔥 <b>Нове замовлення №${order.orderNumber}</b>`,
     ` `,
     `👤 <b>Клієнт:</b> ${clientName}`,
-    `📱 <b>Телефон:</b> +${cleanPhone}`,
+    `📱 <b>Телефон:</b> ${phone}`,
     `📵 <b>Дзвонити?:</b> ${order.noCall ? "❌ Ні" : "✅ Так"}`,
     `📍 <b>Доставка:</b> ${delivery}`,
     `💳 <b>Оплата:</b> ${paymentText}`,
