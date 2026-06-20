@@ -92,6 +92,21 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
     setTimeout(() => mobileInputRef.current?.focus(), 50)
   }
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden"
+      document.body.style.touchAction = "none"
+    } else {
+      document.body.style.overflow = ""
+      document.body.style.touchAction = ""
+    }
+    return () => {
+      document.body.style.overflow = ""
+      document.body.style.touchAction = ""
+    }
+  }, [menuOpen])
+
   return (
     <>
       <header
@@ -249,8 +264,11 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
 
       {menuOpen && (
         <div
-          className="fixed inset-0 z-40 bg-background flex flex-col animate-in fade-in duration-200"
-          style={{ paddingTop: "calc(64px + max(16px, env(safe-area-inset-top)))" }}
+          className="fixed inset-0 z-40 bg-background flex flex-col overflow-y-auto animate-in fade-in duration-200"
+          style={{
+            paddingTop: "calc(64px + max(16px, env(safe-area-inset-top)))",
+            overscrollBehavior: "contain",
+          }}
         >
           <nav className="flex flex-col px-4 pt-6 gap-1">
             <p className="text-xs tracking-widest text-muted-foreground uppercase mb-4 font-bold">
