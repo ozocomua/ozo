@@ -371,7 +371,7 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
             <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Назва</div>
-            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Наприклад: Shampoo Star" />
+            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Наприклад: Напувалка ніпельна" />
           </div>
           <div className="space-y-2">
             <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Кастомный URL (Slug)</div>

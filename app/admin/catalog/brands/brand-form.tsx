@@ -127,7 +127,7 @@ export function BrandForm({ mode, brandId }: { mode: "create" | "edit"; brandId?
               setSlugTouched(true)
               setSlug(e.target.value)
             }}
-            placeholder="koch-chemie"
+            placeholder="nasha-marka"
           />
         </div>
       </div>

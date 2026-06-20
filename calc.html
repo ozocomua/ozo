@@ -46,7 +46,7 @@
 
         <main class="lg:col-span-9 space-y-8">
             <section>
-                <h2 class="text-xl font-black text-slate-800 mb-4 px-2">Средства и Автохимия</h2>
+                <h2 class="text-xl font-black text-slate-800 mb-4 px-2">Товари</h2>
                 <div class="bg-white rounded-[2rem] shadow-sm border border-slate-200 overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left">
@@ -97,7 +97,7 @@
 
             <div class="bg-slate-900 rounded-[2.5rem] p-8 text-white flex flex-col md:flex-row justify-between items-center shadow-2xl gap-8">
                 <div>
-                    <p class="text-slate-400 text-[10px] uppercase tracking-widest font-black opacity-60 text-center md:text-left">Средняя прибыль (химия)</p>
+                    <p class="text-slate-400 text-[10px] uppercase tracking-widest font-black opacity-60 text-center md:text-left">Середній прибуток</p>
                     <p id="totalProfitSum" class="text-5xl font-black text-blue-400 mt-2 text-center md:text-left">0 ₴</p>
                 </div>
                 <div class="flex-1 flex justify-around w-full">
@@ -261,7 +261,7 @@
         save();
     }
 
-    // Расчет себестоимости набора: Химия (только жидкость) + Допы набора
+    // Розрахунок собівартості набору: Товари + Доповнення
     function getBundleCost(b) {
         let total = 0;
         // 1. Добавляем чистую стоимость химии (без их собственной тары)
