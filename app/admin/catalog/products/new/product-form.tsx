@@ -51,6 +51,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { NativeMediaUploader } from "@/components/catalog/media-uploader"
 import { createProduct, deleteProduct, duplicateProduct, updateProduct, generateSku } from "@/app/actions/catalog";
+import { slugify } from "@/lib/slug";
 
 const RichTextEditor = dynamic(() => import("@/components/rich-text-editor"), {
   ssr: false,
@@ -98,6 +99,8 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
   );
   const allProducts = allProductsProp || [];
 
+  const [seoGenerated, setSeoGenerated] = useState(false);
+
   const form = useForm<z.infer<typeof productSchema>>({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -134,6 +137,12 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
       })
     }
   }, [initialData, form])
+
+  // Reset SEO generated state when name changes (so button reverts)
+  const watchedName = form.watch("name")
+  useEffect(() => {
+    setSeoGenerated(false)
+  }, [watchedName])
 
   const onInvalid = () => {
     const errors = form.formState.errors
@@ -369,14 +378,17 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
                       toast.error("Спочатку заповніть назву товару")
                       return
                     }
+                    const generatedSlug = slugify(name)
+                    form.setValue("slug", generatedSlug, { shouldDirty: true })
                     form.setValue("metaTitle", `${name} | OZO`, { shouldDirty: true })
                     form.setValue("metaDescription", desc.slice(0, 150), { shouldDirty: true })
                     form.setValue("seoAlt", name, { shouldDirty: true })
-                    toast.success("SEO згенеровано з назви та опису")
+                    setSeoGenerated(true)
+                    toast.success(`SEO згенеровано: slug → ${generatedSlug}`, { duration: 4000 })
                   }}
                 >
                   <Sparkles size={13} />
-                  Згенерувати SEO
+                  {seoGenerated ? "Оновлено ✓" : "Згенерувати SEO"}
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground -mt-2">Заповніть або залиште порожніми — заповниться автоматично з назви та опису</p>
@@ -384,7 +396,18 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
               <FormField control={form.control} name="slug" render={({ field }) => (
                 <FormItem>
                   <FormLabel>URL (Slug)</FormLabel>
-                  <FormControl><Input placeholder="наприклад: soft99-glaco-30ml (якщо залишити порожнім, спрацює автогенерація)" {...field} /></FormControl>
+                  <div className="relative">
+                    <FormControl>
+                      <Input
+                        placeholder="Автоматично з назви"
+                        className={seoGenerated && field.value ? "border-l-4 border-l-emerald-400 pl-[calc(1rem-4px)]" : ""}
+                        {...field}
+                      />
+                    </FormControl>
+                    {seoGenerated && field.value && (
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-500 text-xs font-bold">✓</span>
+                    )}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )} />
@@ -392,7 +415,18 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
               <FormField control={form.control} name="metaTitle" render={({ field }) => (
                 <FormItem>
                   <FormLabel>Meta Title</FormLabel>
-                  <FormControl><Input placeholder="Автоматично: [Назва] | OZO" {...field} /></FormControl>
+                  <div className="relative">
+                    <FormControl>
+                      <Input
+                        placeholder="Автоматично: [Назва] | OZO"
+                        className={seoGenerated && field.value ? "border-l-4 border-l-emerald-400 pl-[calc(1rem-4px)]" : ""}
+                        {...field}
+                      />
+                    </FormControl>
+                    {seoGenerated && field.value && (
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-500 text-xs font-bold">✓</span>
+                    )}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )} />
@@ -400,9 +434,18 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
               <FormField control={form.control} name="metaDescription" render={({ field }) => (
                 <FormItem>
                   <FormLabel>Meta Description</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Автоматично: перші 150 символів опису" className="resize-none" {...field} />
-                  </FormControl>
+                  <div className="relative">
+                    <FormControl>
+                      <Textarea
+                        placeholder="Автоматично: перші 150 символів опису"
+                        className={`resize-none ${seoGenerated && field.value ? "border-l-4 border-l-emerald-400 pl-[calc(1rem-4px)]" : ""}`}
+                        {...field}
+                      />
+                    </FormControl>
+                    {seoGenerated && field.value && (
+                      <span className="absolute right-3 top-3 text-emerald-500 text-xs font-bold">✓</span>
+                    )}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )} />
@@ -410,7 +453,18 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
               <FormField control={form.control} name="seoAlt" render={({ field }) => (
                 <FormItem>
                   <FormLabel>SEO Alt (для зображень)</FormLabel>
-                  <FormControl><Input placeholder="Автоматично: назва товару" {...field} /></FormControl>
+                  <div className="relative">
+                    <FormControl>
+                      <Input
+                        placeholder="Автоматично: назва товару"
+                        className={seoGenerated && field.value ? "border-l-4 border-l-emerald-400 pl-[calc(1rem-4px)]" : ""}
+                        {...field}
+                      />
+                    </FormControl>
+                    {seoGenerated && field.value && (
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-500 text-xs font-bold">✓</span>
+                    )}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )} />
