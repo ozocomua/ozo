@@ -337,6 +337,36 @@ export async function deleteProduct(productId: number, confirmationSku: string) 
   }
 }
 
+export async function regenerateAllSeo(): Promise<{ success: boolean; count: number; error?: string }> {
+  try {
+    const products = await prisma.product.findMany({
+      select: { id: true, name: true, description: true },
+    })
+
+    let count = 0
+    for (const p of products) {
+      const slug = slugify(p.name)
+      const metaTitle = `${p.name.trim()} | OZO`
+      const metaDescription = (p.description || "").slice(0, 150)
+      const seoAlt = p.name.trim()
+
+      await prisma.product.update({
+        where: { id: p.id },
+        data: { slug, metaTitle, metaDescription, seoAlt },
+      })
+      count++
+    }
+
+    revalidatePath("/admin/catalog")
+    revalidatePath("/")
+    revalidatePath("/catalog")
+    return { success: true, count }
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : "Ошибка"
+    return { success: false, count: 0, error: message }
+  }
+}
+
 export async function createReview(data: {
   productId?: number;
   rating: number;
