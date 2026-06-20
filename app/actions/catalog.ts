@@ -381,14 +381,19 @@ export async function createReview(data: {
     if (!data.userName.trim()) {
       return { success: false, error: "Ім'я обов'язкове" };
     }
+    if (data.userName.trim().length > 100) {
+      return { success: false, error: "Ім'я занадто довге (максимум 100 символів)" };
+    }
     const isStore = data.isStoreReview === true;
     if (!isStore && !data.productId) {
       return { success: false, error: "Не вказано товар" };
     }
+    // Truncate comment to 2000 chars to match DB column
+    const safeComment = (data.comment?.trim() || "").slice(0, 2000) || null
     await prisma.review.create({
       data: {
         rating: data.rating,
-        comment: data.comment || null,
+        comment: safeComment,
         userName: data.userName.trim(),
         productId: isStore ? null : data.productId!,
         isStoreReview: isStore,
@@ -398,8 +403,13 @@ export async function createReview(data: {
     revalidatePath("/reviews");
     return { success: true };
   } catch (e: unknown) {
-    const message = e instanceof Error ? e.message : "Ошибка";
-    return { success: false, error: message };
+    console.error("createReview error:", e)
+    const message = e instanceof Error ? e.message : "Невідома помилка";
+    // Prisma errors contain internal details — return clean message to user
+    if (message.includes("too long") || message.includes("column")) {
+      return { success: false, error: "Текст відгуку занадто довгий. Спробуйте скоротити." };
+    }
+    return { success: false, error: "Не вдалося зберегти відгук. Спробуйте ще раз." };
   }
 }
 

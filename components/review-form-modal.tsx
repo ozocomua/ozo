@@ -80,9 +80,13 @@ export function ReviewFormModal({ open, onOpenChange, productId }: ReviewFormMod
               placeholder="Ваш відгук (необов'язково)"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
+              maxLength={2000}
               rows={4}
               className="resize-none"
             />
+            <p className="text-[10px] text-muted-foreground text-right mt-1">
+              {comment.length} / 2000
+            </p>
           </div>
           <Button
             onClick={handleSubmit}

@@ -148,7 +148,7 @@ model ProductVariant {
 model Review {
   id           String   @id @default(cuid())
   rating       Int
-  comment      String?
+  comment      String?  @db.Text
   userName     String
   productId    Int?
   isStoreReview Boolean  @default(false)
