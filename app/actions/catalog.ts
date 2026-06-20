@@ -405,6 +405,18 @@ export async function createReview(data: {
   } catch (e: unknown) {
     console.error("❌ createReview error:", e)
     const message = e instanceof Error ? e.message : "Невідома помилка";
+    const stack = e instanceof Error ? e.stack : undefined
+
+    // Send error to Telegram
+    import("@/lib/telegram").then(({ sendErrorToTelegram }) =>
+      sendErrorToTelegram({
+        source: "createReview",
+        message,
+        userName: data.userName?.trim() || undefined,
+        stack,
+      }).catch(() => {})
+    )
+
     // Only mask actual "Data too long" errors
     if (message.includes("Data too long") || message.includes("too long for column")) {
       return { success: false, error: "Текст відгуку занадто довгий. Спробуйте скоротити." };

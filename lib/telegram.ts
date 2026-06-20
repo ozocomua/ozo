@@ -299,3 +299,62 @@ export async function sendOrderNotification(order: {
     })
   }
 }
+
+/**
+ * Відправляє в Telegram сповіщення про будь-яку помилку на сайті.
+ */
+export async function sendErrorToTelegram(error: {
+  source: string       // e.g. "createReview", "checkout"
+  message: string      // error message
+  userName?: string    // user name if available
+  phone?: string       // user phone if available
+  stack?: string       // stack trace
+}) {
+  const botToken = process.env.TELEGRAM_BOT_TOKEN
+  const adminChatId = process.env.TELEGRAM_ADMIN_TOKEN
+
+  if (!botToken || !adminChatId) {
+    console.warn("[telegram] sendErrorToTelegram: TELEGRAM_BOT_TOKEN or TELEGRAM_ADMIN_TOKEN not set")
+    return
+  }
+
+  const now = new Date().toLocaleString("uk-UA", {
+    timeZone: "Europe/Kyiv",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  })
+
+  const lines = [
+    "🚨 <b>ПОМИЛКА НА САЙТІ</b>",
+    "",
+    `<b>Джерело:</b> ${error.source}`,
+    `<b>Помилка:</b> ${error.message.slice(0, 500)}`,
+  ]
+
+  if (error.userName) lines.push(`<b>Користувач:</b> ${error.userName}`)
+  if (error.phone) lines.push(`<b>Телефон:</b> ${formatPhone(error.phone)}`)
+  if (error.stack) lines.push(`<pre>${error.stack.slice(0, 800)}</pre>`)
+
+  lines.push("", `🕐 ${now}`)
+
+  const text = lines.join("\n")
+
+  try {
+    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: adminChatId,
+        text,
+        parse_mode: "HTML",
+      }),
+    })
+  } catch (err) {
+    logger.error("[telegram] sendErrorToTelegram failed", {
+      error: err instanceof Error ? err.message : String(err),
+    })
+  }
+}
