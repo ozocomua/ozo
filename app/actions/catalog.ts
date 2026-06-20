@@ -403,13 +403,14 @@ export async function createReview(data: {
     revalidatePath("/reviews");
     return { success: true };
   } catch (e: unknown) {
-    console.error("createReview error:", e)
+    console.error("❌ createReview error:", e)
     const message = e instanceof Error ? e.message : "Невідома помилка";
-    // Prisma errors contain internal details — return clean message to user
-    if (message.includes("too long") || message.includes("column")) {
+    // Only mask actual "Data too long" errors
+    if (message.includes("Data too long") || message.includes("too long for column")) {
       return { success: false, error: "Текст відгуку занадто довгий. Спробуйте скоротити." };
     }
-    return { success: false, error: "Не вдалося зберегти відгук. Спробуйте ще раз." };
+    // Pass through the real error so we can debug it
+    return { success: false, error: `Помилка: ${message}` };
   }
 }
 
