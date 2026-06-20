@@ -315,7 +315,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
               <FormField control={form.control} name="name" render={({ field }) => (
                 <FormItem>
                   <FormLabel>Назва товару *</FormLabel>
-                  <FormControl><Input placeholder="Наприклад: Очищувач кузова..." {...field} /></FormControl>
+                  <FormControl><Input placeholder="Наприклад: Напувалка ніпельна..." {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )} />
@@ -687,7 +687,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
                 <div>
                   <div className="text-sm font-medium mb-1">Пов'язані товари (Версії)</div>
                   <div className="text-xs text-muted-foreground mb-3">
-                    Зв'яжи версії товару (воскі для темних/світлих авто тощо)
+                    Зв'яжи версії товару (напувалки для різної птиці, розміри килимків тощо)
                   </div>
                 </div>
                 <Input

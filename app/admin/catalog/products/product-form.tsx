@@ -381,7 +381,7 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
                 setSlugTouched(true)
                 setSlug(e.target.value)
               }}
-              placeholder="наприклад: soft99-glaco-30ml (якщо залишити порожнім, спрацює автогенерація)"
+              placeholder="наприклад: napuvalka-nipelna (якщо залишити порожнім, спрацює автогенерація)"
             />
           </div>
         </div>
@@ -555,7 +555,7 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
                     onChange={(e) =>
                       setVariants((prev) => prev.map((x, i) => (i === idx ? { ...x, sku: e.target.value } : x)))
                     }
-                    placeholder="KOCH-SS-1L"
+                    placeholder="OZO-SKU-001"
                   />
                 </div>
                 <div className="space-y-1">

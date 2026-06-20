@@ -121,7 +121,7 @@ export function CategoryForm({
             <FormItem>
               <FormLabel>Название *</FormLabel>
               <FormControl>
-                <Input placeholder="Например: Уход за кузовом" {...field} />
+                <Input placeholder="Наприклад: Напувалки" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

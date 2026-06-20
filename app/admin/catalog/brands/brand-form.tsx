@@ -115,7 +115,7 @@ export function BrandForm({ mode, brandId }: { mode: "create" | "edit"; brandId?
           <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
             Назва
           </div>
-          <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Наприклад: Koch Chemie" />
+          <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Наприклад: OZO" />
         </div>
         <div className="space-y-2">
           <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">

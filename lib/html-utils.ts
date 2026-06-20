@@ -30,13 +30,7 @@ export function cleanMetaDescription(metaDesc: string | null | undefined, descri
 export function cleanMetaTitle(metaTitle: string | null | undefined, productName: string): string {
   const fromMeta = metaTitle?.trim()
   const raw = fromMeta ? stripHtml(fromMeta) : stripHtml(productName)
-  // strip any legacy BROSCO suffix/prefix from DB records
-  return raw
-    .replace(/\s*\|?\s*BROSCO\s*/gi, " ")
-    .replace(/\s*-\s*BROSCO\s*/gi, " ")
-    .replace(/\s*BROSCO\s*\|?\s*/gi, " ")
-    .replace(/\s+/g, " ")
-    .trim()
+  return raw.replace(/\s+/g, " ").trim()
 }
 
 export function cleanSeoAlt(seoAlt: string | null | undefined, productName: string): string {
