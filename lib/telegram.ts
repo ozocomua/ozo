@@ -304,18 +304,19 @@ export async function sendOrderNotification(order: {
  * Відправляє в Telegram сповіщення про будь-яку помилку на сайті.
  */
 export async function sendErrorToTelegram(error: {
-  source: string       // e.g. "createReview", "checkout"
-  message: string      // error message
-  userName?: string    // user name if available
-  phone?: string       // user phone if available
-  stack?: string       // stack trace
-}) {
+  source: string
+  message: string
+  userName?: string
+  phone?: string
+  stack?: string
+}): Promise<{ ok: boolean; error?: string }> {
   const botToken = process.env.TELEGRAM_BOT_TOKEN
   const adminChatId = process.env.TELEGRAM_ADMIN_TOKEN
 
   if (!botToken || !adminChatId) {
-    console.warn("[telegram] sendErrorToTelegram: TELEGRAM_BOT_TOKEN or TELEGRAM_ADMIN_TOKEN not set")
-    return
+    const err = "TELEGRAM_BOT_TOKEN або TELEGRAM_ADMIN_TOKEN не задано в .env"
+    console.warn(`[telegram] sendErrorToTelegram: ${err}`)
+    return { ok: false, error: err }
   }
 
   const now = new Date().toLocaleString("uk-UA", {
@@ -343,7 +344,7 @@ export async function sendErrorToTelegram(error: {
   const text = lines.join("\n")
 
   try {
-    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+    const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -352,9 +353,23 @@ export async function sendErrorToTelegram(error: {
         parse_mode: "HTML",
       }),
     })
+
+    const json = await res.json().catch(() => ({}))
+
+    if (!res.ok) {
+      const err = `Telegram API: ${res.status} — ${JSON.stringify(json)}`
+      logger.error("[telegram] sendErrorToTelegram — Telegram API error", {
+        status: res.status,
+        body: json,
+      })
+      return { ok: false, error: err }
+    }
+
+    console.log("[telegram] sendErrorToTelegram — success")
+    return { ok: true }
   } catch (err) {
-    logger.error("[telegram] sendErrorToTelegram failed", {
-      error: err instanceof Error ? err.message : String(err),
-    })
+    const msg = err instanceof Error ? err.message : String(err)
+    logger.error("[telegram] sendErrorToTelegram — network error", { error: msg })
+    return { ok: false, error: `Network error: ${msg}` }
   }
 }
