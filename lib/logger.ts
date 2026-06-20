@@ -74,12 +74,32 @@ if (typeof process !== "undefined") {
       stack: err.stack,
       name: err.name,
     })
+    // Send to Telegram (dynamic import to avoid circular dep)
+    import("@/lib/telegram")
+      .then(({ sendErrorToTelegram }) =>
+        sendErrorToTelegram({
+          source: "uncaughtException",
+          message: err.message,
+          stack: err.stack,
+        }).catch(() => {}),
+      )
+      .catch(() => {})
   })
 
   process.on("unhandledRejection", (reason: unknown) => {
     const msg = reason instanceof Error ? reason.message : String(reason)
     const stack = reason instanceof Error ? reason.stack : undefined
     logger.error(`Unhandled Rejection: ${msg}`, stack ? { stack } : undefined)
+    // Send to Telegram
+    import("@/lib/telegram")
+      .then(({ sendErrorToTelegram }) =>
+        sendErrorToTelegram({
+          source: "unhandledRejection",
+          message: msg,
+          stack,
+        }).catch(() => {}),
+      )
+      .catch(() => {})
   })
 }
 
