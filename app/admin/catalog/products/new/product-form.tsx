@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import { Save, ArrowLeft, MoreVertical, Copy, Trash } from "lucide-react";
+import { Save, ArrowLeft, MoreVertical, Copy, Trash, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
 
@@ -355,8 +355,31 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
 
             {/* SEO */}
             <div className="border border-border rounded-xl shadow-sm bg-white p-5 space-y-4 focus:border-[#00B5D1] focus:ring-1 focus:ring-[#00B5D1]">
-              <h2 className="text-lg font-semibold border-b pb-2">SEO</h2>
-              <p className="text-xs text-muted-foreground">Заповніть або залиште порожніми — заповниться автоматично з назви та опису</p>
+              <div className="flex items-center justify-between border-b pb-2">
+                <h2 className="text-lg font-semibold">SEO</h2>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="gap-1.5 text-xs h-8"
+                  onClick={() => {
+                    const name = form.getValues("name").trim()
+                    const desc = form.getValues("description")?.trim() ?? ""
+                    if (!name) {
+                      toast.error("Спочатку заповніть назву товару")
+                      return
+                    }
+                    form.setValue("metaTitle", `${name} | OZO`, { shouldDirty: true })
+                    form.setValue("metaDescription", desc.slice(0, 150), { shouldDirty: true })
+                    form.setValue("seoAlt", name, { shouldDirty: true })
+                    toast.success("SEO згенеровано з назви та опису")
+                  }}
+                >
+                  <Sparkles size={13} />
+                  Згенерувати SEO
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground -mt-2">Заповніть або залиште порожніми — заповниться автоматично з назви та опису</p>
 
               <FormField control={form.control} name="slug" render={({ field }) => (
                 <FormItem>
