@@ -1,17 +1,42 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Phone, X, Loader2, Check } from "lucide-react"
 import { toast } from "sonner"
 
 export default function CallbackWidget() {
   const [isOpen, setIsOpen] = useState(false)
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle')
+  const [attention, setAttention] = useState(false)
+  const attentionTimer = useRef<ReturnType<typeof setInterval>>()
+
   const [formData, setFormData] = useState({
     name: '',
     phone: '+380',
     comment: ''
   })
+
+  // ── Attention pulse every 30 seconds ────────────────────
+  useEffect(() => {
+    const trigger = () => {
+      setAttention(true)
+      setTimeout(() => setAttention(false), 2500)
+    }
+    // First pulse after 8 seconds
+    const initial = setTimeout(trigger, 8000)
+    // Then every 30 seconds
+    attentionTimer.current = setInterval(trigger, 30_000)
+
+    return () => {
+      clearTimeout(initial)
+      clearInterval(attentionTimer.current)
+    }
+  }, [])
+
+  // Don't distract while form is open
+  useEffect(() => {
+    if (isOpen) setAttention(false)
+  }, [isOpen])
 
   useEffect(() => {
     const handleOpen = () => setIsOpen(true);
@@ -68,13 +93,41 @@ export default function CallbackWidget() {
 
   return (
     <div className="fixed bottom-6 right-6 z-[9999] font-sans">
+      {/* Attention ring — expands outward on pulse */}
+      <span
+        className={`absolute inset-0 rounded-full bg-[#00B5D1] transition-all duration-1000 ease-out pointer-events-none ${
+          attention ? "scale-[2.5] opacity-0" : "scale-100 opacity-0"
+        }`}
+        aria-hidden="true"
+      />
+
       <button
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Зворотній зв'язок"
-        className="w-14 h-14 bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 group"
+        className={`relative w-14 h-14 bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 group ${
+          attention ? "animate-bounce" : ""
+        }`}
       >
+        {/* Glow ring on pulse */}
+        <span
+          className={`absolute inset-0 rounded-full transition-all duration-700 ${
+            attention
+              ? "ring-8 ring-[#00B5D1]/40 animate-ping opacity-0"
+              : "ring-0 ring-transparent opacity-0"
+          }`}
+          aria-hidden="true"
+        />
         {isOpen ? <X size={24} /> : <Phone size={24} className="group-hover:rotate-12 transition-transform" />}
       </button>
+
+      {/* Pulsing dot badge — "ну ж бо натисни" */}
+      <span
+        className={`absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-white transition-opacity ${
+          attention ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <span className="absolute inset-0 rounded-full bg-red-500 animate-ping opacity-75" />
+      </span>
 
       {isOpen && (
         <div className="absolute bottom-20 right-0 w-[90vw] md:w-[350px] bg-white rounded-[2.5rem] shadow-2xl border border-black/5 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
