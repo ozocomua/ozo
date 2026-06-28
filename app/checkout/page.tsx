@@ -379,9 +379,6 @@ export default function CheckoutPage() {
                   </div>
                 </button>
               </div>
-              <p className="text-[11px] text-amber-600 bg-amber-50 px-4 py-2 rounded-xl leading-relaxed">
-                ⚠️ Оплата карткою тимчасово недоступна з технічних причин. Будь ласка, оберіть накладений платіж — оплата при отриманні на пошті.
-              </p>
               
               <div className="space-y-2 pt-4">
                 <label className="text-[10px] uppercase font-bold opacity-40 ml-4">Коментар до замовлення</label>
