@@ -5,6 +5,7 @@ import { CartProvider } from "@/lib/cart-context"
 import { RecentlyViewedProvider } from "@/lib/recently-viewed-context"
 import { Providers } from "./providers"
 import { Toaster } from "@/components/ui/sonner"
+import FacebookPixel from "@/components/facebook-pixel"
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -56,6 +57,7 @@ export default function RootLayout({
           </RecentlyViewedProvider>
         </Providers>
         <Toaster />
+        <FacebookPixel />
       </body>
     </html>
   )
