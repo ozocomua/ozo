@@ -257,10 +257,17 @@ export async function POST(req: Request) {
     }
 
     // 4. ГЕНЕРАЦІЯ ПОСИЛАННЯ (Тільки для оплати карткою)
-    let paymentUrl: string | undefined = ""
+    let paymentUrl: string | undefined = undefined
     if (paymentType === 'card') {
       try {
-        paymentUrl = await createPaymentLink(txResult.total, finalOrderNumber)
+        const url = await createPaymentLink(txResult.total, finalOrderNumber)
+        if (url) {
+          paymentUrl = url
+          await prisma.order.update({
+            where: { id: txResult.id },
+            data: { paymentUrl },
+          })
+        }
       } catch (payError) {
         console.error("MYIBAN_ERROR:", payError)
       }
@@ -269,7 +276,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ 
       success: true, 
       orderId: finalOrderNumber,
-      paymentUrl: paymentUrl,
+      paymentUrl: paymentUrl || undefined,
       isNewUser,
     })
 

@@ -192,33 +192,9 @@ export default function CheckoutPage() {
       clearCart()
       
       if (paymentType === 'card' && result.paymentUrl) {
-        const payParams = new URLSearchParams({
-          id: result.orderId,
-          total: orderData.total.toString(),
-          delivery: orderData.delivery,
-          items: orderData.items,
-          paymentUrl: result.paymentUrl,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          middleName: formData.middleName,
-          phone: formData.phone,
-          noCall: String(formData.noCall),
-        })
-        window.location.href = `/checkout/pay?${payParams.toString()}`
+        window.location.href = `/checkout/pay/${result.orderId}`
       } else if (paymentType === 'cod') {
-        const successParams = new URLSearchParams({
-          id: result.orderId,
-          total: orderData.total.toString(),
-          delivery: orderData.delivery,
-          items: orderData.items,
-          payment: paymentLabels[paymentType],
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          middleName: formData.middleName,
-          phone: formData.phone,
-          noCall: String(formData.noCall),
-        })
-        window.location.href = `/checkout/success?${successParams.toString()}`
+        window.location.href = `/checkout/success/${result.orderId}`
       }
     } catch (err: any) {
       console.error(err)
