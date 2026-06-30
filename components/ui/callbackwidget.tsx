@@ -104,8 +104,8 @@ export default function CallbackWidget() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Зворотній зв'язок"
-        className={`relative w-14 h-14 bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 group ${
-          attention ? "animate-bounce" : ""
+        className={`relative w-16 h-16 bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white rounded-full shadow-[0_0_20px_rgba(0,181,209,0.4)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 group ${
+          attention ? "animate-bounce shadow-[0_0_35px_rgba(0,181,209,0.7)]" : ""
         }`}
       >
         {/* Glow ring on pulse */}
@@ -117,14 +117,14 @@ export default function CallbackWidget() {
           }`}
           aria-hidden="true"
         />
-        {isOpen ? <X size={24} /> : <Phone size={24} className="group-hover:rotate-12 transition-transform" />}
+        {/* Persistent subtle glow ring */}
+        <span className="absolute inset-0 rounded-full ring-4 ring-[#00B5D1]/25 animate-pulse pointer-events-none" aria-hidden="true" />
+        {isOpen ? <X size={26} /> : <Phone size={26} className="group-hover:rotate-12 transition-transform" />}
       </button>
 
       {/* Pulsing dot badge — "ну ж бо натисни" */}
       <span
-        className={`absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-white transition-opacity ${
-          attention ? "opacity-100" : "opacity-0"
-        }`}
+        className={`absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full border-2 border-white transition-opacity shadow-lg`}
       >
         <span className="absolute inset-0 rounded-full bg-red-500 animate-ping opacity-75" />
       </span>
