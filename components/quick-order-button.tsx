@@ -145,7 +145,7 @@ export default function QuickOrderButton({
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center justify-center gap-2 border-2 border-[#00B5D1] text-[#00B5D1] font-semibold py-3.5 rounded-xl hover:bg-[#00B5D1]/5 active:scale-[0.98] transition-all duration-150 mb-3 w-full text-sm md:text-base"
+        className="flex items-center justify-center gap-2 bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white font-semibold py-4 rounded-xl hover:from-[#0c5db8] hover:to-[#00c5e3] active:scale-[0.98] transition-all duration-150 mb-3 w-full text-sm md:text-base"
       >
         <Zap size={16} />
         Швидке замовлення

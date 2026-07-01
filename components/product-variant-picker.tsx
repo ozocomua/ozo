@@ -75,8 +75,8 @@ export default function ProductVariantPicker({
         <div>
           <span className="text-2xl sm:text-3xl font-bold text-foreground">{price} ₴</span>
         </div>
-        <AddToCartButton product={product} />
         <QuickOrderButton product={product} />
+        <AddToCartButton product={product} />
       </div>
     )
   }
@@ -110,8 +110,8 @@ export default function ProductVariantPicker({
         </span>
       </div>
 
-      <AddToCartButton product={productWithVariant} />
       <QuickOrderButton product={productWithVariant} />
+      <AddToCartButton product={productWithVariant} />
 
       {/* ── Bottom Sheet (mobile) / Modal (desktop) ── */}
       {open && (
