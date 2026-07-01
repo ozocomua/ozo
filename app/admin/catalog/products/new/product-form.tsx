@@ -161,7 +161,7 @@ export function ProductForm({ categories, brands, initialData, allProductsProp }
         metaTitle: values.metaTitle,
         metaDescription: values.metaDescription,
         seoAlt: values.seoAlt,
-        brandId: values.brandId === "none" ? undefined : Number(values.brandId),
+        brandId: values.brandId === "none" ? null : Number(values.brandId),
         status: action,
         price: values.price,
         stock: values.stock,
