@@ -64,7 +64,7 @@ function QuickOrderModal({ open, onClose, productName, productId, price, variant
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-[400] flex items-end md:items-center justify-center">
+    <div className="fixed inset-0 z-[10000] flex items-end md:items-center justify-center">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
       <div className="relative bg-white rounded-t-3xl md:rounded-3xl shadow-2xl w-full md:max-w-md p-6 pt-8 animate-in slide-in-from-bottom-4 duration-300">
         <button onClick={onClose} className="absolute top-4 right-4 p-1.5 rounded-full bg-black/5 text-black/40 hover:bg-black/10">
@@ -92,7 +92,7 @@ function QuickOrderModal({ open, onClose, productName, productId, price, variant
                 <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/40" />
                 <input
                   required
-                  className="w-full bg-muted/50 rounded-2xl py-3.5 pl-11 pr-4 text-sm outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
+                  className="w-full bg-muted/50 rounded-2xl py-3.5 pl-11 pr-4 text-base sm:text-sm outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
                   placeholder="Ваше ім'я"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -107,7 +107,7 @@ function QuickOrderModal({ open, onClose, productName, productId, price, variant
                 <input
                   required
                   type="tel"
-                  className="w-full bg-muted/50 rounded-2xl py-3.5 pl-11 pr-4 text-sm font-mono outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
+                  className="w-full bg-muted/50 rounded-2xl py-3.5 pl-11 pr-4 text-base sm:text-sm font-mono outline-none focus:ring-2 focus:ring-[#00B5D1] transition-all"
                   value={phone}
                   onChange={(e) => setPhone(formatPhone(e.target.value))}
                 />
