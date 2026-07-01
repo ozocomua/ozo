@@ -201,8 +201,8 @@ export default function CheckoutPage() {
       
       if (paymentType === 'card' && result.paymentUrl) {
         window.location.href = `/checkout/pay/${result.orderId}`
-      } else if (paymentType === 'cod') {
-        window.location.href = `/checkout/success/${result.orderId}`
+      } else {
+        window.location.href = '/lead'
       }
     } catch (err: any) {
       console.error(err)
