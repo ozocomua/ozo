@@ -151,6 +151,14 @@ export default function CheckoutPage() {
       toast.error("Вкажіть ім'я та прізвище")
       return
     }
+    if (!selectedPoint) {
+      toast.error("Оберіть точку доставки")
+      return
+    }
+    if (!isValidPhone(formData.phone)) {
+      toast.error("Вкажіть коректний номер телефону")
+      return
+    }
     setIsSubmitting(true)
 
     const paymentLabels: Record<string, string> = {
@@ -403,13 +411,7 @@ export default function CheckoutPage() {
                 </div>
                 <button 
                   onClick={handleSubmit}
-                  disabled={
-                    isSubmitting ||
-                    !selectedPoint ||
-                    !isValidPhone(formData.phone) ||
-                    !formData.firstName.trim() ||
-                    !formData.lastName.trim()
-                  }
+                  disabled={isSubmitting}
                   className="w-full bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white py-6 rounded-2xl font-black uppercase text-[13px] hover:from-[#0c5db8] hover:to-[#00c5e3] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-40"
                 >
                   {isSubmitting ? <Loader2 className="animate-spin" size={16} /> : "Замовити зараз"}
@@ -475,13 +477,7 @@ export default function CheckoutPage() {
               
               <button 
                 onClick={handleSubmit}
-                disabled={
-                  isSubmitting ||
-                  !selectedPoint ||
-                  !isValidPhone(formData.phone) ||
-                  !formData.firstName.trim() ||
-                  !formData.lastName.trim()
-                }
+                disabled={isSubmitting}
                 className="w-full bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white py-6 rounded-2xl font-black uppercase text-[11px] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 hover:from-[#0c5db8] hover:to-[#00c5e3] disabled:opacity-40"
               >
                 {isSubmitting ? <Loader2 className="animate-spin" size={16} /> : "Замовити зараз"}
