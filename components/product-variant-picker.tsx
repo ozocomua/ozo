@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react"
 import { ChevronDown, X } from "lucide-react"
 import AddToCartButton from "@/components/add-to-cart-button"
+import QuickOrderButton from "@/components/quick-order-button"
 
 interface Variant {
   id: number
@@ -75,6 +76,7 @@ export default function ProductVariantPicker({
           <span className="text-2xl sm:text-3xl font-bold text-foreground">{price} ₴</span>
         </div>
         <AddToCartButton product={product} />
+        <QuickOrderButton product={product} />
       </div>
     )
   }
@@ -109,6 +111,7 @@ export default function ProductVariantPicker({
       </div>
 
       <AddToCartButton product={productWithVariant} />
+      <QuickOrderButton product={productWithVariant} />
 
       {/* ── Bottom Sheet (mobile) / Modal (desktop) ── */}
       {open && (
