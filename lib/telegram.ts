@@ -211,6 +211,8 @@ export async function sendOrderNotification(order: {
 
   const clientName = order.user.name || "Не вказано"
   const phone = formatPhone(order.user.phone)
+  const phoneDigits = order.user.phone.replace(/\D/g, "")
+  const phoneIntl = phoneDigits.startsWith("38") ? `+${phoneDigits}` : phoneDigits.startsWith("0") ? `+38${phoneDigits.slice(1)}` : `+${phoneDigits}`
   const city = order.cityName || ""
   const warehouse = order.deliveryPoint || ""
   const deliveryParts = [city, warehouse].filter(Boolean)
@@ -259,6 +261,17 @@ export async function sendOrderNotification(order: {
     // Telegram не принимает localhost в inline-кнопках — добавляем ссылку текстом
     body.text = text + `\n\n🔗 <a href="${ttnUrl}">Створити ТТН в Новій Пошті</a>`
     console.log("[telegram] local URL detected, link added as text instead of button")
+    body.reply_markup = {
+      inline_keyboard: [
+        [
+          { text: "📱 Написати у Viber", url: `viber://chat?number=%2B${phoneDigits}` },
+          { text: "✈️ Написати у Telegram", url: `https://t.me/+${phoneDigits}` },
+        ],
+        [
+          { text: "📞 Зателефонувати", url: `tel:${phoneIntl}` },
+        ],
+      ],
+    }
   } else {
     body.reply_markup = {
       inline_keyboard: [
@@ -267,6 +280,13 @@ export async function sendOrderNotification(order: {
             text: "🚚 Створити ТТН в Новій Пошті",
             url: ttnUrl,
           },
+        ],
+        [
+          { text: "📱 Написати у Viber", url: `viber://chat?number=%2B${phoneDigits}` },
+          { text: "✈️ Написати у Telegram", url: `https://t.me/+${phoneDigits}` },
+        ],
+        [
+          { text: "📞 Зателефонувати", url: `tel:${phoneIntl}` },
         ],
       ],
     }
