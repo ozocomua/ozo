@@ -142,7 +142,7 @@ export async function createProduct(data: {
   metaTitle?: string;
   metaDescription?: string;
   seoAlt?: string;
-  brandId?: number;
+  brandId?: number | null;
   status: "DRAFT" | "PUBLISHED";
   price: number;
   stock: number;
@@ -490,7 +490,7 @@ export async function updateProduct(
     seoAlt?: string;
     badge?: string;
     isPublished?: boolean;
-    brandId?: number;
+    brandId?: number | null;
     price?: number;
     stock?: number;
     volume?: string;
@@ -538,13 +538,13 @@ export async function updateProduct(
     }
     if (data.fullDescription !== undefined) updateData.fullDescription = data.fullDescription;
     if (data.metaTitle !== undefined) {
-      updateData.metaTitle = data.metaTitle.trim() || `${data.name.trim()} | OZO`;
+      updateData.metaTitle = data.metaTitle.trim() || `${data.name?.trim() ?? ""} | OZO`;
     }
     if (data.metaDescription !== undefined) {
       updateData.metaDescription = data.metaDescription.trim() || (data.description || "").slice(0, 150);
     }
     if (data.seoAlt !== undefined) {
-      updateData.seoAlt = data.seoAlt.trim() || data.name.trim();
+      updateData.seoAlt = data.seoAlt.trim() || data.name?.trim() ?? "";
     }
     if (data.badge !== undefined) updateData.badge = data.badge;
     if (data.isPublished !== undefined) updateData.isPublished = data.isPublished;
