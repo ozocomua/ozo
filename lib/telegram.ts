@@ -39,6 +39,14 @@ function paymentLabel(type: string): string {
   return type
 }
 
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+}
+
 function escapeMd(text: string): string {
   return text.replace(/[_*[\]()~`>#+\-=|{}.!]/g, "\\$&")
 }
@@ -209,22 +217,22 @@ export async function sendOrderNotification(order: {
     return
   }
 
-  const clientName = order.user.name || "Не вказано"
-  const phone = formatPhone(order.user.phone)
+  const clientName = escapeHtml(order.user.name || "Не вказано")
+  const phone = escapeHtml(formatPhone(order.user.phone))
   const phoneDigits = order.user.phone.replace(/\D/g, "")
   const phoneIntl = phoneDigits.startsWith("38") ? `+${phoneDigits}` : phoneDigits.startsWith("0") ? `+38${phoneDigits.slice(1)}` : `+${phoneDigits}`
-  const city = order.cityName || ""
-  const warehouse = order.deliveryPoint || ""
+  const city = escapeHtml(order.cityName || "")
+  const warehouse = escapeHtml(order.deliveryPoint || "")
   const deliveryParts = [city, warehouse].filter(Boolean)
   const delivery = deliveryParts.length ? deliveryParts.join(", ") : "Не вказана"
 
   const itemLines = parseItems(order.items)
   const productsList = itemLines.length
-    ? itemLines.join("\n")
+    ? itemLines.map(escapeHtml).join("\n")
     : "—"
 
   const commentText = order.comment?.trim()
-    ? `📝 <b>Коментар:</b> "${order.comment.trim()}"`
+    ? `📝 <b>Коментар:</b> "${escapeHtml(order.comment.trim())}"`
     : ""
 
   const paymentText = paymentLabel(order.paymentType)
@@ -243,7 +251,7 @@ export async function sendOrderNotification(order: {
     productsList,
     commentText,
     ``,
-    `📱 Viber: <code>${phone}</code>  |  ✈️ <a href="https://t.me/+${phoneDigits}">Написати у Telegram</a>`,
+    `📞 <a href="tel:${phoneIntl}">Зателефонувати клієнту</a>`,
   ].filter(Boolean).join("\n")
 
   const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || "").replace(/\/+$/, "")
@@ -260,16 +268,11 @@ export async function sendOrderNotification(order: {
   }
 
   if (isLocalUrl) {
-    // Telegram не принимает localhost в inline-кнопках — добавляем ссылку текстом
     body.text = text + `\n\n🔗 <a href="${ttnUrl}">Створити ТТН в Новій Пошті</a>`
-    console.log("[telegram] local URL detected, link added as text instead of button")
     body.reply_markup = {
       inline_keyboard: [
         [
           { text: "✈️ Написати у Telegram", url: `https://t.me/+${phoneDigits}` },
-        ],
-        [
-          { text: "📞 Зателефонувати", url: `tel:${phoneIntl}` },
         ],
       ],
     }
@@ -277,16 +280,10 @@ export async function sendOrderNotification(order: {
     body.reply_markup = {
       inline_keyboard: [
         [
-          {
-            text: "🚚 Створити ТТН в Новій Пошті",
-            url: ttnUrl,
-          },
+          { text: "🚚 Створити ТТН в Новій Пошті", url: ttnUrl },
         ],
         [
           { text: "✈️ Написати у Telegram", url: `https://t.me/+${phoneDigits}` },
-        ],
-        [
-          { text: "📞 Зателефонувати", url: `tel:${phoneIntl}` },
         ],
       ],
     }
