@@ -242,6 +242,8 @@ export async function sendOrderNotification(order: {
     `🛒 <b>Товари:</b>`,
     productsList,
     commentText,
+    ``,
+    `📱 <a href="viber://chat?number=%2B${phoneDigits}">Написати у Viber</a>  |  ✈️ <a href="https://t.me/+${phoneDigits}">Написати у Telegram</a>`,
   ].filter(Boolean).join("\n")
 
   const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || "").replace(/\/+$/, "")
@@ -264,8 +266,7 @@ export async function sendOrderNotification(order: {
     body.reply_markup = {
       inline_keyboard: [
         [
-          { text: "📱 Viber", url: `viber://chat?number=%2B${phoneDigits}` },
-          { text: "✈️ Telegram", url: `https://t.me/+${phoneDigits}` },
+          { text: "✈️ Написати у Telegram", url: `https://t.me/+${phoneDigits}` },
         ],
         [
           { text: "📞 Зателефонувати", url: `tel:${phoneIntl}` },
@@ -282,8 +283,7 @@ export async function sendOrderNotification(order: {
           },
         ],
         [
-          { text: "📱 Viber", url: `viber://chat?number=%2B${phoneDigits}` },
-          { text: "✈️ Telegram", url: `https://t.me/+${phoneDigits}` },
+          { text: "✈️ Написати у Telegram", url: `https://t.me/+${phoneDigits}` },
         ],
         [
           { text: "📞 Зателефонувати", url: `tel:${phoneIntl}` },
