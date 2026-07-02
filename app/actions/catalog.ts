@@ -544,7 +544,7 @@ export async function updateProduct(
       updateData.metaDescription = data.metaDescription.trim() || (data.description || "").slice(0, 150);
     }
     if (data.seoAlt !== undefined) {
-      updateData.seoAlt = data.seoAlt.trim() || data.name?.trim() ?? "";
+      updateData.seoAlt = data.seoAlt.trim() || (data.name?.trim() ?? "");
     }
     if (data.badge !== undefined) updateData.badge = data.badge;
     if (data.isPublished !== undefined) updateData.isPublished = data.isPublished;
