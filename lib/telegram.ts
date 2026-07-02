@@ -243,7 +243,7 @@ export async function sendOrderNotification(order: {
     productsList,
     commentText,
     ``,
-    `📱 <a href="viber://chat?number=%2B${phoneDigits}">Написати у Viber</a>  |  ✈️ <a href="https://t.me/+${phoneDigits}">Написати у Telegram</a>`,
+    `📱 Viber: <code>${phone}</code>  |  ✈️ <a href="https://t.me/+${phoneDigits}">Написати у Telegram</a>`,
   ].filter(Boolean).join("\n")
 
   const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || "").replace(/\/+$/, "")
