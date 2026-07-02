@@ -250,8 +250,6 @@ export async function sendOrderNotification(order: {
     `🛒 <b>Товари:</b>`,
     productsList,
     commentText,
-    ``,
-    `📞 <a href="tel:${phoneIntl}">Зателефонувати клієнту</a>`,
   ].filter(Boolean).join("\n")
 
   const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || "").replace(/\/+$/, "")
@@ -272,7 +270,11 @@ export async function sendOrderNotification(order: {
     body.reply_markup = {
       inline_keyboard: [
         [
-          { text: "✈️ Написати у Telegram", url: `https://t.me/+${phoneDigits}` },
+          { text: "📞 Зателефонувати клієнту", url: `${siteUrl}/r/call/${phoneDigits}` },
+        ],
+        [
+          { text: "📱 Viber", url: `${siteUrl}/r/viber/${phoneDigits}` },
+          { text: "✈️ Telegram", url: `https://t.me/+${phoneDigits}` },
         ],
       ],
     }
@@ -283,7 +285,11 @@ export async function sendOrderNotification(order: {
           { text: "🚚 Створити ТТН в Новій Пошті", url: ttnUrl },
         ],
         [
-          { text: "✈️ Написати у Telegram", url: `https://t.me/+${phoneDigits}` },
+          { text: "📞 Зателефонувати клієнту", url: `${siteUrl}/r/call/${phoneDigits}` },
+        ],
+        [
+          { text: "📱 Viber", url: `${siteUrl}/r/viber/${phoneDigits}` },
+          { text: "✈️ Telegram", url: `https://t.me/+${phoneDigits}` },
         ],
       ],
     }
