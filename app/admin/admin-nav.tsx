@@ -10,6 +10,7 @@ const sections: NavItem[] = [
   { key: "orders", label: "Замовлення", segment: "" },
   { key: "callbacks", label: "Заявки на дзвінок", segment: "callbacks" },
   { key: "catalog", label: "Каталог", segment: "catalog" },
+  { key: "import", label: "Імпорт", segment: "import" },
   { key: "blog", label: "Блог", segment: "blog" },
   { key: "reviews", label: "Відгуки", segment: "reviews" },
   { key: "calculator", label: "Калькулятор", segment: "profit-calculator" },
@@ -91,6 +92,12 @@ function isFinanceSection(pathname: string): boolean {
   return parts[1] === "finance-control"
 }
 
+function isImportSection(pathname: string): boolean {
+  const parts = normalizePath(pathname).split("/").filter(Boolean)
+  if (parts.length < 2) return false
+  return parts[1] === "import"
+}
+
 function buildHref(base: string, segment: string): string {
   if (!segment) return base
   return segment.includes("/") ? `${base}/${segment}` : `${base}/${segment}`
@@ -134,6 +141,7 @@ export function AdminNav() {
   const settingsSection = isSettingsSection(pathname)
   const calculatorSection = isCalculatorSection(pathname)
   const financeSection = isFinanceSection(pathname)
+  const importSection = isImportSection(pathname)
   const normalizedPath = normalizePath(pathname)
 
   const [pendingCount, setPendingCount] = useState(0)
@@ -147,7 +155,7 @@ export function AdminNav() {
       .catch(() => {})
   }, [])
 
-  const subNavItems = catalogSection ? catalog : reviewsSection ? reviewsSub : settingsSection || calculatorSection || financeSection ? [] : blogSection ? [] : orders
+  const subNavItems = catalogSection ? catalog : reviewsSection ? reviewsSub : settingsSection || calculatorSection || financeSection || importSection ? [] : blogSection ? [] : orders
 
   return (
     <>
@@ -170,6 +178,8 @@ export function AdminNav() {
               active = calculatorSection
             } else if (item.key === "finance") {
               active = financeSection
+            } else if (item.key === "import") {
+              active = importSection
             } else {
               active =
                   !catalogSection &&
@@ -179,6 +189,7 @@ export function AdminNav() {
                   !settingsSection &&
                   !calculatorSection &&
                   !financeSection &&
+                  !importSection &&
                   (normalizedPath === base || normalizedPath.startsWith(`${base}/`))
             }
             return (
