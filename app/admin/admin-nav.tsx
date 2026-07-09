@@ -10,7 +10,6 @@ const sections: NavItem[] = [
   { key: "orders", label: "Замовлення", segment: "" },
   { key: "callbacks", label: "Заявки на дзвінок", segment: "callbacks" },
   { key: "catalog", label: "Каталог", segment: "catalog" },
-  { key: "import", label: "Імпорт", segment: "import" },
   { key: "blog", label: "Блог", segment: "blog" },
   { key: "reviews", label: "Відгуки", segment: "reviews" },
   { key: "calculator", label: "Калькулятор", segment: "profit-calculator" },
