@@ -10,11 +10,11 @@ import CallbackWidget from "@/components/ui/callbackwidget"
 import { toast } from "sonner"
 
 const TOP_CITIES = [
-  { name: "Київ", ref: "8d5a980d-391c-11dd-90d9-001a92567626" },
-  { name: "Одеса", ref: "db5c88d0-391c-11dd-90d9-001a92567626" },
-  { name: "Львів", ref: "db5c88f5-391c-11dd-90d9-001a92567626" },
-  { name: "Дніпро", ref: "db5c88c6-391c-11dd-90d9-001a92567626" },
-  { name: "Харків", ref: "db5c88e0-391c-11dd-90d9-001a92567626" }
+  { name: "Київ", ref: "8d5a980d-391c-11dd-90d9-001a92567626", area: "Київ" },
+  { name: "Одеса", ref: "db5c88d0-391c-11dd-90d9-001a92567626", area: "Одеська" },
+  { name: "Львів", ref: "db5c88f5-391c-11dd-90d9-001a92567626", area: "Львівська" },
+  { name: "Дніпро", ref: "db5c88c6-391c-11dd-90d9-001a92567626", area: "Дніпропетровська" },
+  { name: "Харків", ref: "db5c88e0-391c-11dd-90d9-001a92567626", area: "Харківська" }
 ];
 
 export default function CheckoutPage() {
@@ -59,7 +59,7 @@ export default function CheckoutPage() {
 
   const fetchCities = async (query: string = "") => {
     if (query.length === 0) {
-      setCities(TOP_CITIES.map(c => ({ Description: c.name, Ref: c.ref })));
+      setCities(TOP_CITIES.map(c => ({ Description: c.name, Ref: c.ref, displayName: `${c.name} (${c.area} обл.)`, isTop: true })));
       return;
     }
     try {
@@ -68,11 +68,35 @@ export default function CheckoutPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           modelName: 'Address', calledMethod: 'getCities',
-          methodProperties: { FindByString: query, Limit: "15" }
+          methodProperties: { FindByString: query, Limit: "25" }
         })
       })
       const data = await res.json()
-      if (data.success) setCities(data.data)
+      if (data.success && data.data) {
+        // Sort: місто first, then селище міського типу, then everything else
+        const TYPE_ORDER: Record<string, number> = {
+          "місто": 0,
+          "селище міського типу": 1,
+          "селище": 2,
+          "село": 3,
+        }
+        const sorted = data.data.sort((a: any, b: any) => {
+          const aType = a.SettlementTypeDescription || ""
+          const bType = b.SettlementTypeDescription || ""
+          return (TYPE_ORDER[aType] ?? 5) - (TYPE_ORDER[bType] ?? 5)
+        })
+        // Format area/region suffix for display
+        const formatted = sorted.map((c: any) => {
+          let suffix = ""
+          if (c.Area) suffix += `${c.Area} обл.`
+          if (c.Region) suffix += suffix ? `, ${c.Region} р-н` : `${c.Region} р-н`
+          return {
+            ...c,
+            displayName: suffix ? `${c.Description} (${suffix})` : c.Description,
+          }
+        })
+        setCities(formatted)
+      }
     } catch (err) { console.error(err) }
   }
 
@@ -130,14 +154,22 @@ export default function CheckoutPage() {
 
   // Client-side filter: search locally by typed query (handles "70", "центральна", etc.)
   const filteredPoints = useMemo(() => {
-    if (!pointInput.trim()) return deliveryPoints.slice(0, 20)
+    if (!pointInput.trim()) return deliveryPoints.slice(0, 30)
     const q = pointInput.toLowerCase().trim()
+    // Smart filter: matches by name OR by warehouse number (e.g. "12" finds "Відділення №12")
+    const isNumeric = /^\d+$/.test(q)
     return deliveryPoints
       .filter((p: any) => {
         const desc = (p.Description || p.Present || "").toLowerCase()
-        return desc.includes(q)
+        // Always try direct substring match
+        if (desc.includes(q)) return true
+        // For numeric search, also match "№12", "№ 12", "№12 (до 30 кг)", etc.
+         if (isNumeric) {
+           return new RegExp(`№\\s*${q}\\b`).test(desc)
+        }
+        return false
       })
-      .slice(0, 30)
+      .slice(0, 50)
   }, [deliveryPoints, pointInput])
 
   // ОНОВЛЕНА ЛОГІКА ТЕЛЕФОНУ
@@ -292,10 +324,13 @@ export default function CheckoutPage() {
                 />
                 {showCities && cities.length > 0 && (
                   <div className="absolute top-full left-0 right-0 bg-white shadow-2xl z-[70] rounded-2xl mt-1 max-h-60 overflow-y-auto border border-black/5">
-                    {cities.map(c => (
+                    {cities.map((c: any) => (
                       <div key={c.Ref} className="p-4 hover:bg-gradient-to-r hover:from-[#0B53A4] hover:to-[#00B5D1] hover:text-white cursor-pointer text-sm transition-colors border-b border-black/5 last:border-0" 
-                        onClick={() => { setSelectedCity({ref: c.Ref, name: c.Description}); setCityInput(c.Description); setShowCities(false); }}>
-                        <span className="truncate block">{c.Description}</span>
+                        onClick={() => { setSelectedCity({ref: c.Ref, name: c.Description}); setCityInput(c.displayName || c.Description); setShowCities(false); }}>
+                        <span className="truncate block font-medium">{c.Description}</span>
+                        {(c.displayName && c.displayName !== c.Description) && (
+                          <span className="text-[11px] opacity-50 truncate block mt-0.5">{c.displayName.replace(c.Description + " (", "").replace(")", "")}</span>
+                        )}
                       </div>
                     ))}
                   </div>
