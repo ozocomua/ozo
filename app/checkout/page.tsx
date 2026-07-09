@@ -152,23 +152,55 @@ export default function CheckoutPage() {
     return () => clearTimeout(timer)
   }, [selectedCity.ref, deliveryType, pointInput])
 
-  // Client-side filter: search locally by typed query (handles "70", "центральна", etc.)
+  // Client-side filter with smart priority sorting
   const filteredPoints = useMemo(() => {
     if (!pointInput.trim()) return deliveryPoints.slice(0, 30)
     const q = pointInput.toLowerCase().trim()
-    // Smart filter: matches by name OR by warehouse number (e.g. "12" finds "Відділення №12")
     const isNumeric = /^\d+$/.test(q)
-    return deliveryPoints
-      .filter((p: any) => {
-        const desc = (p.Description || p.Present || "").toLowerCase()
-        // Always try direct substring match
-        if (desc.includes(q)) return true
-        // For numeric search, also match "№12", "№ 12", "№12 (до 30 кг)", etc.
-         if (isNumeric) {
-           return new RegExp(`№\\s*${q}\\b`).test(desc)
+
+    const matched = deliveryPoints.filter((p: any) => {
+      const desc = (p.Description || p.Present || "").toLowerCase()
+      if (desc.includes(q)) return true
+      if (isNumeric) {
+        return new RegExp(`№\\s*${q}\\b`).test(desc)
+      }
+      return false
+    })
+
+    if (!isNumeric) return matched.slice(0, 50)
+
+    // ── Priority sort for numeric queries ──
+    // 0 = exact warehouse/postomat number (Відділення №30 / Поштомат №30)
+    // 1 = street address match (вул. Шевченка, 30)
+    // 2 = weight/other match (до 30 кг)
+    // 3 = everything else
+    const PRIORITY_EXACT_NUMBER = 0
+    const PRIORITY_STREET = 1
+    const PRIORITY_WEIGHT = 2
+    const PRIORITY_OTHER = 3
+
+    return matched
+      .map((p: any) => {
+        const desc = (p.Description || p.Present || "")
+        const descLower = desc.toLowerCase()
+        let priority = PRIORITY_OTHER
+
+        // Check for exact number: Відділення №30 or Поштомат №30 (at start after optional prefix)
+        if (new RegExp(`^(Відділення|Поштомат|Поштове відділення)\\s*№\\s*${q}\\b`, "i").test(desc)) {
+          priority = PRIORITY_EXACT_NUMBER
         }
-        return false
+        // Check for street address: contains "вул.", "просп.", "пров." with the number
+        else if (new RegExp(`(вул|просп|пров|пл|бульвар|шосе)\\..*?${q}\\b`, "i").test(desc)) {
+          priority = PRIORITY_STREET
+        }
+        // Check for weight limit: "до X кг"
+        else if (new RegExp(`до\\s*${q}\\s*кг`, "i").test(descLower)) {
+          priority = PRIORITY_WEIGHT
+        }
+
+        return { ...p, _sortPriority: priority }
       })
+      .sort((a: any, b: any) => a._sortPriority - b._sortPriority)
       .slice(0, 50)
   }, [deliveryPoints, pointInput])
 
