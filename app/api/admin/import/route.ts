@@ -65,31 +65,7 @@ export async function GET(req: Request) {
   })
 }
 
-// ── DELETE: clean all imported data ──
-export async function DELETE(req: Request) {
-  const guard = await requireAdminOr401()
-  if (guard) return guard
-
-  const counts = {
-    productsDeleted: 0,
-    categoriesDeleted: 0,
-    brandsDeleted: 0,
-  }
-  
-  // Delete imported products (those starting with "SD" — Sandi SKUs)
-  const deletedProducts = await prisma.product.deleteMany({ where: { sku: { startsWith: "SD" } } })
-  counts.productsDeleted = deletedProducts.count
-
-  // Delete imported categories (those with imageUrl — Sandi provides images)
-  const deletedCats = await prisma.category.deleteMany({ where: { imageUrl: { not: null } } })
-  counts.categoriesDeleted = deletedCats.count
-
-  // Delete imported brands (those created by import — all if products were Sandi)
-  const deletedBrands = await prisma.brand.deleteMany({ where: { products: { none: {} } } })
-  counts.brandsDeleted = deletedBrands.count
-
-  return NextResponse.json({ success: true, counts })
-}
+// ── POST: start import ──
 export async function POST(req: Request) {
   const guard = await requireAdminOr401()
   if (guard) return guard
