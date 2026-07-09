@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, ChevronRight, ChevronDown, Folder, MoreVertical, Trash, Edit } from "lucide-react";
+import { Plus, ChevronRight, ChevronDown, Folder, MoreVertical, Trash, Edit, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -21,7 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { deleteCategory } from "@/app/actions/catalog";
+import { deleteCategory, toggleCategoryPublish } from "@/app/actions/catalog";
 import { toast } from "sonner";
 
 export function CategoriesClient({ initialCategories }: { initialCategories: any[] }) {
@@ -89,9 +89,27 @@ export function CategoriesClient({ initialCategories }: { initialCategories: any
                 )}
                 <Folder className="w-4 h-4 text-blue-500" />
                 <span className="text-sm font-medium">{cat.name}</span>
+                {cat.isPublished === false && (
+                  <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full">прихована</span>
+                )}
               </div>
               
-              <DropdownMenu>
+              <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                <button
+                  onClick={async () => {
+                    await toggleCategoryPublish(cat.id, !(cat.isPublished !== false))
+                    toast.success(cat.isPublished !== false ? "Категорію приховано" : "Категорію показано")
+                  }}
+                  className="p-1 rounded hover:bg-muted transition-colors"
+                  title={cat.isPublished !== false ? "Приховати" : "Показати"}
+                >
+                  {cat.isPublished !== false ? (
+                    <Eye className="w-3.5 h-3.5 text-muted-foreground" />
+                  ) : (
+                    <EyeOff className="w-3.5 h-3.5 text-amber-500" />
+                  )}
+                </button>
+                <DropdownMenu>
                 <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                   <Button variant="ghost" size="icon" className="h-6 w-6">
                     <MoreVertical className="w-4 h-4" />
@@ -109,6 +127,7 @@ export function CategoriesClient({ initialCategories }: { initialCategories: any
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+            </div>
             </div>
             
             {hasChildren && isExpanded && (

@@ -54,6 +54,7 @@ model Category {
   metaTitle       String?
   metaDescription String?
   seoAlt          String?
+  isPublished     Boolean           @default(true)
   parentId        Int?
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt

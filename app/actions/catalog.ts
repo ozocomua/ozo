@@ -337,6 +337,26 @@ export async function deleteProduct(productId: number, confirmationSku: string) 
   }
 }
 
+// ── Bulk actions ──
+
+export async function bulkHideProducts() {
+  const result = await prisma.product.updateMany({
+    where: { isPublished: true },
+    data: { isPublished: false },
+  })
+  revalidatePath("/admin/catalog")
+  return { success: true, count: result.count }
+}
+
+export async function toggleCategoryPublish(categoryId: number, published: boolean) {
+  await prisma.category.update({
+    where: { id: categoryId },
+    data: { isPublished: published },
+  })
+  revalidatePath("/admin/catalog/categories")
+  return { success: true }
+}
+
 export async function regenerateAllSeo(): Promise<{ success: boolean; count: number; error?: string }> {
   try {
     const products = await prisma.product.findMany({

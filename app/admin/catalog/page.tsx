@@ -158,6 +158,23 @@ export default function AdminCatalogProductsPage() {
           <Button onClick={() => { window.location.href = window.location.pathname + '/products/new' }}>
             + Товар
           </Button>
+          <Button
+            variant="outline"
+            className="text-amber-600 border-amber-200 hover:bg-amber-50"
+            onClick={async () => {
+              if (!confirm("Сховати ВСІ опубліковані товари? Вони зникнуть з сайту.")) return
+              const res = await fetch("/api/admin/catalog/products/bulk-hide", { method: "POST" })
+              const data = await res.json().catch(() => ({}))
+              if (data.success) {
+                toast.success(`Приховано ${data.count} товарів`)
+                void load()
+              } else {
+                toast.error(data.error || "Помилка")
+              }
+            }}
+          >
+            <EyeOff size={14} className="mr-1" /> Сховати всі
+          </Button>
         </div>
       </div>
 

@@ -94,7 +94,7 @@ function pickDefaultVariant(variants: StorefrontVariant[]): StorefrontVariant | 
 
 export async function getTopCategories(): Promise<StorefrontCategory[]> {
   const categories = await prisma.category.findMany({
-    where: { parentId: null },
+    where: { parentId: null, isPublished: true },
     orderBy: { name: "asc" },
     select: { id: true, slug: true, name: true, description: true, imageUrl: true },
   })
@@ -110,7 +110,7 @@ export async function getTopCategories(): Promise<StorefrontCategory[]> {
 
 export async function getCategoryBySlug(slug: string): Promise<StorefrontCategory | null> {
   const c = await prisma.category.findUnique({
-    where: { slug },
+    where: { slug, isPublished: true },
     select: { id: true, slug: true, name: true, description: true, imageUrl: true },
   })
   if (!c) return null
@@ -125,7 +125,7 @@ export async function getCategoryBySlug(slug: string): Promise<StorefrontCategor
 
 export async function getSubcategories(parentId: number): Promise<StorefrontCategory[]> {
   const children = await prisma.category.findMany({
-    where: { parentId },
+    where: { parentId, isPublished: true },
     orderBy: { name: "asc" },
     select: { id: true, slug: true, name: true, description: true, imageUrl: true },
   })
