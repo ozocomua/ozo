@@ -6,7 +6,6 @@ import { RecentlyViewedProvider } from "@/lib/recently-viewed-context"
 import { Providers } from "./providers"
 import { Toaster } from "@/components/ui/sonner"
 import FacebookPixel from "@/components/facebook-pixel"
-import ExitPopup from "@/components/exit-popup"
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -59,7 +58,7 @@ export default function RootLayout({
         </Providers>
         <Toaster />
         <FacebookPixel />
-        <ExitPopup />
+        {/* ExitPopup temporarily disabled */}
       </body>
     </html>
   )
