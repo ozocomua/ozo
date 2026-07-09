@@ -163,7 +163,13 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
           </div>
 
           {/* Desktop cart */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3">
+            <Link
+              href="/catalog"
+              className="text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Каталог
+            </Link>
             <button
               className="relative p-2 text-foreground hover:text-primary transition-all active:scale-90"
               onClick={() => setIsModalOpen(true)}
@@ -271,7 +277,14 @@ export default function Header({ categories }: { categories: HeaderCategory[] })
           }}
         >
           <nav className="flex flex-col px-4 pt-6 gap-1">
-            <p className="text-xs tracking-widest text-muted-foreground uppercase mb-4 font-bold">
+            <Link
+              href="/catalog"
+              className="py-3 text-lg font-bold text-primary border-b border-border"
+              onClick={() => setMenuOpen(false)}
+            >
+              📦 Каталог товарів
+            </Link>
+            <p className="text-xs tracking-widest text-muted-foreground uppercase mb-2 mt-4 font-bold">
               Категорії
             </p>
             {categories.map((cat) => (
