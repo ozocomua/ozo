@@ -65,7 +65,31 @@ export async function GET(req: Request) {
   })
 }
 
-// ── POST: start import ──
+// ── DELETE: clean all imported data ──
+export async function DELETE(req: Request) {
+  const guard = await requireAdminOr401()
+  if (guard) return guard
+
+  const counts = {
+    productsDeleted: 0,
+    categoriesDeleted: 0,
+    brandsDeleted: 0,
+  }
+  
+  // Delete imported products (those starting with "SD" — Sandi SKUs)
+  const deletedProducts = await prisma.product.deleteMany({ where: { sku: { startsWith: "SD" } } })
+  counts.productsDeleted = deletedProducts.count
+
+  // Delete imported categories (those with imageUrl — Sandi provides images)
+  const deletedCats = await prisma.category.deleteMany({ where: { imageUrl: { not: null } } })
+  counts.categoriesDeleted = deletedCats.count
+
+  // Delete imported brands (those created by import — all if products were Sandi)
+  const deletedBrands = await prisma.brand.deleteMany({ where: { products: { none: {} } } })
+  counts.brandsDeleted = deletedBrands.count
+
+  return NextResponse.json({ success: true, counts })
+}
 export async function POST(req: Request) {
   const guard = await requireAdminOr401()
   if (guard) return guard
@@ -147,23 +171,35 @@ async function runImport(jid: string, sourceUrl: string) {
   const catEntries = data.categories ? Object.entries(data.categories) : []
   const categoryIdByUuid = new Map<string, number>()
   if (catEntries.length) {
-    const catData = catEntries.map(([uuid, c]) => ({ uuid, ...c, slug: slugify(c.name.uk) }))
+    const catData = catEntries.map(([uuid, c]) => ({ uuid, ...c, nameUk: c.name.uk, slug: slugify(c.name.uk) }))
     const byUuid = new Map(catData.map(c => [c.uuid, c]))
     let catProcessed = 0
 
-    async function ensureCategory(uuid: string): Promise<number> {
+    function makeSlug(uuid: string, name: string, parentUuid: string | null): string {
+      if (!parentUuid) return slugify(name)
+      const parent = byUuid.get(parentUuid)
+      const parentSlug = parent ? slugify(parent.nameUk) : ""
+      const mySlug = slugify(name)
+      const combined = parentSlug ? `${parentSlug}-${mySlug}` : mySlug
+      return combined.slice(0, 190)
+    }
+
+    async function ensureCategory(uuid: string, parentRef: string | null): Promise<number> {
       if (categoryIdByUuid.has(uuid)) return categoryIdByUuid.get(uuid)!
       const c = byUuid.get(uuid)
       if (!c) throw new Error(`Category not found: ${uuid}`)
       let parentId: number | null = null
-      if (c.parent_ref && byUuid.has(c.parent_ref)) parentId = await ensureCategory(c.parent_ref)
-      const existing = await prisma.category.findUnique({ where: { slug: c.slug }, select: { id: true } })
+      if (parentRef && byUuid.has(parentRef)) {
+        parentId = await ensureCategory(parentRef, byUuid.get(parentRef)!.parent_ref)
+      }
+      const uniqueSlug = makeSlug(uuid, c.nameUk, parentRef)
+      const existing = await prisma.category.findUnique({ where: { slug: uniqueSlug }, select: { id: true } })
       if (existing) {
         categoryIdByUuid.set(uuid, existing.id)
         stats.categories.skipped++
         return existing.id
       }
-      const created = await prisma.category.create({ data: { name: c.name.uk, slug: c.slug, parentId, imageUrl: c.image } })
+      const created = await prisma.category.create({ data: { name: c.nameUk, slug: uniqueSlug, parentId, imageUrl: c.image } })
       categoryIdByUuid.set(uuid, created.id)
       stats.categories.created++
       return created.id
@@ -172,7 +208,8 @@ async function runImport(jid: string, sourceUrl: string) {
     for (const [uuid] of catEntries) {
       catProcessed++
       updateProgress(catProcessed, catEntries.length + 1)
-      try { await ensureCategory(uuid) } catch (e) { console.error(`[import:${jid}] Category error:`, uuid, e) }
+      const c = byUuid.get(uuid)!
+      try { await ensureCategory(uuid, c.parent_ref) } catch (e) { console.error(`[import:${jid}] Category error:`, uuid, e) }
     }
   }
 

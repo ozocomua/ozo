@@ -1,17 +1,19 @@
 "use client"
 
 import { useState, useRef, useEffect, useCallback } from "react"
-import { Download, Loader2, CheckCircle, AlertCircle } from "lucide-react"
+import { Download, Loader2, CheckCircle, AlertCircle, Trash2 } from "lucide-react"
 
 export default function ImportPage() {
   const [url, setUrl] = useState("")
   const [loading, setLoading] = useState(false)
+  const [clearing, setClearing] = useState(false)
   const [status, setStatus] = useState<"idle" | "running" | "done" | "error">("idle")
   const [stats, setStats] = useState<any>(null)
   const [error, setError] = useState("")
   const [progress, setProgress] = useState(0)
   const [processed, setProcessed] = useState(0)
   const [total, setTotal] = useState(0)
+  const [clearedCounts, setClearedCounts] = useState<any>(null)
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const jobIdRef = useRef("")
 
@@ -44,6 +46,21 @@ export default function ImportPage() {
         }
       } catch { /* ignore poll errors */ }
     }, 1500)
+  }
+
+  async function clearImport() {
+    if (!confirm("Видалити ВСІ імпортовані товари, категорії та бренди? Ручні товари не постраждають.")) return
+    setClearing(true)
+    setClearedCounts(null)
+    try {
+      const res = await fetch("/api/admin/import", { method: "DELETE" })
+      const data = await res.json()
+      if (data.success) setClearedCounts(data.counts)
+    } catch (e: any) {
+      setError(e.message)
+    } finally {
+      setClearing(false)
+    }
   }
 
   async function startImport() {
@@ -119,6 +136,24 @@ export default function ImportPage() {
             </>
           )}
         </button>
+
+        <button
+          onClick={clearImport}
+          disabled={clearing}
+          className="w-full flex items-center justify-center gap-2 border border-red-200 text-red-600 font-bold py-3 rounded-xl hover:bg-red-50 active:scale-[0.98] transition-all disabled:opacity-40 text-sm"
+        >
+          {clearing ? (
+            <><Loader2 size={14} className="animate-spin" /> Очищення...</>
+          ) : (
+            <><Trash2 size={14} /> Очистити імпортовані дані (перед повторним імпортом)</>
+          )}
+        </button>
+
+        {clearedCounts && (
+          <div className="text-xs text-muted-foreground p-2 bg-amber-50 rounded-xl">
+            ✅ Видалено: {clearedCounts.productsDeleted} товарів, {clearedCounts.categoriesDeleted} категорій, {clearedCounts.brandsDeleted} брендів
+          </div>
+        )}
 
         {/* Progress bar */}
         {status === "running" && (
