@@ -111,7 +111,6 @@ model Product {
   images          ProductImage[]
   variants        ProductVariant[]
   reviews         Review[]
-  landings        LandingPage[]
 }
 
 model ProductCategory {
@@ -236,20 +235,23 @@ model Post {
 }
 
 model LandingPage {
-  id            Int      @id @default(autoincrement())
-  slug          String   @unique
-  title         String
-  subtitle      String?
-  productId     Int
-  ctaText       String   @default("Купити")
-  bgColor       String   @default("#F9F9F7")
-  btnColor       String   @default("#0B53A4")
-  textColor     String   @default("#111111")
-  bgImage       String?
-  metaTitle     String?
+  id              Int      @id @default(autoincrement())
+  slug            String   @unique
+  title           String
+  subtitle        String?
+  productName     String   @default("")
+  productDesc     String?  @db.Text
+  productPrice    Float    @default(0)
+  productOldPrice Float?
+  productImage    String?
+  productImages   Json     @default("[]")
+  ctaText         String   @default("Купити")
+  bgColor         String   @default("#F9F9F7")
+  btnColor        String   @default("#0B53A4")
+  textColor       String   @default("#111111")
+  metaTitle       String?
   metaDescription String?
-  isPublished   Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  product       Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+  isPublished     Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }

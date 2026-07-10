@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Plus, Pencil, Trash2, Eye, EyeOff, ExternalLink, Search, X } from "lucide-react"
+import { Plus, Pencil, Trash2, Eye, EyeOff, ExternalLink, X } from "lucide-react"
 import { toast } from "sonner"
 
 type Landing = {
@@ -11,8 +11,12 @@ type Landing = {
   slug: string
   title: string
   subtitle: string | null
-  productId: number
-  product: { id: number; name: string }
+  productName: string
+  productDesc: string | null
+  productPrice: number
+  productOldPrice: number | null
+  productImage: string | null
+  productImages: string[]
   ctaText: string
   bgColor: string
   btnColor: string
@@ -20,85 +24,18 @@ type Landing = {
   metaTitle: string | null
   metaDescription: string | null
   isPublished: boolean
-  createdAt: string
-}
-
-type ProductOption = { id: number; name: string }
-
-function ProductSearch({ products, selectedId, onSelect }: { products: ProductOption[]; selectedId: string; onSelect: (id: string) => void }) {
-  const [open, setOpen] = useState(false)
-  const [q, setQ] = useState("")
-  const selected = products.find(p => String(p.id) === selectedId)
-
-  const filtered = products.filter(p =>
-    p.name.toLowerCase().includes(q.toLowerCase())
-  ).slice(0, 30)
-
-  return (
-    <div className="relative">
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm flex items-center gap-2 hover:bg-muted/30 transition-colors text-left"
-      >
-        <Search size={14} className="shrink-0 text-muted-foreground" />
-        <span className={selected ? "" : "text-muted-foreground"}>
-          {selected ? selected.name : "Оберіть товар..."}
-        </span>
-      </button>
-
-      {open && (
-        <div className="absolute z-50 top-full mt-1 w-full bg-white border rounded-xl shadow-xl max-h-72 overflow-hidden">
-          <div className="p-2 border-b sticky top-0 bg-white">
-            <div className="relative">
-              <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="text"
-                autoFocus
-                value={q}
-                onChange={e => setQ(e.target.value)}
-                placeholder="Пошук товару..."
-                className="w-full h-9 pl-8 pr-8 rounded-md border border-input bg-background text-sm outline-none focus:ring-2 focus:ring-[#00B5D1]"
-                onKeyDown={e => e.key === "Escape" && setOpen(false)}
-              />
-              {q && (
-                <button onClick={() => setQ("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                  <X size={14} />
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="overflow-y-auto max-h-56">
-            {filtered.length === 0 ? (
-              <p className="text-sm text-muted-foreground p-3 text-center">Нічого не знайдено</p>
-            ) : (
-              filtered.map(p => (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => { onSelect(String(p.id)); setOpen(false); setQ("") }}
-                  className={`w-full text-left px-4 py-2.5 text-sm hover:bg-[#00B5D1]/10 transition-colors ${
-                    String(p.id) === selectedId ? "bg-[#00B5D1]/5 font-bold text-[#0B53A4]" : ""
-                  }`}
-                >
-                  {p.name}
-                </button>
-              ))
-            )}
-          </div>
-        </div>
-      )}
-      {/* Backdrop */}
-      {open && <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />}
-    </div>
-  )
 }
 
 const emptyForm = {
   slug: "",
   title: "",
   subtitle: "",
-  productId: "",
+  productName: "",
+  productDesc: "",
+  productPrice: "0",
+  productOldPrice: "",
+  productImage: "",
+  productImages: [] as string[],
   ctaText: "Купити",
   bgColor: "#F9F9F7",
   btnColor: "#0B53A4",
@@ -112,22 +49,16 @@ export default function LandingsPage() {
   const [loading, setLoading] = useState(true)
   const [creating, setCreating] = useState(false)
   const [editingId, setEditingId] = useState<number | null>(null)
-  const [products, setProducts] = useState<{ id: number; name: string }[]>([])
   const [saving, setSaving] = useState(false)
-
   const [form, setForm] = useState(emptyForm)
+  const [newImgUrl, setNewImgUrl] = useState("")
 
   async function load() {
     setLoading(true)
     try {
-      const [lRes, pRes] = await Promise.all([
-        fetch("/api/admin/landings"),
-        fetch("/api/admin/landings/products"),
-      ])
-      setLandings((await lRes.json()).landings ?? [])
-      setProducts((await pRes.json()).products ?? [])
-    } catch { /* */ }
-    finally { setLoading(false) }
+      const res = await fetch("/api/admin/landings")
+      setLandings((await res.json()).landings ?? [])
+    } finally { setLoading(false) }
   }
 
   useEffect(() => { load() }, [])
@@ -139,7 +70,12 @@ export default function LandingsPage() {
       slug: l.slug,
       title: l.title,
       subtitle: l.subtitle || "",
-      productId: String(l.productId),
+      productName: l.productName || "",
+      productDesc: l.productDesc || "",
+      productPrice: String(l.productPrice || 0),
+      productOldPrice: l.productOldPrice ? String(l.productOldPrice) : "",
+      productImage: l.productImage || "",
+      productImages: Array.isArray(l.productImages) ? l.productImages : [],
       ctaText: l.ctaText,
       bgColor: l.bgColor,
       btnColor: l.btnColor,
@@ -155,9 +91,22 @@ export default function LandingsPage() {
     setForm(emptyForm)
   }
 
+  function addImage() {
+    const url = newImgUrl.trim()
+    if (!url) return
+    setForm({ ...form, productImages: [...form.productImages, url] })
+    setNewImgUrl("")
+    if (!form.productImage) setForm(f => ({ ...f, productImage: url }))
+  }
+
+  function removeImage(idx: number) {
+    const arr = form.productImages.filter((_, i) => i !== idx)
+    setForm({ ...form, productImages: arr, productImage: arr[0] || "" })
+  }
+
   async function save() {
-    if (!form.slug.trim() || !form.title.trim() || !form.productId) {
-      toast.error("Slug, назва і товар обов'язкові")
+    if (!form.slug.trim() || !form.title.trim()) {
+      toast.error("Slug і заголовок обов'язкові")
       return
     }
     setSaving(true)
@@ -217,33 +166,42 @@ export default function LandingsPage() {
 
       {/* Form */}
       {isFormOpen && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-black/5 space-y-4">
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-black/5 space-y-4 max-h-[80vh] overflow-y-auto">
           <h3 className="font-bold text-lg">{editingId ? "Редагувати лендінг" : "Новий лендінг"}</h3>
+
+          {/* Row 1 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-[10px] font-bold uppercase text-muted-foreground">Slug (url)</label>
-              <Input value={form.slug} onChange={e => setForm({ ...form, slug: e.target.value })} placeholder="nasos-dlya-vody" />
+              <Input value={form.slug} onChange={e => setForm({ ...form, slug: e.target.value })} placeholder="sekator-verano" />
             </div>
             <div>
-              <label className="text-[10px] font-bold uppercase text-muted-foreground">Заголовок</label>
-              <Input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Найкращий насос" />
+              <label className="text-[10px] font-bold uppercase text-muted-foreground">Заголовок H1</label>
+              <Input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Секатор Verano 205 мм" />
             </div>
+          </div>
+
+          {/* Row 2 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-[10px] font-bold uppercase text-muted-foreground">Підзаголовок</label>
-              <Input value={form.subtitle} onChange={e => setForm({ ...form, subtitle: e.target.value })} placeholder="Короткий опис" />
+              <Input value={form.subtitle} onChange={e => setForm({ ...form, subtitle: e.target.value })} placeholder="Японська сталь SK-5" />
             </div>
             <div>
-              <label className="text-[10px] font-bold uppercase text-muted-foreground">Товар</label>
-              <ProductSearch
-                products={products}
-                selectedId={form.productId}
-                onSelect={(id) => setForm({ ...form, productId: id })}
-              />
-              {products.length === 0 && (
-                <p className="text-[10px] text-amber-600 mt-1">
-                  Немає товарів. Спочатку створіть товар у Каталозі.
-                </p>
-              )}
+              <label className="text-[10px] font-bold uppercase text-muted-foreground">Назва товару (на сторінці)</label>
+              <Input value={form.productName} onChange={e => setForm({ ...form, productName: e.target.value })} placeholder="Секатор Verano 71-814" />
+            </div>
+          </div>
+
+          {/* Row 3 — prices */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+              <label className="text-[10px] font-bold uppercase text-muted-foreground">Ціна (грн)</label>
+              <Input type="number" value={form.productPrice} onChange={e => setForm({ ...form, productPrice: e.target.value })} />
+            </div>
+            <div>
+              <label className="text-[10px] font-bold uppercase text-muted-foreground">Стара ціна (грн)</label>
+              <Input type="number" value={form.productOldPrice} onChange={e => setForm({ ...form, productOldPrice: e.target.value })} placeholder="Не обов'язково" />
             </div>
             <div>
               <label className="text-[10px] font-bold uppercase text-muted-foreground">Текст кнопки</label>
@@ -251,19 +209,50 @@ export default function LandingsPage() {
             </div>
             <div className="flex gap-2">
               <div>
-                <label className="text-[10px] font-bold uppercase text-muted-foreground">Колір кнопки</label>
-                <input type="color" value={form.btnColor} onChange={e => setForm({ ...form, btnColor: e.target.value })} className="w-10 h-10 rounded border cursor-pointer" />
+                <label className="text-[10px] font-bold uppercase text-muted-foreground">Кнопка</label>
+                <input type="color" value={form.btnColor} onChange={e => setForm({ ...form, btnColor: e.target.value })} className="w-8 h-8 rounded border cursor-pointer" />
               </div>
               <div>
-                <label className="text-[10px] font-bold uppercase text-muted-foreground">Колір фону</label>
-                <input type="color" value={form.bgColor} onChange={e => setForm({ ...form, bgColor: e.target.value })} className="w-10 h-10 rounded border cursor-pointer" />
-              </div>
-              <div>
-                <label className="text-[10px] font-bold uppercase text-muted-foreground">Колір тексту</label>
-                <input type="color" value={form.textColor} onChange={e => setForm({ ...form, textColor: e.target.value })} className="w-10 h-10 rounded border cursor-pointer" />
+                <label className="text-[10px] font-bold uppercase text-muted-foreground">Фон</label>
+                <input type="color" value={form.bgColor} onChange={e => setForm({ ...form, bgColor: e.target.value })} className="w-8 h-8 rounded border cursor-pointer" />
               </div>
             </div>
           </div>
+
+          {/* Row 4 — description */}
+          <div>
+            <label className="text-[10px] font-bold uppercase text-muted-foreground">Опис товару</label>
+            <textarea
+              value={form.productDesc}
+              onChange={e => setForm({ ...form, productDesc: e.target.value })}
+              placeholder="Повний опис товару, характеристики..."
+              className="w-full h-32 rounded-md border border-input bg-background px-3 py-2 text-sm resize-y"
+            />
+          </div>
+
+          {/* Row 5 — images */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold uppercase text-muted-foreground">Фото товару (URL)</label>
+            <div className="flex gap-2">
+              <Input value={newImgUrl} onChange={e => setNewImgUrl(e.target.value)} placeholder="https://images.prom.ua/3869195430.jpg" onKeyDown={e => e.key === "Enter" && (e.preventDefault(), addImage())} />
+              <Button type="button" variant="outline" onClick={addImage}>Додати</Button>
+            </div>
+            {form.productImages.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {form.productImages.map((url, i) => (
+                  <div key={i} className="relative group">
+                    <img src={url} alt="" className="w-20 h-20 object-cover rounded-lg border" />
+                    <button onClick={() => removeImage(i)} className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">
+                      <X size={10} />
+                    </button>
+                    {i === 0 && <span className="absolute bottom-0 left-0 right-0 bg-[#0B53A4] text-white text-[9px] text-center rounded-b-lg py-0.5">Головне</span>}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Row 6 — SEO */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-[10px] font-bold uppercase text-muted-foreground">SEO Title</label>
@@ -274,7 +263,8 @@ export default function LandingsPage() {
               <Input value={form.metaDescription} onChange={e => setForm({ ...form, metaDescription: e.target.value })} />
             </div>
           </div>
-          <div className="flex gap-2">
+
+          <div className="flex gap-2 pt-2">
             <Button onClick={save} disabled={saving}>{saving ? "Збереження..." : "Зберегти"}</Button>
             <Button variant="outline" onClick={cancel}>Відміна</Button>
           </div>
@@ -296,6 +286,7 @@ export default function LandingsPage() {
               <tr className="border-b bg-[#F9F9F7] text-[11px] font-bold uppercase tracking-widest text-muted-foreground text-left">
                 <th className="p-4">Лендінг</th>
                 <th className="p-4">Товар</th>
+                <th className="p-4">Ціна</th>
                 <th className="p-4">Slug</th>
                 <th className="p-4">Статус</th>
                 <th className="p-4 text-right">Дії</th>
@@ -305,7 +296,8 @@ export default function LandingsPage() {
               {landings.map(l => (
                 <tr key={l.id} className="hover:bg-muted/30 transition-colors">
                   <td className="p-4 font-medium">{l.title}</td>
-                  <td className="p-4 text-sm text-muted-foreground">{l.product?.name ?? "—"}</td>
+                  <td className="p-4 text-sm">{l.productName || "—"}</td>
+                  <td className="p-4 text-sm font-bold">{l.productPrice > 0 ? `${l.productPrice} ₴` : "—"}</td>
                   <td className="p-4 text-sm text-muted-foreground font-mono">/lp/{l.slug}</td>
                   <td className="p-4">
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${l.isPublished ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
@@ -315,17 +307,17 @@ export default function LandingsPage() {
                   <td className="p-4 text-right">
                     <div className="flex items-center justify-end gap-1">
                       {l.isPublished && (
-                        <a href={`/lp/${l.slug}`} target="_blank" className="p-2 hover:bg-muted rounded transition-colors" title="Відкрити">
+                        <a href={`/lp/${l.slug}`} target="_blank" className="p-2 hover:bg-muted rounded" title="Відкрити">
                           <ExternalLink size={14} className="text-blue-500" />
                         </a>
                       )}
-                      <button onClick={() => startEdit(l)} className="p-2 hover:bg-muted rounded transition-colors" title="Редагувати">
+                      <button onClick={() => startEdit(l)} className="p-2 hover:bg-muted rounded" title="Редагувати">
                         <Pencil size={14} />
                       </button>
-                      <button onClick={() => togglePublish(l.id)} className="p-2 hover:bg-muted rounded transition-colors" title={l.isPublished ? "Приховати" : "Опублікувати"}>
+                      <button onClick={() => togglePublish(l.id)} className="p-2 hover:bg-muted rounded" title={l.isPublished ? "Приховати" : "Опублікувати"}>
                         {l.isPublished ? <Eye size={14} className="text-green-600" /> : <EyeOff size={14} />}
                       </button>
-                      <button onClick={() => deleteLanding(l.id, l.title)} className="p-2 hover:bg-red-50 rounded transition-colors" title="Видалити">
+                      <button onClick={() => deleteLanding(l.id, l.title)} className="p-2 hover:bg-red-50 rounded" title="Видалити">
                         <Trash2 size={14} className="text-red-500" />
                       </button>
                     </div>
