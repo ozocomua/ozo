@@ -324,6 +324,46 @@ export async function sendOrderNotification(order: {
 }
 
 /**
+ * Відправляє в Telegram сповіщення про замовлення з лендінгу.
+ */
+export async function sendLandingOrderNotification(data: {
+  productName: string
+  price: number
+  name: string
+  phone: string
+  slug: string
+}): Promise<void> {
+  const botToken = process.env.TELEGRAM_BOT_TOKEN
+  const adminChatId = process.env.TELEGRAM_ADMIN_TOKEN
+
+  if (!botToken || !adminChatId) {
+    console.warn("[telegram] Landing notification skipped — TELEGRAM_BOT_TOKEN or TELEGRAM_ADMIN_TOKEN not set")
+    return
+  }
+
+  const now = new Date().toLocaleString("uk-UA", { timeZone: "Europe/Kyiv" })
+  const text = `🛒 <b>Нове замовлення з лендінгу!</b>\n\n<b>Товар:</b> ${escapeHtml(data.productName)}\n<b>Ціна:</b> ${data.price} грн\n<b>Ім'я:</b> ${escapeHtml(data.name || "Не вказано")}\n<b>Телефон:</b> ${formatPhone(data.phone)}\n<b>Лендінг:</b> /lp/${escapeHtml(data.slug)}\n\n<i>${now}</i>`
+
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: adminChatId,
+        text,
+        parse_mode: "HTML",
+      }),
+    })
+    const json = await res.json()
+    if (!json.ok) {
+      console.error("[telegram] Landing notification FAILED:", json)
+    }
+  } catch (err) {
+    console.error("[telegram] Landing notification network error:", err)
+  }
+}
+
+/**
  * Відправляє в Telegram сповіщення про будь-яку помилку на сайті.
  */
 export async function sendErrorToTelegram(error: {
