@@ -42,6 +42,7 @@ const emptyForm = {
   textColor: "#111111",
   metaTitle: "",
   metaDescription: "",
+  reviews: [] as {name:string;city:string;text:string;avatar:string;rating:number}[],
 }
 
 export default function LandingsPage() {
@@ -83,6 +84,7 @@ export default function LandingsPage() {
       textColor: l.textColor,
       metaTitle: l.metaTitle || "",
       metaDescription: l.metaDescription || "",
+      reviews: Array.isArray(l.reviews) ? l.reviews : [],
     })
   }
 
@@ -282,7 +284,87 @@ export default function LandingsPage() {
             )}
           </div>
 
-          {/* Row 6 — SEO */}
+          {/* Row 6 — Reviews */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold uppercase text-muted-foreground">Відгуки</label>
+            {form.reviews.map((r, i) => (
+              <div key={i} className="bg-secondary rounded-xl p-4 space-y-3">
+                <div className="flex items-center gap-3">
+                  {r.avatar ? (
+                    <img src={r.avatar} alt="" className="w-10 h-10 rounded-full object-cover" />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#0B53A4] to-[#00B5D1] flex items-center justify-center text-white font-bold text-xs">{r.name?.[0] || "?"}</div>
+                  )}
+                  <div className="flex-1 grid grid-cols-2 gap-2">
+                    <Input
+                      placeholder="Ім'я"
+                      value={r.name}
+                      onChange={e => {
+                        const updated = [...form.reviews]
+                        updated[i] = { ...updated[i], name: e.target.value }
+                        setForm({ ...form, reviews: updated })
+                      }}
+                    />
+                    <Input
+                      placeholder="Місто"
+                      value={r.city}
+                      onChange={e => {
+                        const updated = [...form.reviews]
+                        updated[i] = { ...updated[i], city: e.target.value }
+                        setForm({ ...form, reviews: updated })
+                      }}
+                    />
+                  </div>
+                  <button onClick={() => setForm({ ...form, reviews: form.reviews.filter((_, j) => j !== i) })} className="text-red-400 hover:text-red-600">
+                    <X size={16} />
+                  </button>
+                </div>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="URL аватарки"
+                    value={r.avatar}
+                    onChange={e => {
+                      const updated = [...form.reviews]
+                      updated[i] = { ...updated[i], avatar: e.target.value }
+                      setForm({ ...form, reviews: updated })
+                    }}
+                    className="flex-1"
+                  />
+                  <select
+                    value={r.rating || 5}
+                    onChange={e => {
+                      const updated = [...form.reviews]
+                      updated[i] = { ...updated[i], rating: Number(e.target.value) }
+                      setForm({ ...form, reviews: updated })
+                    }}
+                    className="w-16 h-10 rounded-md border border-input bg-background px-2 text-sm"
+                  >
+                    {[1,2,3,4,5].map(n => <option key={n} value={n}>{n}★</option>)}
+                  </select>
+                </div>
+                <textarea
+                  placeholder="Текст відгуку..."
+                  value={r.text}
+                  onChange={e => {
+                    const updated = [...form.reviews]
+                    updated[i] = { ...updated[i], text: e.target.value }
+                    setForm({ ...form, reviews: updated })
+                  }}
+                  className="w-full h-16 rounded-md border border-input bg-background px-3 py-2 text-sm resize-y"
+                />
+              </div>
+            ))}
+            <Button type="button" variant="outline" size="sm" onClick={() => {
+              setForm({ ...form, reviews: [...form.reviews, { name: "", city: "", text: "", avatar: "", rating: 5 }] })
+            }}>
+              <Plus size={14} className="mr-1" /> Додати відгук
+            </Button>
+            {form.reviews.length === 0 && (
+              <p className="text-[10px] text-muted-foreground">Залиште порожнім — використаються стандартні відгуки</p>
+            )}
+          </div>
+
+          {/* Row 7 — SEO */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-[10px] font-bold uppercase text-muted-foreground">SEO Title</label>

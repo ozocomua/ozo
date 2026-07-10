@@ -10,7 +10,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const body = await req.json()
-  const { slug, title, subtitle, productName, productDesc, productPrice, productOldPrice, productImage, productImages, ctaText, bgColor, btnColor, textColor, metaTitle, metaDescription } = body
+  const { slug, title, subtitle, productName, productDesc, productPrice, productOldPrice, productImage, productImages, ctaText, bgColor, btnColor, textColor, metaTitle, metaDescription, reviews } = body
 
   if (!slug?.trim() || !title?.trim()) {
     return NextResponse.json({ error: "slug, title are required" }, { status: 400 })
@@ -36,6 +36,7 @@ export async function POST(req: Request) {
       textColor: textColor || "#111111",
       metaTitle: metaTitle?.trim() || null,
       metaDescription: metaDescription?.trim() || null,
+      reviews: Array.isArray(reviews) ? reviews : [],
     },
   })
   return NextResponse.json({ success: true, landing })
@@ -43,7 +44,7 @@ export async function POST(req: Request) {
 
 export async function PUT(req: Request) {
   const body = await req.json()
-  const { id, slug, title, subtitle, productName, productDesc, productPrice, productOldPrice, productImage, productImages, ctaText, bgColor, btnColor, textColor, metaTitle, metaDescription } = body
+  const { id, slug, title, subtitle, productName, productDesc, productPrice, productOldPrice, productImage, productImages, ctaText, bgColor, btnColor, textColor, metaTitle, metaDescription, reviews } = body
 
   if (!id || !slug?.trim() || !title?.trim()) {
     return NextResponse.json({ error: "id, slug, title are required" }, { status: 400 })
@@ -70,7 +71,9 @@ export async function PUT(req: Request) {
       textColor: textColor || "#111111",
       metaTitle: metaTitle?.trim() || null,
       metaDescription: metaDescription?.trim() || null,
+      reviews: Array.isArray(reviews) ? reviews : [],
     },
   })
+
   return NextResponse.json({ success: true })
 }
