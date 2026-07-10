@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Plus, Pencil, Trash2, Eye, EyeOff, ExternalLink, X } from "lucide-react"
+import { Plus, Pencil, Trash2, Eye, EyeOff, ExternalLink, X, Upload, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 
 type Landing = {
@@ -51,7 +51,8 @@ export default function LandingsPage() {
   const [editingId, setEditingId] = useState<number | null>(null)
   const [saving, setSaving] = useState(false)
   const [form, setForm] = useState(emptyForm)
-  const [newImgUrl, setNewImgUrl] = useState("")
+  const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   async function load() {
     setLoading(true)
@@ -91,12 +92,31 @@ export default function LandingsPage() {
     setForm(emptyForm)
   }
 
-  function addImage() {
-    const url = newImgUrl.trim()
-    if (!url) return
-    setForm({ ...form, productImages: [...form.productImages, url] })
-    setNewImgUrl("")
-    if (!form.productImage) setForm(f => ({ ...f, productImage: url }))
+  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files
+    if (!files?.length) return
+    setUploading(true)
+    const newUrls: string[] = []
+    for (const file of Array.from(files)) {
+      try {
+        const fd = new FormData()
+        fd.append("file", file)
+        const res = await fetch("/api/upload", { method: "POST", body: fd })
+        const data = await res.json()
+        if (data.success && data.url) {
+          newUrls.push(data.url)
+        } else {
+          toast.error(data.error || "Помилка завантаження")
+        }
+      } catch { toast.error("Мережева помилка при завантаженні") }
+    }
+    if (newUrls.length) {
+      const combined = [...form.productImages, ...newUrls]
+      setForm({ ...form, productImages: combined, productImage: form.productImage || newUrls[0] })
+      toast.success(`Завантажено ${newUrls.length} фото`)
+    }
+    setUploading(false)
+    if (fileInputRef.current) fileInputRef.current.value = ""
   }
 
   function removeImage(idx: number) {
@@ -232,10 +252,20 @@ export default function LandingsPage() {
 
           {/* Row 5 — images */}
           <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase text-muted-foreground">Фото товару (URL)</label>
+            <label className="text-[10px] font-bold uppercase text-muted-foreground">Фото товару</label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleFileUpload}
+              className="hidden"
+            />
             <div className="flex gap-2">
-              <Input value={newImgUrl} onChange={e => setNewImgUrl(e.target.value)} placeholder="https://images.prom.ua/3869195430.jpg" onKeyDown={e => e.key === "Enter" && (e.preventDefault(), addImage())} />
-              <Button type="button" variant="outline" onClick={addImage}>Додати</Button>
+              <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
+                {uploading ? <><Loader2 size={14} className="animate-spin mr-1" /> Завантаження...</> : <><Upload size={14} className="mr-1" /> Завантажити фото</>}
+              </Button>
+              <span className="text-xs text-muted-foreground self-center">JPEG, PNG, WebP — max 10 MB</span>
             </div>
             {form.productImages.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">

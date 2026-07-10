@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Star, ChevronDown, ChevronUp, Scissors, Shield, Truck, RotateCcw, Check, Sprout, Phone, User, Send, ShoppingCart, X } from "lucide-react"
 import { toast } from "sonner"
+import { maskPhoneInput, stripPhoneFormatting, isValidPhone } from "@/lib/phone-format"
 
 /* ── Countdown Timer ── */
 function CountdownTimer({ endTime }: { endTime: number }) {
@@ -38,12 +39,17 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 /* ── Checkout Modal ── */
 function CheckoutModal({ open, onClose, landing, tier, onSuccess }: { open: boolean; onClose: () => void; landing: any; tier: any; onSuccess: () => void }) {
   const [name, setName] = useState("")
-  const [phone, setPhone] = useState("")
+  const [phone, setPhone] = useState("+380")
   const [sending, setSending] = useState(false)
+
+  function handlePhoneChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { masked } = maskPhoneInput(e.target.value)
+    setPhone(masked)
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
-    if (!phone.trim()) { toast.error("Введіть номер телефону"); return }
+    if (!isValidPhone(phone)) { toast.error("Введіть повний номер телефону"); return }
     setSending(true)
     try {
       const res = await fetch("/api/checkout/direct", {
@@ -57,7 +63,7 @@ function CheckoutModal({ open, onClose, landing, tier, onSuccess }: { open: bool
           image: (landing.productImages?.[0]) || landing.productImage || "",
           slug: landing.slug,
           name: name.trim(),
-          phone: phone.trim(),
+          phone: stripPhoneFormatting(phone),
         }),
       })
       if (res.ok) {
@@ -92,7 +98,7 @@ function CheckoutModal({ open, onClose, landing, tier, onSuccess }: { open: bool
             <label className="text-[10px] font-bold uppercase text-muted-foreground">Телефон *</label>
             <div className="relative mt-1">
               <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-              <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="+380 (XX) XXX-XX-XX" required className="w-full h-12 rounded-xl border border-input bg-background pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-[#0d5e2e]" />
+              <input value={phone} onChange={handlePhoneChange} placeholder="+38 (097) 233-63-21" required className="w-full h-12 rounded-xl border border-input bg-background pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-[#0d5e2e]" />
             </div>
           </div>
 
