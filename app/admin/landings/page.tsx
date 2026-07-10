@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Plus, Pencil, Trash2, Eye, EyeOff, ExternalLink } from "lucide-react"
+import { Plus, Pencil, Trash2, Eye, EyeOff, ExternalLink, Search, X } from "lucide-react"
 import { toast } from "sonner"
 
 type Landing = {
@@ -21,6 +21,77 @@ type Landing = {
   metaDescription: string | null
   isPublished: boolean
   createdAt: string
+}
+
+type ProductOption = { id: number; name: string }
+
+function ProductSearch({ products, selectedId, onSelect }: { products: ProductOption[]; selectedId: string; onSelect: (id: string) => void }) {
+  const [open, setOpen] = useState(false)
+  const [q, setQ] = useState("")
+  const selected = products.find(p => String(p.id) === selectedId)
+
+  const filtered = products.filter(p =>
+    p.name.toLowerCase().includes(q.toLowerCase())
+  ).slice(0, 30)
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm flex items-center gap-2 hover:bg-muted/30 transition-colors text-left"
+      >
+        <Search size={14} className="shrink-0 text-muted-foreground" />
+        <span className={selected ? "" : "text-muted-foreground"}>
+          {selected ? selected.name : "Оберіть товар..."}
+        </span>
+      </button>
+
+      {open && (
+        <div className="absolute z-50 top-full mt-1 w-full bg-white border rounded-xl shadow-xl max-h-72 overflow-hidden">
+          <div className="p-2 border-b sticky top-0 bg-white">
+            <div className="relative">
+              <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="text"
+                autoFocus
+                value={q}
+                onChange={e => setQ(e.target.value)}
+                placeholder="Пошук товару..."
+                className="w-full h-9 pl-8 pr-8 rounded-md border border-input bg-background text-sm outline-none focus:ring-2 focus:ring-[#00B5D1]"
+                onKeyDown={e => e.key === "Escape" && setOpen(false)}
+              />
+              {q && (
+                <button onClick={() => setQ("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  <X size={14} />
+                </button>
+              )}
+            </div>
+          </div>
+          <div className="overflow-y-auto max-h-56">
+            {filtered.length === 0 ? (
+              <p className="text-sm text-muted-foreground p-3 text-center">Нічого не знайдено</p>
+            ) : (
+              filtered.map(p => (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => { onSelect(String(p.id)); setOpen(false); setQ("") }}
+                  className={`w-full text-left px-4 py-2.5 text-sm hover:bg-[#00B5D1]/10 transition-colors ${
+                    String(p.id) === selectedId ? "bg-[#00B5D1]/5 font-bold text-[#0B53A4]" : ""
+                  }`}
+                >
+                  {p.name}
+                </button>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+      {/* Backdrop */}
+      {open && <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />}
+    </div>
+  )
 }
 
 const emptyForm = {
@@ -163,16 +234,11 @@ export default function LandingsPage() {
             </div>
             <div>
               <label className="text-[10px] font-bold uppercase text-muted-foreground">Товар</label>
-              <select
-                value={form.productId}
-                onChange={e => setForm({ ...form, productId: e.target.value })}
-                className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
-              >
-                <option value="">Оберіть товар...</option>
-                {products.map(p => (
-                  <option key={p.id} value={String(p.id)}>{p.name}</option>
-                ))}
-              </select>
+              <ProductSearch
+                products={products}
+                selectedId={form.productId}
+                onSelect={(id) => setForm({ ...form, productId: id })}
+              />
               {products.length === 0 && (
                 <p className="text-[10px] text-amber-600 mt-1">
                   Немає товарів. Спочатку створіть товар у Каталозі.
