@@ -111,6 +111,7 @@ model Product {
   images          ProductImage[]
   variants        ProductVariant[]
   reviews         Review[]
+  landings        LandingPage[]
 }
 
 model ProductCategory {
