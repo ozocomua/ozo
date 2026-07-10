@@ -1,9 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ShoppingCart, Star, ChevronDown, ChevronUp, Scissors, Shield, Truck, RotateCcw, Check, Sprout } from "lucide-react"
+import { Star, ChevronDown, ChevronUp, Scissors, Shield, Truck, RotateCcw, Check, Sprout, Phone, User, Send, ShoppingCart, X } from "lucide-react"
 import { toast } from "sonner"
 
+/* ── Countdown Timer ── */
 function CountdownTimer({ endTime }: { endTime: number }) {
   const [now, setNow] = useState(Date.now())
   useEffect(() => { const iv = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(iv) }, [])
@@ -23,6 +24,7 @@ function CountdownTimer({ endTime }: { endTime: number }) {
   )
 }
 
+/* ── FAQ Item ── */
 function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false)
   return (
@@ -33,6 +35,85 @@ function FaqItem({ q, a }: { q: string; a: string }) {
   )
 }
 
+/* ── Checkout Modal ── */
+function CheckoutModal({ open, onClose, landing, tier, onSuccess }: { open: boolean; onClose: () => void; landing: any; tier: any; onSuccess: () => void }) {
+  const [name, setName] = useState("")
+  const [phone, setPhone] = useState("")
+  const [sending, setSending] = useState(false)
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!phone.trim()) { toast.error("Введіть номер телефону"); return }
+    setSending(true)
+    try {
+      const res = await fetch("/api/checkout/direct", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          productName: landing.productName || landing.title,
+          price: tier.pricePerUnit,
+          oldPrice: tier.oldPerUnit,
+          qty: tier.qty,
+          image: (landing.productImages?.[0]) || landing.productImage || "",
+          slug: landing.slug,
+          name: name.trim(),
+          phone: phone.trim(),
+        }),
+      })
+      if (res.ok) {
+        onSuccess()
+        onClose()
+      } else {
+        const d = await res.json()
+        toast.error(d.error || "Помилка")
+      }
+    } catch { toast.error("Мережева помилка") }
+    finally { setSending(false) }
+  }
+
+  if (!open) return null
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="relative bg-white rounded-3xl p-6 md:p-8 max-w-md w-full mx-4 shadow-2xl z-10">
+        <button onClick={onClose} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"><X size={20} /></button>
+        <h3 className="text-xl font-black mb-1">Оформлення замовлення</h3>
+        <p className="text-sm text-muted-foreground mb-6">{landing.productName || landing.title} — {tier.qty} шт × {tier.pricePerUnit} грн</p>
+
+        <form onSubmit={submit} className="space-y-4">
+          <div>
+            <label className="text-[10px] font-bold uppercase text-muted-foreground">Ім'я</label>
+            <div className="relative mt-1">
+              <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <input value={name} onChange={e => setName(e.target.value)} placeholder="Ваше ім'я" className="w-full h-12 rounded-xl border border-input bg-background pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-[#0d5e2e]" />
+            </div>
+          </div>
+          <div>
+            <label className="text-[10px] font-bold uppercase text-muted-foreground">Телефон *</label>
+            <div className="relative mt-1">
+              <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="+380 (XX) XXX-XX-XX" required className="w-full h-12 rounded-xl border border-input bg-background pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-[#0d5e2e]" />
+            </div>
+          </div>
+
+          <div className="bg-[#F5F9F2] rounded-xl p-4 flex items-center justify-between">
+            <span className="text-sm font-bold">До сплати:</span>
+            <span className="text-xl font-black">{tier.pricePerUnit * tier.qty} грн</span>
+          </div>
+
+          <button type="submit" disabled={sending}
+            className="w-full flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-[#0d5e2e] to-[#16a34a] text-white font-black text-lg rounded-xl shadow-lg active:scale-[0.97] transition-all uppercase disabled:opacity-50">
+            <Send size={18} />
+            {sending ? "Відправляємо..." : "Підтвердити замовлення"}
+          </button>
+          <p className="text-[10px] text-muted-foreground text-center">Менеджер передзвонить протягом 15 хвилин</p>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+/* ═══════ MAIN ═══════ */
 export default function LandingClient({ landing }: { landing: any }) {
   const images: string[] = (Array.isArray(landing.productImages) && landing.productImages.length > 0)
     ? landing.productImages
@@ -49,31 +130,10 @@ export default function LandingClient({ landing }: { landing: any }) {
   ]
 
   const [selectedQty, setSelectedQty] = useState(0)
-  const [adding, setAdding] = useState(false)
+  const [showForm, setShowForm] = useState(false)
   const timerEnd = Date.now() + 8 * 3600000 + 43 * 60000 + 15 * 1000
   const tier = tiers[selectedQty]
   const totalPrice = tier.pricePerUnit * tier.qty
-
-  async function handleBuy() {
-    setAdding(true)
-    try {
-      const res = await fetch("/api/checkout/direct", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          productName: landing.productName || landing.title,
-          price: tier.pricePerUnit,
-          oldPrice: tier.oldPerUnit,
-          qty: tier.qty,
-          image: mainImg,
-          slug: landing.slug,
-        }),
-      })
-      if (res.ok) { const d = await res.json(); if (d.checkoutUrl) { window.location.href = d.checkoutUrl; return } }
-    } catch { /* fallback */ }
-    toast.success("Замовлення оформлено! Ми зв'яжемось з вами.")
-    setAdding(false)
-  }
 
   const reviews = [
     { name: "Ігор", city: "Київ", text: "Брав для обрізки винограду. Ріже як по маслу! За два сезони навіть не точив. Рекомендую всім садоводам!" },
@@ -82,8 +142,23 @@ export default function LandingClient({ landing }: { landing: any }) {
     { name: "Олена", city: "Львів", text: "Маленька рука, а секатор лягає ідеально — ручки зручні, не натирають. За день обрізала весь сад, рука не втомилась." },
   ]
 
+  const BuyButton = ({ className }: { className?: string }) => (
+    <button onClick={() => setShowForm(true)} className={className}>
+      <ShoppingCart size={22} />
+      {landing.ctaText || "Замовити зі знижкою"}
+    </button>
+  )
+
   return (
-    <div className="min-h-screen font-sans bg-white text-[#1a1a1a]" suppressHydrationWarning>
+    <div className="min-h-screen font-sans bg-white text-[#1a1a1a]">
+
+      <CheckoutModal
+        open={showForm}
+        onClose={() => setShowForm(false)}
+        landing={landing}
+        tier={tier}
+        onSuccess={() => toast.success("Замовлення прийнято! Очікуйте дзвінка менеджера.")}
+      />
 
       {/* ═══════ HERO ═══════ */}
       <section className="bg-gradient-to-b from-[#0d5e2e] to-[#0a4a24] text-white relative overflow-hidden">
@@ -92,39 +167,24 @@ export default function LandingClient({ landing }: { landing: any }) {
             <a href="/" className="font-serif text-xl font-black tracking-wider opacity-80 hover:opacity-100">OZO</a>
             <div className="text-xs opacity-60">Графік роботи: Пн-Нд: 08:00-21:00</div>
           </div>
-
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="space-y-5">
-              <h1 className="text-2xl md:text-4xl lg:text-5xl font-black leading-tight uppercase">
-                {landing.title}
-              </h1>
-              <p className="text-base md:text-lg opacity-80 leading-relaxed">
-                {landing.subtitle || "Японська сталь SK-5. Чистий різ без заминання гілок"}
-              </p>
-
-              <div className="inline-flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-full font-black text-sm">
-                🔥 47% знижка
-              </div>
-
+              <h1 className="text-2xl md:text-4xl lg:text-5xl font-black leading-tight uppercase">{landing.title}</h1>
+              <p className="text-base md:text-lg opacity-80 leading-relaxed">{landing.subtitle || "Японська сталь SK-5. Чистий різ без заминання гілок"}</p>
+              <div className="inline-flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-full font-black text-sm">🔥 47% знижка</div>
               <div className="space-y-1">
                 {tier.oldPerUnit && <div className="text-lg line-through opacity-50">Стара ціна: <span className="text-xl font-black">{tier.oldPerUnit} грн</span></div>}
                 <div className="text-lg font-black opacity-80">Акційна ціна:</div>
                 <div className="text-3xl md:text-4xl font-black">{tier.pricePerUnit} грн</div>
               </div>
-
               <div className="bg-white/10 rounded-2xl p-4 space-y-2">
                 <p className="text-xs font-bold uppercase tracking-wider">Пропозиція діє:</p>
                 <CountdownTimer endTime={timerEnd} />
               </div>
               <p className="text-sm opacity-60">Залишилось <b>27 шт</b> за акцією</p>
 
-              <button onClick={handleBuy} disabled={adding}
-                className="w-full md:w-auto flex items-center justify-center gap-3 px-8 py-5 bg-red-500 hover:bg-red-600 text-white font-black text-lg rounded-2xl shadow-xl active:scale-[0.97] transition-all uppercase">
-                <ShoppingCart size={22} />
-                {adding ? "Оформлюємо..." : landing.ctaText || "Замовити зі знижкою"}
-              </button>
+              <BuyButton className="w-full md:w-auto flex items-center justify-center gap-3 px-8 py-5 bg-red-500 hover:bg-red-600 text-white font-black text-lg rounded-2xl shadow-xl active:scale-[0.97] transition-all uppercase" />
             </div>
-
             <div className="flex justify-center">
               <div className="relative w-full max-w-sm aspect-square rounded-3xl overflow-hidden bg-white p-4 shadow-2xl">
                 <img src={mainImg} alt={landing.title} className="w-full h-full object-contain" />
@@ -139,9 +199,7 @@ export default function LandingClient({ landing }: { landing: any }) {
       {/* ═══════ ADVANTAGES ═══════ */}
       <section className="py-16 bg-white">
         <div className="mx-auto max-w-5xl px-4">
-          <h2 className="text-2xl md:text-3xl font-black text-center mb-10">
-            Чим особливий<br />цей секатор?
-          </h2>
+          <h2 className="text-2xl md:text-3xl font-black text-center mb-10">Чим особливий<br />цей секатор?</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {[
               { icon: <Scissors size={28} className="text-emerald-600" />, title: "Японська сталь SK-5", desc: "Лезо проходить термічну обробку. Довго залишається гострим, легко точиться." },
@@ -151,10 +209,7 @@ export default function LandingClient({ landing }: { landing: any }) {
             ].map((a, i) => (
               <div key={i} className="bg-[#F5F9F2] rounded-2xl p-6 flex items-start gap-5 hover:shadow-md transition-shadow">
                 <div className="bg-white rounded-xl p-3 shadow-sm shrink-0">{a.icon}</div>
-                <div>
-                  <p className="font-black text-sm leading-tight">{a.title}</p>
-                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{a.desc}</p>
-                </div>
+                <div><p className="font-black text-sm leading-tight">{a.title}</p><p className="text-xs text-muted-foreground mt-1 leading-relaxed">{a.desc}</p></div>
               </div>
             ))}
           </div>
@@ -164,13 +219,9 @@ export default function LandingClient({ landing }: { landing: any }) {
       {/* ═══════ USE CASES ═══════ */}
       <section className="py-16 bg-[#F5F9F2]">
         <div className="mx-auto max-w-5xl px-4">
-          <h2 className="text-2xl md:text-3xl font-black text-center mb-10">
-            Секатор<br />для різних завдань
-          </h2>
+          <h2 className="text-2xl md:text-3xl font-black text-center mb-10">Секатор<br />для різних завдань</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {[
-              "🍇 Винограду", "🌳 Плодових дерев", "🌹 Троянд і кущів", "🍅 Городу",
-            ].map((t, i) => (
+            {["🍇 Винограду", "🌳 Плодових дерев", "🌹 Троянд і кущів", "🍅 Городу"].map((t, i) => (
               <div key={i} className="bg-white rounded-2xl p-5 text-center font-bold text-sm shadow-sm hover:shadow-md transition-shadow">{t}</div>
             ))}
           </div>
@@ -181,7 +232,6 @@ export default function LandingClient({ landing }: { landing: any }) {
       <section className="py-16 bg-white">
         <div className="mx-auto max-w-5xl px-4">
           <h2 className="text-2xl md:text-3xl font-black text-center mb-4">Оберіть кількість</h2>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-10">
             {tiers.map((t, i) => (
               <button key={i} onClick={() => setSelectedQty(i)}
@@ -192,15 +242,12 @@ export default function LandingClient({ landing }: { landing: any }) {
               </button>
             ))}
           </div>
-
           <div className="mt-10 flex flex-col items-center gap-4">
-            <p className="text-sm opacity-50">
-              {selectedQty > 0 && <>Економія <b>{tiers[selectedQty].save}%</b> при замовленні <b>{tiers[selectedQty].qty} шт</b></>}
-            </p>
-            <button onClick={handleBuy} disabled={adding}
+            <p className="text-sm opacity-50">{selectedQty > 0 && <>Економія <b>{tiers[selectedQty].save}%</b> при замовленні <b>{tiers[selectedQty].qty} шт</b></>}</p>
+            <button onClick={() => setShowForm(true)}
               className="flex items-center gap-3 px-12 py-5 bg-gradient-to-r from-[#0d5e2e] to-[#16a34a] text-white font-black text-xl rounded-2xl shadow-xl active:scale-[0.97] transition-all uppercase">
               <ShoppingCart size={24} />
-              {adding ? "Оформлюємо..." : `Замовити ${tier.qty} шт за ${totalPrice} грн`}
+              Замовити {tier.qty} шт за {totalPrice} грн
             </button>
           </div>
         </div>
@@ -209,9 +256,7 @@ export default function LandingClient({ landing }: { landing: any }) {
       {/* ═══════ STEPS ═══════ */}
       <section className="py-16 bg-[#F9F9F7]">
         <div className="mx-auto max-w-5xl px-4">
-          <h2 className="text-2xl md:text-3xl font-black text-center mb-10">
-            Як замовити<br />за лічені хвилини!
-          </h2>
+          <h2 className="text-2xl md:text-3xl font-black text-center mb-10">Як замовити<br />за лічені хвилини!</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               { title: "Крок 1", text: "Оберіть кількість і натисніть «Замовити». Заповніть ім'я та телефон." },
@@ -233,9 +278,7 @@ export default function LandingClient({ landing }: { landing: any }) {
         <section className="py-16 bg-white">
           <div className="mx-auto max-w-3xl px-4">
             <h2 className="text-2xl md:text-3xl font-black text-center mb-10">Опис товару</h2>
-            <div className="opacity-70 leading-relaxed whitespace-pre-line text-sm">
-              {landing.productDesc}
-            </div>
+            <div className="opacity-70 leading-relaxed whitespace-pre-line text-sm">{landing.productDesc}</div>
           </div>
         </section>
       )}
@@ -259,18 +302,14 @@ export default function LandingClient({ landing }: { landing: any }) {
           <h2 className="text-2xl md:text-3xl font-black text-center mb-3">Відгуки клієнтів</h2>
           <div className="flex justify-center items-center gap-2 mb-8">
             <div className="flex">{[1, 2, 3, 4, 5].map(s => <Star key={s} size={16} className="fill-amber-400 text-amber-400" />)}</div>
-            <span className="text-sm font-bold">5.0</span>
-            <span className="text-sm opacity-50">(89 відгуків)</span>
+            <span className="text-sm font-bold">5.0</span><span className="text-sm opacity-50">(89 відгуків)</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {reviews.map((r, i) => (
               <div key={i} className="bg-[#F5F9F2] rounded-2xl p-6 space-y-3">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#0d5e2e] to-[#16a34a] flex items-center justify-center text-white font-black text-sm">{r.name[0]}</div>
-                  <div>
-                    <p className="font-bold text-sm">{r.name}</p>
-                    <p className="text-xs opacity-40">{r.city}</p>
-                  </div>
+                  <div><p className="font-bold text-sm">{r.name}</p><p className="text-xs opacity-40">{r.city}</p></div>
                   <div className="ml-auto flex">{[1, 2, 3, 4, 5].map(s => <Star key={s} size={12} className="fill-amber-400 text-amber-400" />)}</div>
                 </div>
                 <p className="text-sm opacity-70 leading-relaxed">{r.text}</p>
@@ -284,7 +323,7 @@ export default function LandingClient({ landing }: { landing: any }) {
       <section className="py-12 bg-[#0d5e2e] text-white">
         <div className="mx-auto max-w-5xl px-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
-            <div className="space-y-2"><Truck size={32} className="mx-auto opacity-80" /><p className="font-bold">Доставка Новою Поштою</p><p className="text-sm opacity-60">1-3 дні по всій Україні</p></div>
+            <div className="space-y-2"><Truck size={32} className="mx-auto opacity-80" /><p className="font-bold">Доставка Новою Поштою</p><p className="text-sm opacity-60">1-3 дні</p></div>
             <div className="space-y-2"><RotateCcw size={32} className="mx-auto opacity-80" /><p className="font-bold">Повернення 14 днів</p><p className="text-sm opacity-60">Без зайвих питань</p></div>
             <div className="space-y-2"><Shield size={32} className="mx-auto opacity-80" /><p className="font-bold">Оплата при отриманні</p><p className="text-sm opacity-60">Накладений платіж</p></div>
           </div>
@@ -310,10 +349,10 @@ export default function LandingClient({ landing }: { landing: any }) {
           <h2 className="text-2xl md:text-3xl font-black uppercase">{landing.title}</h2>
           <p className="opacity-80">{landing.subtitle || "Японська сталь SK-5. Чистий різ без заминання гілок."}</p>
           <div className="text-3xl font-black">{tier.pricePerUnit} грн</div>
-          <button onClick={handleBuy} disabled={adding}
+          <button onClick={() => setShowForm(true)}
             className="inline-flex items-center gap-3 px-10 py-5 bg-red-500 hover:bg-red-600 text-white font-black text-xl rounded-2xl shadow-xl active:scale-[0.97] transition-all uppercase">
             <ShoppingCart size={24} />
-            {adding ? "Оформлюємо..." : landing.ctaText || "Замовити зі знижкою"}
+            {landing.ctaText || "Замовити зі знижкою"}
           </button>
           <p className="text-sm opacity-50">Графік роботи: Пн-Нд: 08:00-21:00</p>
         </div>
