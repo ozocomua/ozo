@@ -5,38 +5,46 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Plus, Pencil, Trash2, Eye, EyeOff, ExternalLink } from "lucide-react"
 import { toast } from "sonner"
-import { useRouter } from "next/navigation"
 
 type Landing = {
   id: number
   slug: string
   title: string
+  subtitle: string | null
   productId: number
   product: { id: number; name: string }
+  ctaText: string
+  bgColor: string
+  btnColor: string
+  textColor: string
+  metaTitle: string | null
+  metaDescription: string | null
   isPublished: boolean
   createdAt: string
 }
 
+const emptyForm = {
+  slug: "",
+  title: "",
+  subtitle: "",
+  productId: "",
+  ctaText: "Купити",
+  bgColor: "#F9F9F7",
+  btnColor: "#0B53A4",
+  textColor: "#111111",
+  metaTitle: "",
+  metaDescription: "",
+}
+
 export default function LandingsPage() {
-  const router = useRouter()
   const [landings, setLandings] = useState<Landing[]>([])
   const [loading, setLoading] = useState(true)
   const [creating, setCreating] = useState(false)
+  const [editingId, setEditingId] = useState<number | null>(null)
   const [products, setProducts] = useState<{ id: number; name: string }[]>([])
+  const [saving, setSaving] = useState(false)
 
-  // Form state
-  const [form, setForm] = useState({
-    slug: "",
-    title: "",
-    subtitle: "",
-    productId: "",
-    ctaText: "Купити",
-    bgColor: "#F9F9F7",
-    btnColor: "#0B53A4",
-    textColor: "#111111",
-    metaTitle: "",
-    metaDescription: "",
-  })
+  const [form, setForm] = useState(emptyForm)
 
   async function load() {
     setLoading(true)
@@ -53,26 +61,59 @@ export default function LandingsPage() {
 
   useEffect(() => { load() }, [])
 
-  async function create() {
+  function startEdit(l: Landing) {
+    setEditingId(l.id)
+    setCreating(false)
+    setForm({
+      slug: l.slug,
+      title: l.title,
+      subtitle: l.subtitle || "",
+      productId: String(l.productId),
+      ctaText: l.ctaText,
+      bgColor: l.bgColor,
+      btnColor: l.btnColor,
+      textColor: l.textColor,
+      metaTitle: l.metaTitle || "",
+      metaDescription: l.metaDescription || "",
+    })
+  }
+
+  function startCreate() {
+    setCreating(true)
+    setEditingId(null)
+    setForm(emptyForm)
+  }
+
+  async function save() {
     if (!form.slug.trim() || !form.title.trim() || !form.productId) {
       toast.error("Slug, назва і товар обов'язкові")
       return
     }
+    setSaving(true)
     try {
       const res = await fetch("/api/admin/landings", {
-        method: "POST",
+        method: editingId ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(editingId ? { id: editingId, ...form } : form),
       })
       const data = await res.json()
       if (data.success) {
-        toast.success("Лендінг створено")
+        toast.success(editingId ? "Лендінг оновлено" : "Лендінг створено")
         setCreating(false)
+        setEditingId(null)
+        setForm(emptyForm)
         load()
       } else {
         toast.error(data.error || "Помилка")
       }
     } catch { toast.error("Мережева помилка") }
+    finally { setSaving(false) }
+  }
+
+  function cancel() {
+    setCreating(false)
+    setEditingId(null)
+    setForm(emptyForm)
   }
 
   async function togglePublish(id: number) {
@@ -87,6 +128,8 @@ export default function LandingsPage() {
     toast.success("Видалено")
   }
 
+  const isFormOpen = creating || editingId !== null
+
   return (
     <div className="flex-1 space-y-6 p-4 md:p-8 pt-6">
       <div className="flex items-center justify-between">
@@ -96,15 +139,15 @@ export default function LandingsPage() {
             Окрема сторінка на один товар для рекламних кампаній
           </p>
         </div>
-        <Button onClick={() => setCreating(true)} disabled={creating}>
+        <Button onClick={startCreate} disabled={isFormOpen}>
           <Plus size={16} className="mr-1" /> Створити лендінг
         </Button>
       </div>
 
-      {/* Create form */}
-      {creating && (
+      {/* Form */}
+      {isFormOpen && (
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-black/5 space-y-4">
-          <h3 className="font-bold text-lg">Новий лендінг</h3>
+          <h3 className="font-bold text-lg">{editingId ? "Редагувати лендінг" : "Новий лендінг"}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-[10px] font-bold uppercase text-muted-foreground">Slug (url)</label>
@@ -138,30 +181,15 @@ export default function LandingsPage() {
             <div className="flex gap-2">
               <div>
                 <label className="text-[10px] font-bold uppercase text-muted-foreground">Колір кнопки</label>
-                <input
-                  type="color"
-                  value={form.btnColor}
-                  onChange={e => setForm({ ...form, btnColor: e.target.value })}
-                  className="w-10 h-10 rounded border cursor-pointer"
-                />
+                <input type="color" value={form.btnColor} onChange={e => setForm({ ...form, btnColor: e.target.value })} className="w-10 h-10 rounded border cursor-pointer" />
               </div>
               <div>
                 <label className="text-[10px] font-bold uppercase text-muted-foreground">Колір фону</label>
-                <input
-                  type="color"
-                  value={form.bgColor}
-                  onChange={e => setForm({ ...form, bgColor: e.target.value })}
-                  className="w-10 h-10 rounded border cursor-pointer"
-                />
+                <input type="color" value={form.bgColor} onChange={e => setForm({ ...form, bgColor: e.target.value })} className="w-10 h-10 rounded border cursor-pointer" />
               </div>
               <div>
                 <label className="text-[10px] font-bold uppercase text-muted-foreground">Колір тексту</label>
-                <input
-                  type="color"
-                  value={form.textColor}
-                  onChange={e => setForm({ ...form, textColor: e.target.value })}
-                  className="w-10 h-10 rounded border cursor-pointer"
-                />
+                <input type="color" value={form.textColor} onChange={e => setForm({ ...form, textColor: e.target.value })} className="w-10 h-10 rounded border cursor-pointer" />
               </div>
             </div>
           </div>
@@ -176,8 +204,8 @@ export default function LandingsPage() {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button onClick={create}>Зберегти</Button>
-            <Button variant="outline" onClick={() => setCreating(false)}>Відміна</Button>
+            <Button onClick={save} disabled={saving}>{saving ? "Збереження..." : "Зберегти"}</Button>
+            <Button variant="outline" onClick={cancel}>Відміна</Button>
           </div>
         </div>
       )}
@@ -220,6 +248,9 @@ export default function LandingsPage() {
                           <ExternalLink size={14} className="text-blue-500" />
                         </a>
                       )}
+                      <button onClick={() => startEdit(l)} className="p-2 hover:bg-muted rounded transition-colors" title="Редагувати">
+                        <Pencil size={14} />
+                      </button>
                       <button onClick={() => togglePublish(l.id)} className="p-2 hover:bg-muted rounded transition-colors" title={l.isPublished ? "Приховати" : "Опублікувати"}>
                         {l.isPublished ? <Eye size={14} className="text-green-600" /> : <EyeOff size={14} />}
                       </button>
