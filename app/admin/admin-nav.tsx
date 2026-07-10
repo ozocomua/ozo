@@ -10,6 +10,7 @@ const sections: NavItem[] = [
   { key: "orders", label: "Замовлення", segment: "" },
   { key: "callbacks", label: "Заявки на дзвінок", segment: "callbacks" },
   { key: "catalog", label: "Каталог", segment: "catalog" },
+  { key: "landings", label: "Лендінги", segment: "landings" },
   { key: "blog", label: "Блог", segment: "blog" },
   { key: "reviews", label: "Відгуки", segment: "reviews" },
   { key: "calculator", label: "Калькулятор", segment: "profit-calculator" },
@@ -91,6 +92,12 @@ function isFinanceSection(pathname: string): boolean {
   return parts[1] === "finance-control"
 }
 
+function isLandingsSection(pathname: string): boolean {
+  const parts = normalizePath(pathname).split("/").filter(Boolean)
+  if (parts.length < 2) return false
+  return parts[1] === "landings"
+}
+
 function isImportSection(pathname: string): boolean {
   const parts = normalizePath(pathname).split("/").filter(Boolean)
   if (parts.length < 2) return false
@@ -140,6 +147,7 @@ export function AdminNav() {
   const settingsSection = isSettingsSection(pathname)
   const calculatorSection = isCalculatorSection(pathname)
   const financeSection = isFinanceSection(pathname)
+  const landingsSection = isLandingsSection(pathname)
   const importSection = isImportSection(pathname)
   const normalizedPath = normalizePath(pathname)
 
@@ -154,7 +162,7 @@ export function AdminNav() {
       .catch(() => {})
   }, [])
 
-  const subNavItems = catalogSection ? catalog : reviewsSection ? reviewsSub : settingsSection || calculatorSection || financeSection || importSection ? [] : blogSection ? [] : orders
+  const subNavItems = catalogSection ? catalog : reviewsSection ? reviewsSub : settingsSection || calculatorSection || financeSection || landingsSection || importSection ? [] : blogSection ? [] : orders
 
   return (
     <>
@@ -177,6 +185,8 @@ export function AdminNav() {
               active = calculatorSection
             } else if (item.key === "finance") {
               active = financeSection
+            } else if (item.key === "landings") {
+              active = landingsSection
             } else if (item.key === "import") {
               active = importSection
             } else {
@@ -188,6 +198,7 @@ export function AdminNav() {
                   !settingsSection &&
                   !calculatorSection &&
                   !financeSection &&
+                  !landingsSection &&
                   !importSection &&
                   (normalizedPath === base || normalizedPath.startsWith(`${base}/`))
             }
