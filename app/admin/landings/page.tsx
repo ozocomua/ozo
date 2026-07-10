@@ -170,9 +170,14 @@ export default function LandingsPage() {
               >
                 <option value="">Оберіть товар...</option>
                 {products.map(p => (
-                  <option key={p.id} value={p.id}>{p.name}</option>
+                  <option key={p.id} value={String(p.id)}>{p.name}</option>
                 ))}
               </select>
+              {products.length === 0 && (
+                <p className="text-[10px] text-amber-600 mt-1">
+                  Немає товарів. Спочатку створіть товар у Каталозі.
+                </p>
+              )}
             </div>
             <div>
               <label className="text-[10px] font-bold uppercase text-muted-foreground">Текст кнопки</label>
