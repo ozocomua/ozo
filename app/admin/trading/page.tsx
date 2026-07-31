@@ -33,15 +33,12 @@ export default function TradingPage() {
       const res = await fetch("/api/admin/trading")
       const data = await res.json()
       const list = data.pairs ?? []
-      if (list.length === 0) {
-        await fetch("/api/admin/trading/seed", { method: "POST" })
-        const res2 = await fetch("/api/admin/trading")
-        const data2 = await res2.json()
-        setPairs(data2.pairs ?? [])
-        toast.success("167 пар завантажено")
-      } else {
-        setPairs(list)
-      }
+      // Always seed to fix groupNames
+      await fetch("/api/admin/trading/seed", { method: "POST" })
+      const res2 = await fetch("/api/admin/trading")
+      const data2 = await res2.json()
+      setPairs(data2.pairs ?? [])
+      if (list.length === 0) toast.success("167 пар завантажено")
     } finally { setLoading(false) }
   }
 
