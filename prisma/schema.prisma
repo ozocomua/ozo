@@ -265,6 +265,7 @@ model TradingPair {
   id          Int      @id @default(autoincrement())
   symbol      String   @unique
   name        String?
+  groupName   String   @default("")
   chartStatus String   @default("UNCLEAR")
   priority    Int      @default(0)
   notes       String?  @db.Text
