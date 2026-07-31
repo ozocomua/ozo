@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Plus, Trash2, Eye, EyeOff, Star, Pencil, X, Save, ChevronDown, ChevronUp } from "lucide-react"
+import { Plus, Trash2, Star, Pencil, X, Save, Download } from "lucide-react"
 import { toast } from "sonner"
 
 type Pair = {
@@ -51,6 +51,16 @@ export default function TradingPage() {
   }
 
   useEffect(() => { load() }, [])
+
+  async function seedAll() {
+    if (!confirm("Завантажити всі 167 пар? Існуючі не зміняться.")) return
+    const res = await fetch("/api/admin/trading/seed", { method: "POST" })
+    const data = await res.json()
+    if (data.success) {
+      toast.success(`Додано ${data.created} нових, пропущено ${data.skipped}`)
+      load()
+    }
+  }
 
   async function addPair() {
     if (!newSymbol.trim()) return
@@ -130,9 +140,12 @@ export default function TradingPage() {
           <h2 className="text-3xl font-bold tracking-tight">Трейдинг</h2>
           <p className="text-sm text-muted-foreground mt-1">Щоденник графіків — розбирай монети щоб не плутатись</p>
         </div>
-        <Button onClick={() => setShowNew(!showNew)}>
-          <Plus size={16} className="mr-1" /> Додати пару
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={() => setShowNew(!showNew)}><Plus size={16} className="mr-1" /> Додати пару</Button>
+          {pairs.length === 0 && (
+            <Button variant="outline" onClick={seedAll}><Download size={14} className="mr-1" /> Завантажити всі 167 пар</Button>
+          )}
+        </div>
       </div>
 
       {/* New pair */}
