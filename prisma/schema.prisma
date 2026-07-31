@@ -262,14 +262,56 @@ model LandingPage {
 }
 
 model TradingPair {
-  id          Int      @id @default(autoincrement())
-  symbol      String   @unique
-  name        String?
-  groupName   String   @default("")
-  chartStatus String   @default("UNCLEAR")
-  priority    Int      @default(0)
-  notes       String?  @db.Text
-  tags        Json     @default("[]")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             Int       @id @default(autoincrement())
+  symbol         String    @unique
+  name           String?
+  groupName      String    @default("")
+  chartStatus    String    @default("UNCLEAR")
+  priority       Int       @default(0)
+  notes          String?   @db.Text
+  tags           Json      @default("[]")
+  bias           String    @default("NEUTRAL")
+  support        Float?
+  resistance     Float?
+  tvLink         String?
+  dailyNotes     String?   @db.Text
+  dailyNotesDate DateTime?
+  sessions       Json      @default("[]")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  trades         Trade[]
+}
+
+model Trade {
+  id          Int       @id @default(autoincrement())
+  pairId      Int
+  pair        TradingPair @relation(fields: [pairId], references: [id], onDelete: Cascade)
+  direction   String    @default("LONG")
+  entryPrice  Float
+  exitPrice   Float?
+  sl          Float?
+  tp          Float?
+  lots        Float     @default(1)
+  pnl         Float?
+  result      String    @default("OPEN")
+  setup       String?
+  screenshot  String?
+  emotions    String?   @db.Text
+  enteredAt   DateTime  @default(now())
+  exitedAt    DateTime?
+  notes       String?   @db.Text
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model FtmoConfig {
+  id              Int      @id @default(autoincrement())
+  accountSize     Float    @default(100000)
+  dailyLossLimit  Float    @default(5)
+  totalLossLimit  Float    @default(10)
+  profitTarget    Float    @default(10)
+  currentBalance  Float    @default(100000)
+  phase           String   @default("Challenge")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
