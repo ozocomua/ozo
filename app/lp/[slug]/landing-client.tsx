@@ -256,6 +256,40 @@ export default function LandingClient({ landing }: { landing: any }) {
   const mainImg = images[0] || "/placeholder.jpg"
   const price = landing.productPrice || 0
   const oldPrice = landing.productOldPrice || null
+  const stockCount = landing.stockCount ?? 50
+  const discountPercent = landing.discountPercent ?? 47
+
+  // Default fallbacks
+  const defaultAdvantages = [
+    { icon: "Scissors", title: "Японська сталь SK-5", desc: "Термічно оброблене лезо довго залишається гострим, легко точиться." },
+    { icon: "Sprout", title: "Косий зріз 20 мм", desc: "Спеціальний кут леза не заминає рослину. Зріз швидко затягується." },
+    { icon: "Shield", title: "Алюмінієві ручки", desc: "Легкі, міцні, з TPR-накладками. Рука не втомлюється." },
+    { icon: "Check", title: "Надійний фіксатор", desc: "Пластиковий гачок блокує леза в закритому стані. Безпечне зберігання." },
+  ]
+  const defaultUseCases = ["🍇 Винограду", "🌳 Плодових дерев", "🌹 Троянд", "🍅 Городу"]
+
+  const advantages: {icon:string;title:string;desc:string}[] = (Array.isArray(landing.advantages) && landing.advantages.length > 0) ? landing.advantages : defaultAdvantages
+  const useCases: string[] = (Array.isArray(landing.useCases) && landing.useCases.length > 0) ? landing.useCases : defaultUseCases
+
+  // Map icon string to component
+  function renderIcon(name: string, size: number, className: string) {
+    const cls = `${className}`
+    switch (name) {
+      case "Scissors": return <Scissors size={size} className={cls} />
+      case "Sprout": return <Sprout size={size} className={cls} />
+      case "Shield": return <Shield size={size} className={cls} />
+      case "Check": return <Check size={size} className={cls} />
+      case "Truck": return <Truck size={size} className={cls} />
+      case "Zap": return <span role="img" aria-label="zap" className={cls} style={{fontSize: size}}>⚡</span>
+      case "Star": return <Star size={size} className={cls} />
+      case "Award": return <span role="img" aria-label="award" className={cls} style={{fontSize: size}}>🏆</span>
+      case "Droplets": return <span role="img" aria-label="droplet" className={cls} style={{fontSize: size}}>💧</span>
+      case "Wrench": return <span role="img" aria-label="wrench" className={cls} style={{fontSize: size}}>🔧</span>
+      case "Clock": return <span role="img" aria-label="clock" className={cls} style={{fontSize: size}}>🕐</span>
+      case "Phone": return <span role="img" aria-label="phone" className={cls} style={{fontSize: size}}>📱</span>
+      default: return <Check size={size} className={cls} />
+    }
+  }
 
   const [showForm, setShowForm] = useState(false)
   const [activeImg, setActiveImg] = useState(0)
@@ -323,7 +357,7 @@ export default function LandingClient({ landing }: { landing: any }) {
               <p className="text-base opacity-80 leading-relaxed max-w-md">{landing.subtitle}</p>
 
               <div className="flex items-center gap-2">
-                <span className="bg-red-500 text-white text-[11px] font-bold px-3 py-1 rounded-full tracking-wide">-47%</span>
+                <span className="bg-red-500 text-white text-[11px] font-bold px-3 py-1 rounded-full tracking-wide">-{discountPercent}%</span>
                 {oldPrice && <span className="text-base line-through opacity-40">{oldPrice} грн</span>}
               </div>
 
@@ -337,7 +371,7 @@ export default function LandingClient({ landing }: { landing: any }) {
                 <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">До кінця акції:</p>
                 <CountdownTimer endTime={timerEnd} />
               </div>
-              <p className="text-xs opacity-50">Залишилось <b>27 шт</b> за акцією</p>
+              <p className="text-xs opacity-50">Залишилось <b>{stockCount} шт</b> за акцією</p>
 
               {/* Stock */}
               <div className="flex items-center gap-2">
@@ -360,14 +394,9 @@ export default function LandingClient({ landing }: { landing: any }) {
           <p className="text-xs tracking-[0.2em] text-muted-foreground uppercase text-center mb-2">Переваги</p>
           <h2 className="text-xl md:text-2xl font-serif italic text-center mb-8">Чому цей секатор?</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {[
-              { icon: <Scissors size={22} className="text-primary" />, title: "Японська сталь SK-5", desc: "Термічно оброблене лезо довго залишається гострим, легко точиться." },
-              { icon: <Sprout size={22} className="text-emerald-600" />, title: "Косий зріз 20 мм", desc: "Спеціальний кут леза не заминає рослину. Зріз швидко затягується." },
-              { icon: <Shield size={22} className="text-amber-600" />, title: "Алюмінієві ручки", desc: "Легкі, міцні, з TPR-накладками. Рука не втомлюється." },
-              { icon: <Check size={22} className="text-primary" />, title: "Надійний фіксатор", desc: "Пластиковий гачок блокує леза в закритому стані. Безпечне зберігання." },
-            ].map((a, i) => (
+            {advantages.map((a, i) => (
               <div key={i} className="bg-card border border-border rounded-xl p-4 flex items-start gap-4 hover:shadow-md transition-shadow">
-                <div className="bg-secondary rounded-xl p-2.5 shrink-0">{a.icon}</div>
+                <div className="bg-secondary rounded-xl p-2.5 shrink-0">{renderIcon(a.icon, 22, "text-primary")}</div>
                 <div>
                   <p className="font-semibold text-sm">{a.title}</p>
                   <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{a.desc}</p>
@@ -384,7 +413,7 @@ export default function LandingClient({ landing }: { landing: any }) {
           <p className="text-xs tracking-[0.2em] text-muted-foreground uppercase text-center mb-2">Для чого підходить</p>
           <h2 className="text-xl md:text-2xl font-serif italic text-center mb-7">Ідеально для</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {["🍇 Винограду", "🌳 Плодових дерев", "🌹 Троянд", "🍅 Городу"].map((t, i) => (
+            {useCases.map((t, i) => (
               <div key={i} className="bg-card rounded-xl border border-border p-4 text-center font-semibold text-sm hover:border-[#00B5D1]/40 hover:shadow-sm transition-all">{t}</div>
             ))}
           </div>
