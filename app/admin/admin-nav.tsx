@@ -33,9 +33,7 @@ const catalog: NavItem[] = [
   { key: "brands", label: "Бренди", segment: "catalog/brands" },
 ]
 
-const reviewsSub: NavItem[] = [
-  { key: "all", label: "Всі", segment: "reviews" },
-]
+const reviewsSub: NavItem[] = []
 
 function adminRootFromPathname(pathname: string): string {
   if (pathname.startsWith("/admin")) return "/admin"
