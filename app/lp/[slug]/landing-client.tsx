@@ -8,7 +8,7 @@ import {
 import { toast } from "sonner"
 import { maskPhoneInput, stripPhoneFormatting, isValidPhone } from "@/lib/phone-format"
 
-type ReviewType = { name: string; city: string; text: string; rating: number }
+type ReviewType = { name: string; city: string; text: string; rating: number; avatar?: string }
 type AdvantageType = { icon: string; title: string; desc: string }
 
 /* ═══════════════════ Іконки (емодзі / lucide) ═══════════════════ */
@@ -463,7 +463,11 @@ export default function LandingClient({ landing }: { landing: any }) {
             {reviews.map((r, i) => (
               <div key={i} className="bg-white rounded-2xl border border-black/5 p-5 shadow-[0_8px_30px_rgba(0,0,0,0.05)]">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#FF6B00] to-[#FFB300] flex items-center justify-center text-white font-black text-lg shrink-0">{r.name?.[0] || "?"}</div>
+                  {r.avatar ? (
+                    <img src={r.avatar} alt={r.name} className="w-12 h-12 rounded-full object-cover shrink-0" />
+                  ) : (
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#FF6B00] to-[#FFB300] flex items-center justify-center text-white font-black text-lg shrink-0">{r.name?.[0] || "?"}</div>
+                  )}
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5">
                       <p className="font-bold text-[14px] truncate">{r.name}</p>
