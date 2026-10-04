@@ -6,6 +6,16 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Eye, EyeOff, Copy, Pencil, Trash2 } from "lucide-react"
 import { toast } from "sonner"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 type BrandRow = { id: number; name: string }
 type CategoryRow = { id: number; name: string; parentId: number | null }
@@ -53,6 +63,7 @@ export default function AdminCatalogProductsPage() {
   const [brandId, setBrandId] = useState<string>("")
   const [categoryId, setCategoryId] = useState<string>("")
   const [published, setPublished] = useState<string>("")
+  const [deleteTarget, setDeleteTarget] = useState<ProductRow | null>(null)
 
   const query = useMemo(() => {
     const params = new URLSearchParams()
@@ -110,9 +121,7 @@ export default function AdminCatalogProductsPage() {
     }
   }
 
-  async function deleteProduct(id: number, name: string) {
-    const answer = window.prompt(`Видалити товар "${name}"? Введіть DELETE для підтвердження.`)
-    if (answer !== "DELETE") return
+  async function deleteProduct(id: number) {
     setBusyById((s) => ({ ...s, [id]: true }))
     setError(null)
     try {
@@ -291,7 +300,7 @@ export default function AdminCatalogProductsPage() {
                   <Button
                     variant="destructive"
                     size="sm"
-                    onClick={() => void deleteProduct(p.id, p.name)}
+                    onClick={() => setDeleteTarget(p)}
                     disabled={Boolean(busyById[p.id])}
                   >
                     <Trash2 size={14} />
@@ -363,7 +372,7 @@ export default function AdminCatalogProductsPage() {
                     <Button
                       variant="destructive"
                       size="sm"
-                      onClick={() => void deleteProduct(p.id, p.name)}
+                      onClick={() => setDeleteTarget(p)}
                       disabled={Boolean(busyById[p.id])}
                     >
                       <Trash2 size={14} />
@@ -377,6 +386,28 @@ export default function AdminCatalogProductsPage() {
           <div className="px-4 py-10 text-center text-muted-foreground">Немає товарів.</div>
         )}
       </div>
+
+      <AlertDialog open={Boolean(deleteTarget)} onOpenChange={(open) => { if (!open) setDeleteTarget(null) }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Видалити товар?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Товар «{deleteTarget?.name}» буде видалено назавжди. Цю дію не можна скасувати.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Скасувати</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 text-white hover:bg-red-700"
+              onClick={() => {
+                if (deleteTarget) void deleteProduct(deleteTarget.id)
+              }}
+            >
+              Видалити
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

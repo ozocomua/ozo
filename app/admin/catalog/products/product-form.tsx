@@ -8,6 +8,17 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { slugify } from "@/lib/slug"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 type CategoryRow = {
   id: number
@@ -317,8 +328,6 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
 
   async function del() {
     if (!productId) return
-    const answer = window.prompt(`Удалить товар "${name}"? Введите DELETE для подтверждения.`)
-    if (answer !== "DELETE") return
     setSaving(true)
     setError(null)
     try {
@@ -354,9 +363,30 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
               <Button variant="outline" onClick={() => void duplicate()} disabled={saving || loading}>
                 Дублювати
               </Button>
-              <Button variant="destructive" onClick={() => void del()} disabled={saving || loading}>
-                Удалить
-              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive" disabled={saving || loading}>
+                    Удалить
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Видалити товар?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Товар «{name}» буде видалено назавжди. Цю дію не можна скасувати.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Скасувати</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => void del()}
+                      className="bg-red-600 text-white hover:bg-red-700"
+                    >
+                      Видалити
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </>
           ) : null}
           <Button onClick={() => void onSave()} disabled={saving || loading || !name.trim() || !slug.trim()}>

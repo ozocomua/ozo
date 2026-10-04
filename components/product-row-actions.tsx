@@ -4,6 +4,17 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Eye, EyeOff, Copy, Pencil, Trash2 } from "lucide-react"
 import { toast } from "sonner"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 export default function ProductRowActions({
   productId,
@@ -45,8 +56,6 @@ export default function ProductRowActions({
   }
 
   const handleDelete = () => {
-    const answer = window.prompt(`Видалити товар #${productId}? Введіть DELETE для підтвердження.`)
-    if (answer !== "DELETE") return
     setBusy("del")
     fetch(`/api/admin/catalog/products/${productId}`, { method: "DELETE" })
       .then(res => res.json())
@@ -91,14 +100,34 @@ export default function ProductRowActions({
       >
         {published ? <Eye size={15} /> : <EyeOff size={15} />}
       </button>
-      <button
-        onClick={handleDelete}
-        disabled={busy === "del"}
-        className="p-1.5 rounded-lg text-muted-foreground hover:text-red-600 hover:bg-red-50 transition-colors"
-        title="Видалити"
-      >
-        <Trash2 size={15} />
-      </button>
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <button
+            disabled={busy === "del"}
+            className="p-1.5 rounded-lg text-muted-foreground hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50"
+            title="Видалити"
+          >
+            <Trash2 size={15} />
+          </button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Видалити товар?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Товар #{productId} буде видалено назавжди. Цю дію не можна скасувати.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Скасувати</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-red-600 text-white hover:bg-red-700"
+            >
+              Видалити
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
