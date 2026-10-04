@@ -320,6 +320,17 @@ export default function LandingClient({ landing }: { landing: any }) {
         </div>
       </section>
 
+      {/* ═══ TRUST: HANDMADE ═══ */}
+      <section className="pb-6">
+        <div className="max-w-3xl mx-auto px-4">
+          <div className="bg-white rounded-2xl border border-black/5 p-4 shadow-sm flex items-center justify-center gap-x-6 gap-y-2 flex-wrap">
+            <span className="flex items-center gap-2 text-[13px] font-bold">🇺🇦 Зроблено вручну в Україні</span>
+            <span className="flex items-center gap-2 text-[13px] font-bold">🔨 Кожен килимок перевіряю особисто</span>
+            <span className="flex items-center gap-2 text-[13px] font-bold">🛡️ Гарантія 12 місяців</span>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ EXPRESS ORDER FORM (одразу під hero) ═══ */}
       <section id="order" className="py-8 bg-white border-y border-black/5">
         <div className="max-w-md mx-auto px-4">
@@ -380,6 +391,15 @@ export default function LandingClient({ landing }: { landing: any }) {
                 </p>
               </form>
             )}
+          </div>
+
+          <div className="mt-4 space-y-2 text-center">
+            <p className="text-[13px] text-black/55">
+              Є й інші розміри (від 600 грн) — зателефонуйте, підберемо під ваші потреби.
+            </p>
+            <a href="tel:+380778687777" className="inline-flex items-center justify-center gap-2 text-lg font-black text-[#1A1A1A]">
+              <Phone size={18} className="text-[#FF6B00]" /> 077 868 7777
+            </a>
           </div>
         </div>
       </section>
