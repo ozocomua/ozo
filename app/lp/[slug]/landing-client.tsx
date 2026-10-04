@@ -135,9 +135,9 @@ export default function LandingClient({ landing }: { landing: any }) {
   const touchX = useRef<number | null>(null)
 
   const qtyOptions = [
-    { qty: 1, label: "1 шт", total: price, tag: "" },
-    { qty: 2, label: "2 шт", total: Math.round(price * 2 * 0.9), tag: "Знижка -10%" },
-    { qty: 3, label: "3 шт", total: price * 3, tag: "Доставка 0 грн" },
+    { qty: 1, label: "1 шт", total: price },
+    { qty: 2, label: "2 шт", total: price * 2 },
+    { qty: 3, label: "3 шт", total: price * 3 },
   ]
   const current = qtyOptions.find((o) => o.qty === qty) || qtyOptions[0]
 
@@ -474,7 +474,6 @@ export default function LandingClient({ landing }: { landing: any }) {
                         <button type="button" key={o.qty} onClick={() => setQty(o.qty)} className={`relative rounded-xl border-2 px-2 py-2.5 text-center transition-all ${active ? "border-[#FF6B00] bg-[#FFF3E6] shadow-md" : "border-black/10 bg-white"}`}>
                           <span className="block font-black text-[15px]">{o.label}</span>
                           <span className="block text-[12px] text-black/50">{o.total} ₴</span>
-                          {o.tag && <span className={`block text-[10px] font-bold mt-0.5 ${o.qty === 3 ? "text-emerald-600" : "text-[#FF6B00]"}`}>{o.tag}</span>}
                         </button>
                       )
                     })}
@@ -537,7 +536,6 @@ export default function LandingClient({ landing }: { landing: any }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-baseline gap-2">
               <span className="text-xl font-black text-[#FF4D00]">{current.total} ₴</span>
-              {current.qty > 1 && <span className="text-[11px] text-black/40 line-through">{price * current.qty} ₴</span>}
             </div>
             <div className="flex items-center gap-1.5 text-[10px] font-bold text-black/50 mt-0.5">
               <span className="text-[#FF4D00]">⏳</span> Акція: <Countdown compact />
