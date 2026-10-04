@@ -65,11 +65,11 @@ function Countdown({ compact = false, onDark = false }: { compact?: boolean; onD
   }
   return (
     <div className="flex items-center justify-center gap-1.5">
-      <div className="flex flex-col items-center"><span className={`${box} w-12 h-12 text-xl`}>{h}</span><span className={`text-[10px] mt-1 uppercase tracking-wider ${onDark ? "text-white/80" : "text-black/40"}`}>год</span></div>
+      <div className="flex flex-col items-center"><span className={`${box} w-12 h-12 text-xl`}>{h}</span><span className={`text-[12px] mt-1 uppercase tracking-wider ${onDark ? "text-white/80" : "text-black/40"}`}>год</span></div>
       {sep}
-      <div className="flex flex-col items-center"><span className={`${box} w-12 h-12 text-xl`}>{m}</span><span className={`text-[10px] mt-1 uppercase tracking-wider ${onDark ? "text-white/80" : "text-black/40"}`}>хв</span></div>
+      <div className="flex flex-col items-center"><span className={`${box} w-12 h-12 text-xl`}>{m}</span><span className={`text-[12px] mt-1 uppercase tracking-wider ${onDark ? "text-white/80" : "text-black/40"}`}>хв</span></div>
       {sep}
-      <div className="flex flex-col items-center"><span className={`${box} w-12 h-12 text-xl`}>{s}</span><span className={`text-[10px] mt-1 uppercase tracking-wider ${onDark ? "text-white/80" : "text-black/40"}`}>сек</span></div>
+      <div className="flex flex-col items-center"><span className={`${box} w-12 h-12 text-xl`}>{s}</span><span className={`text-[12px] mt-1 uppercase tracking-wider ${onDark ? "text-white/80" : "text-black/40"}`}>сек</span></div>
     </div>
   )
 }
@@ -215,7 +215,7 @@ export default function LandingClient({ landing }: { landing: any }) {
       {/* ═══ TOP URGENCY BANNER (з таймером) ═══ */}
       <div className="bg-gradient-to-r from-[#FF2D00] via-[#FF5A00] to-[#FF8A00] text-white px-3 py-2.5" style={{ paddingTop: "max(10px, env(safe-area-inset-top))" }}>
         <div className="max-w-3xl mx-auto flex items-center justify-center gap-3 flex-wrap">
-          <span className="text-[13px] md:text-[15px] font-black uppercase tracking-wide text-center">🔥 Супер акція! Знижка −30% діє тільки сьогодні!</span>
+          <span className="text-[14px] md:text-[16px] font-black uppercase tracking-wide text-center">🔥 Супер акція! Знижка −30% діє тільки сьогодні!</span>
           <Countdown compact onDark />
         </div>
       </div>
@@ -252,12 +252,12 @@ export default function LandingClient({ landing }: { landing: any }) {
               <div className="bg-white rounded-2xl p-4 shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-black/5">
                 <div className="flex items-center gap-3">
                   <span className="text-[15px] text-black/40 line-through">{oldPrice} грн</span>
-                  <span className="bg-red-500 text-white text-[11px] font-black px-2 py-0.5 rounded-md">−{discountPercent}%</span>
+                  <span className="bg-red-500 text-white text-[13px] font-black px-2 py-0.5 rounded-md">−{discountPercent}%</span>
                 </div>
                 <div className="flex items-end gap-2 mt-1">
                   <span className="text-5xl font-black text-[#FF2D00] leading-none">{price} грн</span>
                 </div>
-                <p className="text-[12px] text-emerald-600 font-bold mt-2">Ви економите {savings} грн сьогодні</p>
+                <p className="text-[14px] text-emerald-600 font-bold mt-2">Ви економите {savings} грн сьогодні</p>
               </div>
 
               {/* Micro-benefits */}
@@ -278,7 +278,7 @@ export default function LandingClient({ landing }: { landing: any }) {
               </button>
 
               {/* Trust chips */}
-              <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-[12px] text-black/60">
+              <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-[14px] text-black/60">
                 <span className="flex items-center gap-1"><Truck size={13} className="text-[#FF6B00]" /> Доставка 1–2 дні</span>
                 <span className="flex items-center gap-1"><CreditCard size={13} className="text-[#FF6B00]" /> Оплата при отриманні</span>
               </div>
@@ -309,9 +309,9 @@ export default function LandingClient({ landing }: { landing: any }) {
                     </div>
                   </>
                 )}
-                <span className="absolute top-3 left-3 bg-[#FF2D00] text-white text-[11px] font-black px-2.5 py-1 rounded-full shadow">−30%</span>
+                <span className="absolute top-3 left-3 bg-[#FF2D00] text-white text-[12px] font-black px-2.5 py-1 rounded-full shadow">−30%</span>
               </div>
-              <div className="flex items-center justify-center gap-1.5 mt-3 text-[12px] text-black/50">
+              <div className="flex items-center justify-center gap-1.5 mt-3 text-[13px] text-black/50">
                 <Star size={14} className="fill-amber-400 text-amber-400" />
                 <span className="font-bold text-black/70">4.9/5</span> — понад 2,500 задоволених птахівників
               </div>
@@ -324,9 +324,9 @@ export default function LandingClient({ landing }: { landing: any }) {
       <section className="pb-6">
         <div className="max-w-3xl mx-auto px-4">
           <div className="bg-white rounded-2xl border border-black/5 p-4 shadow-sm flex items-center justify-center gap-x-6 gap-y-2 flex-wrap">
-            <span className="flex items-center gap-2 text-[13px] font-bold">🇺🇦 Зроблено вручну в Україні</span>
-            <span className="flex items-center gap-2 text-[13px] font-bold">🔨 Кожен килимок перевіряю особисто</span>
-            <span className="flex items-center gap-2 text-[13px] font-bold">🛡️ Гарантія 12 місяців</span>
+            <span className="flex items-center gap-2 text-[14px] font-bold">🇺🇦 Зроблено вручну в Україні</span>
+            <span className="flex items-center gap-2 text-[14px] font-bold">🔨 Кожен килимок перевіряю особисто</span>
+            <span className="flex items-center gap-2 text-[14px] font-bold">🛡️ Гарантія 12 місяців</span>
           </div>
         </div>
       </section>
@@ -344,10 +344,10 @@ export default function LandingClient({ landing }: { landing: any }) {
             ) : (
               <>
               <h2 className="text-[22px] font-black text-center uppercase">Оформіть замовлення за 30 секунд</h2>
-              <p className="text-[13px] text-[#5B5B5B] text-center mt-1">Зателефонуємо для підтвердження та відправимо сьогодні</p>
+              <p className="text-[14px] text-[#5B5B5B] text-center mt-1">Зателефонуємо для підтвердження та відправимо сьогодні</p>
               <form onSubmit={submit} className="space-y-4 mt-5">
                 <div>
-                  <label className="text-[12px] font-bold text-[#1A1A1A]">Ваше ім'я</label>
+                  <label className="text-[14px] font-bold text-[#1A1A1A]">Ваше ім'я</label>
                   <div className="relative mt-1.5">
                     <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-black/35" />
                     <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Наприклад, Андрій" className="w-full h-13 py-3.5 pl-10 pr-3 rounded-xl border border-black/10 bg-white text-base outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" />
@@ -355,7 +355,7 @@ export default function LandingClient({ landing }: { landing: any }) {
                 </div>
 
                 <div>
-                  <label className="text-[12px] font-bold text-[#1A1A1A]">Телефон <span className="text-red-500">*</span></label>
+                  <label className="text-[14px] font-bold text-[#1A1A1A]">Телефон <span className="text-red-500">*</span></label>
                   <div className="relative mt-1.5">
                     <Phone size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-black/35" />
                     <input value={phone} onChange={(e) => setPhone(maskPhoneInput(e.target.value).masked)} placeholder="0XX XXX XX XX" inputMode="tel" required className="w-full h-13 py-3.5 pl-10 pr-3 rounded-xl border border-black/10 bg-white text-base outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" />
@@ -363,14 +363,14 @@ export default function LandingClient({ landing }: { landing: any }) {
                 </div>
 
                 <div>
-                  <label className="text-[12px] font-bold text-[#1A1A1A]">Кількість</label>
+                  <label className="text-[14px] font-bold text-[#1A1A1A]">Кількість</label>
                   <div className="grid grid-cols-3 gap-2 mt-1.5">
                     {qtyOptions.map((o) => {
                       const active = o.qty === qty
                       return (
                         <button type="button" key={o.qty} onClick={() => setQty(o.qty)} className={`relative rounded-xl border-2 px-2 py-2.5 text-center transition-all ${active ? "border-[#FF6B00] bg-[#FFF3E6] shadow-md" : "border-black/10 bg-white"}`}>
                           <span className="block font-black text-[15px]">{o.label}</span>
-                          <span className="block text-[12px] text-black/50">{o.total} ₴</span>
+                          <span className="block text-[13px] text-black/50">{o.total} ₴</span>
                         </button>
                       )
                     })}
@@ -382,10 +382,10 @@ export default function LandingClient({ landing }: { landing: any }) {
                   <span aria-hidden className="pointer-events-none absolute top-0 bottom-0 left-0 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/40 to-transparent" style={{ animation: "ozo-shine 3s ease-in-out infinite" }} />
                 </button>
 
-                <p className="flex items-center justify-center gap-1.5 text-[12px] text-black/45 text-center">
+                <p className="flex items-center justify-center gap-1.5 text-[13px] text-black/45 text-center">
                   <Lock size={13} /> Ваші дані в безпеці. Оплата виключно при отриманні на пошті.
                 </p>
-                <p className="flex items-center justify-center gap-3 text-[11px] text-black/50">
+                <p className="flex items-center justify-center gap-3 text-[13px] text-black/50">
                   <span className="flex items-center gap-1"><Truck size={12} /> Доставка 1–2 дні</span>
                   <span className="flex items-center gap-1"><CreditCard size={12} /> Оплата при отриманні</span>
                 </p>
@@ -408,7 +408,7 @@ export default function LandingClient({ landing }: { landing: any }) {
                 </div>
                 <div>
                   <p className="font-black text-[15px]">{a.title}</p>
-                  <p className="text-[13px] text-[#5B5B5B] mt-1 leading-relaxed">{a.desc}</p>
+                  <p className="text-[14px] text-[#5B5B5B] mt-1 leading-relaxed">{a.desc}</p>
                 </div>
               </div>
             ))}
@@ -426,7 +426,7 @@ export default function LandingClient({ landing }: { landing: any }) {
               <div className="bg-red-500 text-white px-4 py-2.5 flex items-center gap-2 font-black text-[14px]">
                 <X size={16} /> НІ — звичайна ІЧ-лампа
               </div>
-              <ul className="space-y-2 text-[13px] text-[#5B5B5B] p-5">
+              <ul className="space-y-2 text-[14px] text-[#5B5B5B] p-5">
                 <li>• Обпікає верхніх пташенят</li>
                 <li>• Протяги та нерівномірне тепло</li>
                 <li>• Сліпить очі, порушує сон</li>
@@ -439,7 +439,7 @@ export default function LandingClient({ landing }: { landing: any }) {
               <div className="bg-emerald-500 text-white px-4 py-2.5 flex items-center gap-2 font-black text-[14px]">
                 <Check size={16} /> ТАК — Килимок OZO Преміум
               </div>
-              <ul className="space-y-2 text-[13px] text-[#1A1A1A] p-5 bg-gradient-to-br from-[#F0FDF4] to-white">
+              <ul className="space-y-2 text-[14px] text-[#1A1A1A] p-5 bg-gradient-to-br from-[#F0FDF4] to-white">
                 <li>• Гріє знизу — як під квочкою</li>
                 <li>• Безпечний для очей</li>
                 <li>• Повністю водонепроникний</li>
@@ -469,14 +469,14 @@ export default function LandingClient({ landing }: { landing: any }) {
                       <p className="font-bold text-[14px] truncate">{r.name}</p>
                       <BadgeCheck size={15} className="text-emerald-500 shrink-0" />
                     </div>
-                    <p className="text-[12px] text-black/45">{r.city}</p>
+                    <p className="text-[13px] text-black/45">{r.city}</p>
                   </div>
                   <div className="ml-auto flex shrink-0">
                     {[...Array(r.rating || 5)].map((_, j) => <Star key={j} size={13} className="fill-amber-400 text-amber-400" />)}
                   </div>
                 </div>
-                <p className="text-[13px] text-[#3A3A3A] leading-relaxed">{r.text}</p>
-                <p className="text-[11px] text-emerald-600 font-bold mt-2">✓ Покупку підтверджено</p>
+                <p className="text-[14px] text-[#3A3A3A] leading-relaxed">{r.text}</p>
+                <p className="text-[12px] text-emerald-600 font-bold mt-2">✓ Покупку підтверджено</p>
               </div>
             ))}
           </div>
@@ -504,7 +504,7 @@ export default function LandingClient({ landing }: { landing: any }) {
           <button onClick={scrollToOrder} className="inline-flex items-center justify-center gap-2 px-10 py-4 bg-white text-[#FF2D00] font-black text-base rounded-2xl hover:bg-white/95 active:scale-[0.98] transition-transform shadow-xl">
             <ShoppingCart size={18} /> КУПИТИ ЗІ ЗНИЖКОЮ
           </button>
-          <p className="flex items-center justify-center gap-2 text-[12px] text-white/85"><CreditCard size={14} /> Оплата при отриманні • Без передоплати</p>
+          <p className="flex items-center justify-center gap-2 text-[14px] text-white/85"><CreditCard size={14} /> Оплата при отриманні • Без передоплати</p>
         </div>
       </section>
 
@@ -512,7 +512,7 @@ export default function LandingClient({ landing }: { landing: any }) {
       <div className="fixed bottom-0 left-0 right-0 z-30 md:hidden bg-white border-t border-black/10 px-4 py-2.5 shadow-[0_-8px_30px_rgba(0,0,0,0.08)]" style={{ paddingBottom: "max(10px, env(safe-area-inset-bottom))" }}>
         <div className="flex items-center gap-3">
           <div className="flex-1 min-w-0">
-            <div className="text-[11px] text-black/45 font-bold uppercase tracking-wide">Ціна</div>
+            <div className="text-[12px] text-black/45 font-bold uppercase tracking-wide">Ціна</div>
             <div className="text-2xl font-black text-[#FF2D00] leading-none">{current.total} грн</div>
           </div>
           <button onClick={scrollToOrder} className="relative overflow-hidden flex items-center gap-2 px-5 py-3.5 bg-gradient-to-r from-[#FF2D00] to-[#FF8A00] text-white font-black text-[15px] rounded-full active:scale-95 transition-all" style={{ animation: "ozo-glow 2.2s ease-in-out infinite" }}>
@@ -526,7 +526,7 @@ export default function LandingClient({ landing }: { landing: any }) {
       <footer className="py-6 bg-[#F7F6F3] border-t border-black/5 pb-28 md:pb-6">
         <div className="max-w-3xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <span className="font-black tracking-wider">OZO</span>
-          <p className="text-[11px] text-black/40">© {new Date().getFullYear()} OZO. Пн–Нд 08:00–21:00</p>
+          <p className="text-[12px] text-black/40">© {new Date().getFullYear()} OZO. Пн–Нд 08:00–21:00</p>
         </div>
       </footer>
     </div>
