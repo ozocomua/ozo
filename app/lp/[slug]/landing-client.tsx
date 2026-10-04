@@ -332,7 +332,7 @@ export default function LandingClient({ landing }: { landing: any }) {
       </section>
 
       {/* ═══ EXPRESS ORDER FORM (одразу під hero) ═══ */}
-      <section id="order" className="py-8 bg-white border-y border-black/5">
+      <section id="order" className="py-8 bg-white border-y border-black/5 scroll-mt-20">
         <div className="max-w-md mx-auto px-4">
           <div className="rounded-3xl border-2 border-[#FF6B00] shadow-[0_20px_60px_rgba(255,107,0,0.18)] p-6 md:p-8 bg-gradient-to-b from-white to-[#FFF6EC]">
             <h2 className="text-[22px] font-black text-center uppercase">Оформіть замовлення за 30 секунд</h2>
