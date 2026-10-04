@@ -335,9 +335,6 @@ export default function LandingClient({ landing }: { landing: any }) {
       <section id="order" className="py-8 bg-white border-y border-black/5 scroll-mt-20">
         <div className="max-w-md mx-auto px-4">
           <div className="rounded-3xl border-2 border-[#FF6B00] shadow-[0_20px_60px_rgba(255,107,0,0.18)] p-6 md:p-8 bg-gradient-to-b from-white to-[#FFF6EC]">
-            <h2 className="text-[22px] font-black text-center uppercase">Оформіть замовлення за 30 секунд</h2>
-            <p className="text-[13px] text-[#5B5B5B] text-center mt-1">Зателефонуємо для підтвердження та відправимо сьогодні</p>
-
             {done ? (
               <div className="text-center space-y-3 py-6">
                 <div className="w-16 h-16 mx-auto rounded-full bg-emerald-100 flex items-center justify-center"><Check size={32} className="text-emerald-600" /></div>
@@ -345,6 +342,9 @@ export default function LandingClient({ landing }: { landing: any }) {
                 <p className="text-sm text-[#5B5B5B]">Замовлення прийнято. Менеджер передзвонить протягом 15 хвилин для підтвердження.</p>
               </div>
             ) : (
+              <>
+              <h2 className="text-[22px] font-black text-center uppercase">Оформіть замовлення за 30 секунд</h2>
+              <p className="text-[13px] text-[#5B5B5B] text-center mt-1">Зателефонуємо для підтвердження та відправимо сьогодні</p>
               <form onSubmit={submit} className="space-y-4 mt-5">
                 <div>
                   <label className="text-[12px] font-bold text-[#1A1A1A]">Ваше ім'я</label>
@@ -390,6 +390,7 @@ export default function LandingClient({ landing }: { landing: any }) {
                   <span className="flex items-center gap-1"><CreditCard size={12} /> Оплата при отриманні</span>
                 </p>
               </form>
+              </>
             )}
           </div>
 
