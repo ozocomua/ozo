@@ -17,6 +17,45 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
 })
 
+// Відновлює позицію скролу до першої відмальовки (прибирає «блимання шапки» при F5)
+const restoreScrollScript = `
+(function () {
+  try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+  var key = 'ozo-scroll:' + location.pathname + location.search;
+  var saved = parseInt(sessionStorage.getItem(key) || '0', 10);
+  if (!saved) return;
+  var tries = 0;
+  function restore() {
+    var el = document.scrollingElement || document.documentElement;
+    var max = el.scrollHeight - window.innerHeight;
+    if (tries >= 20 || max >= saved - 1) {
+      window.scrollTo(0, saved);
+    } else {
+      tries++;
+      requestAnimationFrame(restore);
+    }
+  }
+  requestAnimationFrame(restore);
+})();
+`
+
+// Запам'ятовує позицію скролу (для кожної сторінки окремо)
+const saveScrollScript = `
+(function () {
+  var key = 'ozo-scroll:' + location.pathname + location.search;
+  var t;
+  function save() {
+    try {
+      var y = window.scrollY || (document.scrollingElement || document.documentElement).scrollTop || 0;
+      sessionStorage.setItem(key, String(y));
+    } catch (e) {}
+  }
+  window.addEventListener('scroll', function () { clearTimeout(t); t = setTimeout(save, 150); }, { passive: true });
+  window.addEventListener('pagehide', save);
+  window.addEventListener('beforeunload', save);
+})();
+`
+
 export const metadata: Metadata = {
   title: "OZO — все для птахівництва",
   description: "Все для птахівництва. Якісне обладнання для птахоферм. Вигідні ціни та швидка доставка Новою Поштою по Україні 1-3 дні.",
@@ -48,6 +87,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="uk" className={`${inter.variable} ${playfair.variable} bg-background`} suppressHydrationWarning>
+      <script dangerouslySetInnerHTML={{ __html: restoreScrollScript }} />
       <body className="font-sans antialiased" suppressHydrationWarning>
         <Providers>
           <RecentlyViewedProvider>
@@ -59,6 +99,7 @@ export default function RootLayout({
         <Toaster />
         <FacebookPixel />
         {/* ExitPopup temporarily disabled */}
+        <script dangerouslySetInnerHTML={{ __html: saveScrollScript }} />
       </body>
     </html>
   )
