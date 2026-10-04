@@ -37,9 +37,9 @@ export default async function HomePage() {
         <section className="bg-gradient-to-r from-[#0B53A4] to-[#00B5D1] text-white px-4 pt-6 pb-6 md:pt-3 md:pb-2">
           <div className="max-w-5xl mx-auto">
             <h1 className="font-serif text-2xl md:text-4xl font-bold leading-tight text-balance">
-              OZO — все для птахівництва
+              OZO — обладнання ручної роботи
               <br />
-              <span className="text-white/60">якісне обладнання</span>
+              <span className="text-white/60">зроблено в Україні з турботою</span>
             </h1>
           </div>
         </section>
