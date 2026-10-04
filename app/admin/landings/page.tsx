@@ -27,7 +27,7 @@ const emptyForm = {
   stockCount: "50", discountPercent: "47",
 }
 
-const AVAILABLE_ICONS = ["Scissors","Sprout","Shield","Check","Truck","Zap","Star","Award","Droplets","Wrench","Clock","Phone"] as const
+const AVAILABLE_ICONS = ["zap","temp","drop","shield","flame","egg","duck","turkey","quail","sprout","money","wrench","check","leaf","heart"] as const
 
 export default function LandingsPage() {
   const [landings, setLandings] = useState<Landing[]>([])
@@ -202,7 +202,7 @@ export default function LandingsPage() {
                 <Input placeholder="Опис" value={a.desc} onChange={e => { const u = [...form.advantages]; u[i] = {...u[i], desc: e.target.value}; setForm({...form, advantages: u}) }} />
               </div>
             ))}
-            <Button type="button" variant="outline" size="sm" onClick={() => setForm({...form, advantages: [...form.advantages, {icon:"Check",title:"",desc:""}]})}><Plus size={14} className="mr-1" /> Додати перевагу</Button>
+            <Button type="button" variant="outline" size="sm" onClick={() => setForm({...form, advantages: [...form.advantages, {icon:"zap",title:"",desc:""}]})}><Plus size={14} className="mr-1" /> Додати перевагу</Button>
           </div>
 
           {/* Use Cases */}
