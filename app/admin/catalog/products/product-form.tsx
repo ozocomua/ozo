@@ -369,7 +369,7 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
                     Удалить
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent>
+                <AlertDialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
                   <AlertDialogHeader>
                     <AlertDialogTitle>Видалити товар?</AlertDialogTitle>
                     <AlertDialogDescription>
@@ -379,6 +379,7 @@ export function ProductForm({ mode, productId }: { mode: "create" | "edit"; prod
                   <AlertDialogFooter>
                     <AlertDialogCancel>Скасувати</AlertDialogCancel>
                     <AlertDialogAction
+                      autoFocus
                       onClick={() => void del()}
                       className="bg-red-600 text-white hover:bg-red-700"
                     >

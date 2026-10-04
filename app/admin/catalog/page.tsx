@@ -388,7 +388,7 @@ export default function AdminCatalogProductsPage() {
       </div>
 
       <AlertDialog open={Boolean(deleteTarget)} onOpenChange={(open) => { if (!open) setDeleteTarget(null) }}>
-        <AlertDialogContent>
+        <AlertDialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
           <AlertDialogHeader>
             <AlertDialogTitle>Видалити товар?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -398,6 +398,7 @@ export default function AdminCatalogProductsPage() {
           <AlertDialogFooter>
             <AlertDialogCancel>Скасувати</AlertDialogCancel>
             <AlertDialogAction
+              autoFocus
               className="bg-red-600 text-white hover:bg-red-700"
               onClick={() => {
                 if (deleteTarget) void deleteProduct(deleteTarget.id)

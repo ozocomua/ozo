@@ -110,7 +110,7 @@ export default function ProductRowActions({
             <Trash2 size={15} />
           </button>
         </AlertDialogTrigger>
-        <AlertDialogContent>
+        <AlertDialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
           <AlertDialogHeader>
             <AlertDialogTitle>Видалити товар?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -120,6 +120,7 @@ export default function ProductRowActions({
           <AlertDialogFooter>
             <AlertDialogCancel>Скасувати</AlertDialogCancel>
             <AlertDialogAction
+              autoFocus
               onClick={handleDelete}
               className="bg-red-600 text-white hover:bg-red-700"
             >
