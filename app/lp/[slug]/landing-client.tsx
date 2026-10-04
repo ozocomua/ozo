@@ -100,10 +100,10 @@ export default function LandingClient({ landing }: { landing: any }) {
       : landing.productImage
         ? [landing.productImage]
         : []
-  const price = Number(landing.productPrice) || 599
-  const oldPrice = Number(landing.productOldPrice) || 850
+  const price = Number(landing.productPrice) || 799
+  const oldPrice = Number(landing.productOldPrice) || 1140
   const discountPercent = landing.discountPercent != null ? Number(landing.discountPercent) : 30
-  const productName = landing.productName || "Килимок OZO Преміум"
+  const productName = landing.productName || "Килимок OZO Преміум (80 × 50 см)"
   const savings = oldPrice - price
 
   const advantages: AdvantageType[] =
