@@ -233,9 +233,9 @@ export default function LandingClient({ landing }: { landing: any }) {
       {/* ═══ HERO ═══ */}
       <section className="relative overflow-hidden">
         <div className="max-w-3xl mx-auto px-4 pt-4 pb-6">
-          {/* Product title badge */}
+          {/* Product title */}
           <div className="flex justify-center mb-3">
-            <span className="inline-flex items-center gap-1.5 bg-[#1A1A1A] text-white text-[12px] font-bold px-3.5 py-1.5 rounded-full shadow-sm">🏷️ {productName}</span>
+            <span className="text-[12px] font-bold uppercase tracking-[0.18em] text-[#FF6B00]">{productName}</span>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-center">
