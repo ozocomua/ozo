@@ -64,6 +64,9 @@ export default function AdminCatalogProductsPage() {
   const [categoryId, setCategoryId] = useState<string>("")
   const [published, setPublished] = useState<string>("")
   const [deleteTarget, setDeleteTarget] = useState<ProductRow | null>(null)
+  const [selected, setSelected] = useState<Set<number>>(new Set())
+  const [bulkOpen, setBulkOpen] = useState(false)
+  const [bulkBusy, setBulkBusy] = useState(false)
 
   const query = useMemo(() => {
     const params = new URLSearchParams()
@@ -154,6 +157,45 @@ export default function AdminCatalogProductsPage() {
     }
   }
 
+  function toggleSelect(id: number) {
+    setSelected((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  function toggleSelectAll() {
+    setSelected((prev) => {
+      if (products.length && prev.size === products.length) return new Set()
+      return new Set(products.map((p) => p.id))
+    })
+  }
+
+  async function bulkDelete() {
+    setBulkBusy(true)
+    setError(null)
+    try {
+      const res = await fetch("/api/admin/catalog/products/bulk-delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: Array.from(selected) }),
+      })
+      const data = (await res.json().catch(() => ({}))) as { count?: number; error?: string }
+      if (!res.ok) {
+        setError(data.error ?? "Не вдалося видалити товари.")
+        return
+      }
+      toast.success(`Видалено ${data.count ?? selected.size} товарів`)
+      setSelected(new Set())
+      void load()
+    } finally {
+      setBulkBusy(false)
+      setBulkOpen(false)
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -184,6 +226,15 @@ export default function AdminCatalogProductsPage() {
           >
             <EyeOff size={14} className="mr-1" /> Сховати всі
           </Button>
+          {selected.size > 0 ? (
+            <Button
+              variant="destructive"
+              onClick={() => setBulkOpen(true)}
+              disabled={bulkBusy}
+            >
+              <Trash2 size={14} className="mr-1" /> Видалити обрані ({selected.size})
+            </Button>
+          ) : null}
         </div>
       </div>
 
@@ -256,8 +307,14 @@ export default function AdminCatalogProductsPage() {
             const cover = p.images?.[0]?.url ?? ""
             return (
               <div key={p.id} className="rounded-2xl border bg-white p-4 space-y-3">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
+                <div className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 mt-0.5 accent-red-600 cursor-pointer"
+                    checked={selected.has(p.id)}
+                    onChange={() => toggleSelect(p.id)}
+                  />
+                  <div className="min-w-0 flex-1">
                     <div className="text-sm font-medium truncate">{p.name}</div>
                     <div className="text-xs text-muted-foreground mt-1 truncate">/{p.slug}</div>
                   </div>
@@ -317,7 +374,15 @@ export default function AdminCatalogProductsPage() {
       </div>
 
       <div className="hidden md:block rounded-xl border bg-white overflow-hidden">
-        <div className="grid grid-cols-[1fr_220px_140px_160px_260px] gap-0 border-b bg-[#F9F9F7] px-4 py-3 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+        <div className="grid grid-cols-[40px_1fr_220px_140px_160px_260px] gap-0 border-b bg-[#F9F9F7] px-4 py-3 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              className="h-4 w-4 accent-red-600 cursor-pointer"
+              checked={products.length > 0 && selected.size === products.length}
+              onChange={toggleSelectAll}
+            />
+          </div>
           <div>Товар</div>
           <div>Категорії</div>
           <div>Ціна</div>
@@ -333,7 +398,15 @@ export default function AdminCatalogProductsPage() {
               const range = priceRange(p.variants)
               const cats = (p.categories ?? []).map((c: { category: { name: string } }) => c.category.name).slice(0, 2)
               return (
-                <div key={p.id} className="grid grid-cols-[1fr_220px_140px_160px_260px] items-center gap-0 px-4 py-3">
+                <div key={p.id} className="grid grid-cols-[40px_1fr_220px_140px_160px_260px] items-center gap-0 px-4 py-3">
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 accent-red-600 cursor-pointer"
+                      checked={selected.has(p.id)}
+                      onChange={() => toggleSelect(p.id)}
+                    />
+                  </div>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <div className="font-medium truncate">{p.name}</div>
@@ -403,6 +476,27 @@ export default function AdminCatalogProductsPage() {
               onClick={() => {
                 if (deleteTarget) void deleteProduct(deleteTarget.id)
               }}
+            >
+              Видалити
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={bulkOpen} onOpenChange={(open) => { if (!open) setBulkOpen(false) }}>
+        <AlertDialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Видалити вибрані товари?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Буде видалено {selected.size} товар(ів) назавжди. Цю дію не можна скасувати.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Скасувати</AlertDialogCancel>
+            <AlertDialogAction
+              autoFocus
+              className="bg-red-600 text-white hover:bg-red-700"
+              onClick={() => void bulkDelete()}
             >
               Видалити
             </AlertDialogAction>
