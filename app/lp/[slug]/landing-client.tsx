@@ -222,12 +222,9 @@ export default function LandingClient({ landing }: { landing: any }) {
 
       {/* ═══ HEADER ═══ */}
       <header className="sticky top-0 z-40 bg-[#F7F6F3]/95 backdrop-blur border-b border-black/5">
-        <div className="max-w-3xl mx-auto h-14 px-4 flex items-center justify-between gap-2">
-          <span className="font-black text-xl tracking-wider shrink-0">OZO</span>
-          <a href="tel:+380778687777" className="flex items-center gap-1.5 text-[13px] font-bold whitespace-nowrap">
-            <Phone size={14} className="text-[#FF6B00]" /> 077 868 7777
-          </a>
-          <button onClick={scrollToOrder} className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#FF6B00] to-[#FFB300] text-white font-bold text-sm rounded-full active:scale-95 transition-all shadow-md shrink-0">
+        <div className="max-w-3xl mx-auto h-14 px-4 flex items-center justify-between">
+          <span className="font-black text-xl tracking-wider">OZO</span>
+          <button onClick={scrollToOrder} className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#FF6B00] to-[#FFB300] text-white font-bold text-sm rounded-full active:scale-95 transition-all shadow-md">
             <ShoppingCart size={15} /> Замовити
           </button>
         </div>
