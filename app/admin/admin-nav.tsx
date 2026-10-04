@@ -174,7 +174,13 @@ export function AdminNav() {
       .catch(() => {})
   }, [])
 
-  const subNavItems = catalogSection ? catalog : reviewsSection ? reviewsSub : settingsSection || calculatorSection || financeSection || landingsSection || tradingSection || importSection ? [] : blogSection ? [] : orders
+  const subNavItems = catalogSection
+    ? catalog
+    : reviewsSection
+      ? reviewsSub
+      : callbacksSection || settingsSection || calculatorSection || financeSection || landingsSection || tradingSection || importSection || blogSection
+        ? []
+        : orders
 
   return (
     <>
