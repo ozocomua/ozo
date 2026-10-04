@@ -6,6 +6,7 @@ import { RecentlyViewedProvider } from "@/lib/recently-viewed-context"
 import { Providers } from "./providers"
 import { Toaster } from "@/components/ui/sonner"
 import FacebookPixel from "@/components/facebook-pixel"
+import TikTokPixel from "@/components/tiktok-pixel"
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -98,6 +99,7 @@ export default function RootLayout({
         </Providers>
         <Toaster />
         <FacebookPixel />
+        <TikTokPixel />
         {/* ExitPopup temporarily disabled */}
         <script dangerouslySetInnerHTML={{ __html: saveScrollScript }} />
       </body>
