@@ -393,12 +393,6 @@ export default function LandingClient({ landing }: { landing: any }) {
               </>
             )}
           </div>
-
-          <div className="mt-4 text-center">
-            <p className="text-[13px] text-black/55">
-              Є й інші розміри (від 600 грн) — зателефонуйте, підберемо під ваші потреби.
-            </p>
-          </div>
         </div>
       </section>
 
