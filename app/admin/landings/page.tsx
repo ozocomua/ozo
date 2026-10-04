@@ -38,6 +38,9 @@ export default function LandingsPage() {
   const [form, setForm] = useState(emptyForm)
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [avatarUploading, setAvatarUploading] = useState<number | null>(null)
+  const avatarFileRef = useRef<HTMLInputElement>(null)
+  const avatarTargetIdx = useRef<number | null>(null)
   const [newUseCase, setNewUseCase] = useState("")
 
   async function load() {
@@ -87,6 +90,29 @@ export default function LandingsPage() {
     }
     setUploading(false)
     if (fileInputRef.current) fileInputRef.current.value = ""
+  }
+
+  async function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    const idx = avatarTargetIdx.current
+    if (!file || idx == null) return
+    setAvatarUploading(idx)
+    try {
+      const fd = new FormData(); fd.append("file", file)
+      const res = await fetch("/api/upload", { method: "POST", body: fd })
+      const data = await res.json()
+      if (data.success && data.url) {
+        const u = [...form.reviews]
+        u[idx] = { ...u[idx], avatar: data.url }
+        setForm({ ...form, reviews: u })
+        toast.success("Фото додано")
+      } else toast.error(data.error || "Помилка завантаження")
+    } catch { toast.error("Мережева помилка") }
+    finally {
+      setAvatarUploading(null)
+      avatarTargetIdx.current = null
+      if (avatarFileRef.current) avatarFileRef.current.value = ""
+    }
   }
 
   function removeImage(idx: number) {
@@ -225,6 +251,7 @@ export default function LandingsPage() {
           {/* Reviews */}
           <div className="space-y-2">
             <label className="text-[10px] font-bold uppercase text-muted-foreground">Відгуки</label>
+            <input ref={avatarFileRef} type="file" accept="image/*" onChange={handleAvatarUpload} className="hidden" />
             {form.reviews.map((r, i) => (
               <div key={i} className="bg-secondary rounded-xl p-4 space-y-3">
                 <div className="flex items-center gap-3">
@@ -237,6 +264,9 @@ export default function LandingsPage() {
                 </div>
                 <div className="flex gap-2">
                   <Input placeholder="URL аватарки" value={r.avatar} onChange={e => { const u = [...form.reviews]; u[i] = {...u[i], avatar: e.target.value}; setForm({...form, reviews: u}) }} className="flex-1" />
+                  <button type="button" onClick={() => { avatarTargetIdx.current = i; avatarFileRef.current?.click() }} disabled={avatarUploading === i} className="h-10 px-2.5 rounded-md border flex items-center justify-center text-muted-foreground hover:bg-muted" title="Завантажити фото">
+                    {avatarUploading === i ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
+                  </button>
                   <select value={r.rating || 5} onChange={e => { const u = [...form.reviews]; u[i] = {...u[i], rating: Number(e.target.value)}; setForm({...form, reviews: u}) }} className="w-16 h-10 rounded-md border px-2 text-sm">{[1,2,3,4,5].map(n => <option key={n} value={n}>{n}★</option>)}</select>
                 </div>
                 <textarea placeholder="Текст відгуку..." value={r.text} onChange={e => { const u = [...form.reviews]; u[i] = {...u[i], text: e.target.value}; setForm({...form, reviews: u}) }} className="w-full h-16 rounded-md border px-3 py-2 text-sm resize-y" />
