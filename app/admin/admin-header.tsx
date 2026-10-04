@@ -20,6 +20,7 @@ export function AdminHeader() {
       .then(d => {
         financeRef.current = d
         if (d.settings?.usdRate) setUsdRate(d.settings.usdRate)
+        void fetchNBU()
       })
       .catch(() => {})
   }, [])
@@ -48,25 +49,16 @@ export function AdminHeader() {
     }
   }
 
-  const fetchNBU = async () => {
+  async function fetchNBU() {
     try {
-      const res = await fetch("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=USD&json")
+      const res = await fetch("/api/admin/usd-rate", { method: "POST" })
       const data = await res.json()
-      if (data[0]?.rate) {
-        const rate = parseFloat(data[0].rate.toFixed(2))
-        setDraft(rate.toString())
-        if (!editing) {
-          if (!financeRef.current) return
-          setSaving(true)
-          const nextSettings = { ...financeRef.current.settings, usdRate: rate }
-          await fetch("/api/admin/finance", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ sales: financeRef.current.sales || [], settings: nextSettings }),
-          })
-          setUsdRate(rate)
-          setSaving(false)
+      if (data.rate) {
+        setUsdRate(data.rate)
+        if (financeRef.current) {
+          financeRef.current.settings = { ...financeRef.current.settings, usdRate: data.rate }
         }
+        if (editing) setDraft(String(data.rate))
       }
     } catch {
       // silent
