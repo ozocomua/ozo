@@ -223,10 +223,7 @@ export default function LandingClient({ landing }: { landing: any }) {
       {/* ═══ HEADER ═══ */}
       <header className="sticky top-0 z-40 bg-[#F7F6F3]/95 backdrop-blur border-b border-black/5">
         <div className="max-w-3xl mx-auto h-14 px-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#FF6B00] to-[#FFB300] flex items-center justify-center text-white font-black text-sm shadow-sm">O</span>
-            <span className="font-black text-lg tracking-wider">OZO</span>
-          </div>
+          <span className="font-black text-xl tracking-wider">OZO</span>
           <button onClick={scrollToOrder} className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#FF6B00] to-[#FFB300] text-white font-bold text-sm rounded-full active:scale-95 transition-all shadow-md">
             <ShoppingCart size={15} /> Замовити
           </button>
