@@ -235,7 +235,7 @@ export default function LandingClient({ landing }: { landing: any }) {
         <div className="max-w-3xl mx-auto px-4 pt-4 pb-6">
           {/* Product title */}
           <div className="flex justify-center mb-3">
-            <span className="text-[12px] font-bold uppercase tracking-[0.18em] text-[#FF6B00]">{productName}</span>
+            <span className="text-[13px] font-black uppercase tracking-[0.18em] text-[#FF6B00]">{productName}</span>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-center">
