@@ -393,13 +393,10 @@ export default function LandingClient({ landing }: { landing: any }) {
             )}
           </div>
 
-          <div className="mt-4 space-y-2 text-center">
+          <div className="mt-4 text-center">
             <p className="text-[13px] text-black/55">
               Є й інші розміри (від 600 грн) — зателефонуйте, підберемо під ваші потреби.
             </p>
-            <a href="tel:+380778687777" className="inline-flex items-center justify-center gap-2 text-lg font-black text-[#1A1A1A]">
-              <Phone size={18} className="text-[#FF6B00]" /> 077 868 7777
-            </a>
           </div>
         </div>
       </section>
