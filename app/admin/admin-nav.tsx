@@ -137,7 +137,11 @@ function SubNav({ base, pathname, items }: { base: string; pathname: string; ite
       {items.map((item) => {
         const href = item.segment ? buildHref(base, item.segment) : base
         const h = normalizePath(href)
-        const active = item.segment === "" ? p === h : p === h || p.startsWith(`${h}/`)
+        const active = item.segment === ""
+          ? p === h
+          : item.key === "products"
+            ? p === h || p.startsWith(`${h}/products`)
+            : p === h || p.startsWith(`${h}/`)
         return <NavLink key={item.key} href={href} active={active} label={item.label} />
       })}
     </nav>
