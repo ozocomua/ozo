@@ -356,22 +356,28 @@ export default function LandingClient({ landing }: { landing: any }) {
               <h1 className="text-2xl md:text-4xl lg:text-5xl font-serif italic leading-tight">{landing.title}</h1>
               <p className="text-base opacity-80 leading-relaxed max-w-md">{landing.subtitle}</p>
 
-              <div className="flex items-center gap-2">
-                <span className="bg-red-500 text-white text-[11px] font-bold px-3 py-1 rounded-full tracking-wide">-{discountPercent}%</span>
-                {oldPrice && <span className="text-base line-through opacity-40">{oldPrice} грн</span>}
-              </div>
+              {discountPercent > 0 && (
+                <div className="flex items-center gap-2">
+                  <span className="bg-red-500 text-white text-[11px] font-bold px-3 py-1 rounded-full tracking-wide">-{discountPercent}%</span>
+                  {oldPrice && <span className="text-base line-through opacity-40">{oldPrice} грн</span>}
+                </div>
+              )}
 
               <div className="flex items-baseline gap-2">
                 <span className="text-4xl md:text-5xl font-black">{price}</span>
                 <span className="text-lg opacity-60">грн</span>
               </div>
 
-              {/* Timer */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 space-y-1.5 inline-block">
-                <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">До кінця акції:</p>
-                <CountdownTimer endTime={timerEnd} />
-              </div>
-              <p className="text-xs opacity-50">Залишилось <b>{stockCount} шт</b> за акцією</p>
+              {discountPercent > 0 && (
+                <>
+                  {/* Timer */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 space-y-1.5 inline-block">
+                    <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">До кінця акції:</p>
+                    <CountdownTimer endTime={timerEnd} />
+                  </div>
+                  <p className="text-xs opacity-50">Залишилось <b>{stockCount} шт</b> за акцією</p>
+                </>
+              )}
 
               {/* Stock */}
               <div className="flex items-center gap-2">
@@ -392,7 +398,7 @@ export default function LandingClient({ landing }: { landing: any }) {
       <section className="py-12 bg-background">
         <div className="max-w-5xl mx-auto px-4">
           <p className="text-xs tracking-[0.2em] text-muted-foreground uppercase text-center mb-2">Переваги</p>
-          <h2 className="text-xl md:text-2xl font-serif italic text-center mb-8">Чому цей секатор?</h2>
+          <h2 className="text-xl md:text-2xl font-serif italic text-center mb-8">Чому обирають OZO?</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {advantages.map((a, i) => (
               <div key={i} className="bg-card border border-border rounded-xl p-4 flex items-start gap-4 hover:shadow-md transition-shadow">
