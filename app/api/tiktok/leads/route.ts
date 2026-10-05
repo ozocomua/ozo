@@ -71,8 +71,8 @@ export async function POST(req: Request) {
 
   for (const lead of leads) {
     const name = getField(lead, ["name", "full_name", "first_name", "lead_name", "user_name"])
-    const phone = normalizePhone(getField(lead, ["phone", "phone_number", "mobile", "telephone", "tel", "contact"]))
-    const email = getField(lead, ["email", "e_mail", "email_address"])
+    const phone = normalizePhone(getField(lead, ["user_phone", "phone", "phone_number", "mobile", "telephone", "tel", "contact"]))
+    const email = getField(lead, ["user_email", "email", "e_mail", "email_address"])
     if (!phone) continue
 
     try {
