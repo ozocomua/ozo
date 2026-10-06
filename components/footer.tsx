@@ -24,7 +24,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Все для птахівництва та фермерських господарств
+              Товари ручної роботи, зроблено в Україні з турботою
             </p>
           </div>
 

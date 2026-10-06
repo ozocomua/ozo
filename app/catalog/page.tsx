@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || ""
   return {
     title: "Каталог товарів | OZO",
-    description: "Весь асортимент обладнання для птахівництва: клітки, годівниці, напувалки, інкубатори. Вигідні ціни та швидка доставка по Україні.",
+    description: "Весь асортимент товарів ручної роботи, зроблених в Україні з турботою. Інфрачервоні нагрівальні килимки та інші вироби. Вигідні ціни та швидка доставка по Україні.",
     alternates: { canonical: `${SITE_URL}/catalog` },
   }
 }

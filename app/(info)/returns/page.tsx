@@ -4,7 +4,7 @@ import { Shield, RefreshCw, CreditCard, Truck, Phone } from "lucide-react"
 export const metadata: Metadata = {
   title: "Обмін та повернення товару | OZO",
   description:
-    "Інформація про умови обміну та повернення товарів для птахівництва в інтернет-магазині OZO.",
+    "Інформація про умови обміну та повернення товарів ручної роботи в інтернет-магазині OZO.",
 }
 
 export default function ReturnsPage() {
