@@ -212,6 +212,7 @@ model ProfitEntry {
   id          Int      @id @default(autoincrement())
   productName String
   amount      Float
+  comment     String?
   createdAt   DateTime @default(now())
 }
 

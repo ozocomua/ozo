@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react"
 
 type Product = { id: number; name: string }
-type Entry = { id: number; productName: string; amount: number; createdAt: string }
+type Entry = { id: number; productName: string; amount: number; comment: string | null; createdAt: string }
 
 export default function ProfitPage() {
   const [loaded, setLoaded] = useState(false)
@@ -11,6 +11,7 @@ export default function ProfitPage() {
   const [entries, setEntries] = useState<Entry[]>([])
   const [productId, setProductId] = useState<string>("")
   const [amount, setAmount] = useState("")
+  const [comment, setComment] = useState("")
   const [busy, setBusy] = useState(false)
 
   const load = () => {
@@ -38,11 +39,12 @@ export default function ProfitPage() {
       const res = await fetch("/api/admin/profit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productName: product.name, amount: val }),
+        body: JSON.stringify({ productName: product.name, amount: val, comment: comment.trim() }),
       })
       if (res.ok) {
         setAmount("")
         setProductId("")
+        setComment("")
         load()
       }
     } finally {
@@ -121,6 +123,19 @@ export default function ProfitPage() {
           />
         </div>
 
+        <div>
+          <label className="text-xs font-bold text-slate-600 uppercase block mb-1">
+            Коментар (не обов'язково)
+          </label>
+          <input
+            type="text"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="Наприклад: продав 3 шт"
+            className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500"
+          />
+        </div>
+
         <button
           onClick={add}
           disabled={busy || !productId || !amount}
@@ -142,6 +157,9 @@ export default function ProfitPage() {
               <li key={e.id} className="flex items-center gap-3 px-4 py-3">
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate">{e.productName}</p>
+                  {e.comment ? (
+                    <p className="text-[11px] text-slate-500 truncate mt-0.5">💬 {e.comment}</p>
+                  ) : null}
                   <p className="text-[10px] text-muted-foreground">
                     {new Date(e.createdAt).toLocaleString("uk-UA", {
                       day: "2-digit",

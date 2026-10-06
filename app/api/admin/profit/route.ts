@@ -19,6 +19,7 @@ export async function GET() {
       id: e.id,
       productName: e.productName,
       amount: e.amount,
+      comment: e.comment,
       createdAt: e.createdAt,
     })),
     products,
@@ -32,13 +33,14 @@ export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}))
   const productName = String(body.productName || "").trim()
   const amount = parseFloat(body.amount)
+  const comment = String(body.comment || "").trim() || null
 
   if (!productName || Number.isNaN(amount)) {
     return NextResponse.json({ error: "Вкажіть товар і суму" }, { status: 400 })
   }
 
   const entry = await prisma.profitEntry.create({
-    data: { productName, amount },
+    data: { productName, amount, comment },
   })
 
   return NextResponse.json({ ok: true, entry })
