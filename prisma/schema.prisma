@@ -208,6 +208,13 @@ model FinanceSettings {
   targetRevenue Int   @default(80000)
 }
 
+model ProfitEntry {
+  id          Int      @id @default(autoincrement())
+  productName String
+  amount      Float
+  createdAt   DateTime @default(now())
+}
+
 model CallbackRequest {
   id        Int      @id @default(autoincrement())
   name      String
