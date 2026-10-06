@@ -216,6 +216,13 @@ model ProfitEntry {
   createdAt   DateTime @default(now())
 }
 
+model AdExpense {
+  id        Int      @id @default(autoincrement())
+  amount    Float
+  comment   String?
+  createdAt DateTime @default(now())
+}
+
 model CallbackRequest {
   id        Int      @id @default(autoincrement())
   name      String
