@@ -111,8 +111,8 @@ export default function LandingClient({ landing }: { landing: any }) {
       ? landing.advantages
       : [
           { icon: "zap", title: "30 Вт економії", desc: "Споживає менше за звичайну лампочку — рахунок за світло в рази менший." },
-          { icon: "temp", title: "Ідеальна температура 38–40°C", desc: "Пташенята не кучкуються, не мерзнуть та ростуть швидше." },
-          { icon: "drop", title: "Вологозахищений", desc: "Не боїться води, посліду та легко миється." },
+          { icon: "temp", title: "Ідеальна температура 38–40°C", desc: "Рівномірне тепло без перегріву — комфортно та безпечно." },
+          { icon: "drop", title: "Вологозахищений", desc: "Не боїться води, бруду та легко миється." },
           { icon: "shield", title: "100% безпека", desc: "Вбудований захист від перегріву — працює 24/7 без нагляду." },
         ]
 
@@ -120,10 +120,10 @@ export default function LandingClient({ landing }: { landing: any }) {
     Array.isArray(landing.reviews) && landing.reviews.length > 0
       ? landing.reviews
       : [
-          { name: "Іван", city: "Полтавська обл.", text: "Курчата перестали гинути, як тільки поставив килимок замість лампи. Гріє рівномірно, малята спокійно сплять і не тиснуться. Дуже задоволений!", rating: 5 },
-          { name: "Олена", city: "Київська обл.", text: "Значна економія на світлі — лічильник майже не крутиться. Виводок вижив повністю, 100%. Рекомендую кожному птахівнику!", rating: 5 },
+          { name: "Іван", city: "Полтавська обл.", text: "Поставив килимок замість лампи — і одразу відчув різницю. Гріє рівномірно, безпечно, споживає копійки. Дуже задоволений!", rating: 5 },
+          { name: "Олена", city: "Київська обл.", text: "Значна економія на світлі — лічильник майже не крутиться. Гріє відмінно, працює безперебійно. Рекомендую кожному!", rating: 5 },
           { name: "Сергій", city: "Хмельницька обл.", text: "Швидка доставка — прийшло за 2 дні Новою Поштою. Килимок якісний, вологи не боїться. Вже другу зиму працює без нарікань.", rating: 5 },
-          { name: "Марія", city: "Вінницька обл.", text: "Замовила 3 шт для індичат. Окупилося з першого виводку. Пташенята ростуть активними, без перегріву. Дякую за консультацію!", rating: 5 },
+          { name: "Марія", city: "Вінницька обл.", text: "Замовила 3 шт. Окупилося з першого місяця. Гріє рівномірно, без перегріву. Дякую за консультацію!", rating: 5 },
         ]
 
   // Форма
@@ -245,7 +245,7 @@ export default function LandingClient({ landing }: { landing: any }) {
                 {landing.title || "Збережіть 99% молодняку з перших днів життя!"}
               </h1>
               <p className="text-[15px] md:text-base text-[#4A4A4A] leading-relaxed">
-                {landing.subtitle || "Безпечне, рівномірне та економне інфрачервоне тепло. Пташенята не мерзнуть, не тиснуться та ростуть у 1.5 рази швидше."}
+                {landing.subtitle || "Безпечне, рівномірне та економне інфрачервоне тепло — комфорт для ваших потреб без зайвих витрат."}
               </p>
 
               {/* Price card */}
@@ -264,7 +264,7 @@ export default function LandingClient({ landing }: { landing: any }) {
               <ul className="space-y-2">
                 <li className="flex items-center gap-2.5 text-[14px]"><span className="text-base">⚡</span> Всього 30 Вт — рахунок за світло в 8 разів менший</li>
                 <li className="flex items-center gap-2.5 text-[14px]"><span className="text-base">🛡️</span> 100% захист від вологи, бруду та перегріву</li>
-                <li className="flex items-center gap-2.5 text-[14px]"><span className="text-base">🐣</span> Курчата, каченята, індичата та перепели</li>
+                <li className="flex items-center gap-2.5 text-[14px]"><span className="text-base">🔄</span> Підходить для птиці, тварин, розсади та акумуляторів</li>
               </ul>
 
               {/* CTA */}
@@ -313,7 +313,7 @@ export default function LandingClient({ landing }: { landing: any }) {
               </div>
               <div className="flex items-center justify-center gap-1.5 mt-3 text-[13px] text-black/50">
                 <Star size={14} className="fill-amber-400 text-amber-400" />
-                <span className="font-bold text-black/70">4.9/5</span> — понад 2,500 задоволених птахівників
+                <span className="font-bold text-black/70">4.9/5</span> — понад 2,500 задоволених клієнтів
               </div>
             </div>
           </div>
@@ -427,7 +427,7 @@ export default function LandingClient({ landing }: { landing: any }) {
                 <X size={16} /> НІ — звичайна ІЧ-лампа
               </div>
               <ul className="space-y-2 text-[14px] text-[#5B5B5B] p-5">
-                <li>• Обпікає верхніх пташенят</li>
+                <li>• Перегріває зверху</li>
                 <li>• Протяги та нерівномірне тепло</li>
                 <li>• Сліпить очі, порушує сон</li>
                 <li>• Споживає 250+ Вт</li>
@@ -440,7 +440,7 @@ export default function LandingClient({ landing }: { landing: any }) {
                 <Check size={16} /> ТАК — Килимок OZO Преміум
               </div>
               <ul className="space-y-2 text-[14px] text-[#1A1A1A] p-5 bg-gradient-to-br from-[#F0FDF4] to-white">
-                <li>• Гріє знизу — як під квочкою</li>
+                <li>• Гріє рівномірно знизу</li>
                 <li>• Безпечний для очей</li>
                 <li>• Повністю водонепроникний</li>
                 <li>• Лише 30 Вт</li>
@@ -492,7 +492,7 @@ export default function LandingClient({ landing }: { landing: any }) {
         <div className="max-w-2xl mx-auto px-4">
           <h2 className="text-xl md:text-2xl font-black text-center mb-6">Поширені запитання</h2>
           <div className="bg-white rounded-2xl border border-black/8 px-5 py-1 shadow-sm">
-            <FaqItem q="Як правильно використовувати килимок?" a="Покладіть килимок на дно брудера або ящика, зверху — суху підстилку (стружка, папір). Підключіть до мережі та відрегулюйте температуру. Пташенята самі виберуть комфортну зону — частина спить на теплому, частина — на прохолодному." />
+            <FaqItem q="Як правильно використовувати килимок?" a="Покладіть килимок на рівну поверхню, зверху — за потреби тонку підстилку. Підключіть до мережі та відрегулюйте температуру. Тепло розподіляється рівномірно по всій площі." />
             <FaqItem q="Чи безпечно залишати його на ніч?" a="Так. Вбудований захист від перегріву автоматично підтримує безпечну температуру 38–40°C. Килимок розрахований на роботу 24/7 і не боїться вологи." />
             <FaqItem q="Яка гарантія та умови повернення?" a="Гарантія — 12 місяців. Якщо виявили дефект — замінимо або повернемо кошти. Також діє повернення протягом 14 днів без пояснення причини." />
             <FaqItem q="Як швидко здійснюється доставка?" a="Відправляємо Новою Поштою в день замовлення (якщо до 16:00). Доставка по Україні — 1–2 дні. Оплата при отриманні." />

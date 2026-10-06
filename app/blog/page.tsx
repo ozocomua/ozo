@@ -12,8 +12,8 @@ export const dynamic = "force-dynamic"
 
 export function generateMetadata(): Metadata {
   return {
-    title: "Блог | OZO — поради для птахівників",
-    description: "Корисні статті та поради для птахівників: догляд за птицею, вибір обладнання, годування, розведення курчат.",
+    title: "Блог | OZO",
+    description: "Корисні статті та поради: про товари ручної роботи, їх вибір, догляд та використання.",
   }
 }
 
