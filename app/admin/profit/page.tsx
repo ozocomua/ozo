@@ -4,6 +4,14 @@ import { useState, useEffect, useMemo } from "react"
 
 type Product = { id: number; name: string }
 type Entry = { id: number; productName: string; amount: number; comment: string | null; createdAt: string }
+type Period = "all" | "today" | "7d" | "30d"
+
+const PERIODS: { key: Period; label: string }[] = [
+  { key: "all", label: "Весь час" },
+  { key: "today", label: "Сьогодні" },
+  { key: "7d", label: "7 днів" },
+  { key: "30d", label: "30 днів" },
+]
 
 export default function ProfitPage() {
   const [loaded, setLoaded] = useState(false)
@@ -12,6 +20,7 @@ export default function ProfitPage() {
   const [productId, setProductId] = useState<string>("")
   const [amount, setAmount] = useState("")
   const [comment, setComment] = useState("")
+  const [period, setPeriod] = useState<Period>("all")
   const [busy, setBusy] = useState(false)
 
   const load = () => {
@@ -28,7 +37,33 @@ export default function ProfitPage() {
     load()
   }, [])
 
-  const total = useMemo(() => entries.reduce((s, e) => s + (e.amount || 0), 0), [entries])
+  const filtered = useMemo(() => {
+    const now = new Date()
+    return entries.filter((e) => {
+      const d = new Date(e.createdAt)
+      if (period === "today") return d.toDateString() === now.toDateString()
+      if (period === "7d") return d.getTime() >= now.getTime() - 7 * 24 * 3600 * 1000
+      if (period === "30d") return d.getTime() >= now.getTime() - 30 * 24 * 3600 * 1000
+      return true
+    })
+  }, [entries, period])
+
+  const total = useMemo(() => filtered.reduce((s, e) => s + (e.amount || 0), 0), [filtered])
+
+  const byProduct = useMemo(() => {
+    const map = new Map<string, { sum: number; count: number }>()
+    filtered.forEach((e) => {
+      const cur = map.get(e.productName) || { sum: 0, count: 0 }
+      cur.sum += e.amount || 0
+      cur.count += 1
+      map.set(e.productName, cur)
+    })
+    return Array.from(map.entries())
+      .map(([name, v]) => ({ name, ...v }))
+      .sort((a, b) => b.sum - a.sum)
+  }, [filtered])
+
+  const maxSum = Math.max(1, ...byProduct.map((p) => p.sum))
 
   const add = async () => {
     const product = products.find((p) => p.id === Number(productId))
@@ -79,16 +114,62 @@ export default function ProfitPage() {
         </p>
       </div>
 
+      {/* ── Period selector ── */}
+      <div className="flex gap-2 overflow-x-auto">
+        {PERIODS.map((p) => (
+          <button
+            key={p.key}
+            onClick={() => setPeriod(p.key)}
+            className={
+              "shrink-0 rounded-full border px-4 py-2 text-xs font-bold uppercase tracking-wide transition-colors " +
+              (period === p.key
+                ? "bg-slate-900 text-white border-slate-900"
+                : "bg-white text-muted-foreground border-black/10 hover:border-black")
+            }
+          >
+            {p.label}
+          </button>
+        ))}
+      </div>
+
       {/* ── Total ── */}
       <div className="rounded-2xl border bg-slate-900 p-6 text-white text-center">
         <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
-          Загальний прибуток
+          Прибуток · {PERIODS.find((p) => p.key === period)?.label}
         </p>
         <p className="text-4xl font-black mt-2 text-green-400">
           {Math.round(total).toLocaleString("uk-UA")} ₴
         </p>
-        <p className="text-[11px] text-slate-400 mt-1">Записів: {entries.length}</p>
+        <p className="text-[11px] text-slate-400 mt-1">Записів: {filtered.length}</p>
       </div>
+
+      {/* ── By product ── */}
+      {byProduct.length > 0 && (
+        <div className="rounded-2xl border bg-white p-5 space-y-4">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500">
+            Що продається більше / менше
+          </h2>
+          <div className="space-y-3">
+            {byProduct.map((p) => (
+              <div key={p.name}>
+                <div className="flex items-baseline justify-between gap-3 mb-1">
+                  <span className="text-sm font-medium truncate">{p.name}</span>
+                  <span className="text-xs font-bold text-green-600 whitespace-nowrap">
+                    {Math.round(p.sum).toLocaleString("uk-UA")} ₴
+                    <span className="text-muted-foreground font-normal"> · {p.count} зап.</span>
+                  </span>
+                </div>
+                <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full transition-all duration-500"
+                    style={{ width: `${Math.round((p.sum / maxSum) * 100)}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ── Add form ── */}
       <div className="rounded-2xl border bg-white p-5 space-y-4">
@@ -147,13 +228,13 @@ export default function ProfitPage() {
 
       {/* ── Entries ── */}
       <div className="rounded-2xl border bg-white overflow-hidden">
-        {entries.length === 0 ? (
+        {filtered.length === 0 ? (
           <div className="py-14 text-center text-sm text-muted-foreground">
-            Ще немає записів. Додай перший вище.
+            {entries.length === 0 ? "Ще немає записів. Додай перший вище." : "Немає записів за цей період."}
           </div>
         ) : (
           <ul className="divide-y">
-            {entries.map((e) => (
+            {filtered.map((e) => (
               <li key={e.id} className="flex items-center gap-3 px-4 py-3">
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate">{e.productName}</p>
