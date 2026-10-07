@@ -15,7 +15,7 @@ const sections: NavItem[] = [
   { key: "reviews", label: "Відгуки", segment: "reviews" },
   { key: "calculator", label: "Калькулятор", segment: "profit-calculator" },
   { key: "finance", label: "Фінанси", segment: "finance-control" },
-  { key: "profit", label: "Прибуток", segment: "profit" },
+  { key: "profit", label: "Заробіток", segment: "profit" },
   { key: "settings", label: "Налаштування", segment: "settings" },
 ]
 

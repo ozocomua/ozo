@@ -19,6 +19,7 @@ export async function GET() {
       id: e.id,
       productName: e.productName,
       amount: e.amount,
+      qty: e.qty,
       comment: e.comment,
       createdAt: e.createdAt,
     })),
@@ -33,6 +34,7 @@ export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}))
   const productName = String(body.productName || "").trim()
   const amount = parseFloat(body.amount)
+  const qty = Math.max(1, parseInt(body.qty, 10) || 1)
   const comment = String(body.comment || "").trim() || null
 
   if (!productName || Number.isNaN(amount)) {
@@ -40,7 +42,7 @@ export async function POST(req: Request) {
   }
 
   const entry = await prisma.profitEntry.create({
-    data: { productName, amount, comment },
+    data: { productName, amount, qty, comment },
   })
 
   return NextResponse.json({ ok: true, entry })

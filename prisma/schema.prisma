@@ -212,11 +212,19 @@ model ProfitEntry {
   id          Int      @id @default(autoincrement())
   productName String
   amount      Float
+  qty         Int      @default(1)
   comment     String?
   createdAt   DateTime @default(now())
 }
 
 model AdExpense {
+  id        Int      @id @default(autoincrement())
+  amount    Float
+  comment   String?
+  createdAt DateTime @default(now())
+}
+
+model Payout {
   id        Int      @id @default(autoincrement())
   amount    Float
   comment   String?
