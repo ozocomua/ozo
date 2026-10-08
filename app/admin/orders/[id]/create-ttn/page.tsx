@@ -100,10 +100,19 @@ export default function CreateTtnPage({ params }: { params: Promise<{ id: string
         // ── Auto-select warehouse from order ──────────────────
         if (!warehouseAutoFilled && order.deliveryPoint) {
           const clientPoint = order.deliveryPoint.toLowerCase().trim()
-          const match = list.find((w) =>
-            w.name.toLowerCase().includes(clientPoint) ||
-            clientPoint.includes(w.name.toLowerCase())
-          )
+          // Extract branch number like "№66" from client's address
+          const numMatch = order.deliveryPoint.match(/№\s*(\d+)/)
+          const branchNum = numMatch ? numMatch[1] : null
+          const match = list.find((w) => {
+            if (branchNum) {
+              const wNum = w.name.match(/№\s*(\d+)/)
+              return !!wNum && wNum[1] === branchNum
+            }
+            return (
+              w.name.toLowerCase().includes(clientPoint) ||
+              clientPoint.includes(w.name.toLowerCase())
+            )
+          })
           if (match) {
             setSelectedWarehouse(match)
             setWarehouseQuery(match.name)

@@ -79,7 +79,7 @@ export async function searchWarehouses(cityRef: string): Promise<NpWarehouse[]> 
   return cached(key, WAREHOUSES_TTL, () =>
     npRequest<NpWarehouse>("Address", "getWarehouses", {
       CityRef: cityRef,
-      Limit: "50",
+      Limit: "500",
     }),
   )
 }
